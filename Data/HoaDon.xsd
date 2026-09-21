@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Định nghĩa kiểu Mã Hóa Đơn HDxxx -->
+  <xs:simpleType name="MaHDType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="HD[0-9]{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Định nghĩa Số điện thoại -->
+  <xs:simpleType name="SoDienThoaiType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="(0[3|5|7|8|9])+([0-9]{8})"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Phân tử gốc DanhSachHoaDon -->
+  <xs:element name="DanhSachHoaDon">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="HoaDon" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MaHD" type="MaHDType"/>
+              <xs:element name="NgayLap" type="xs:dateTime"/>
+              <xs:element name="KhachHang">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="TenKH" type="xs:string"/>
+                    <xs:element name="SoDienThoai" type="SoDienThoaiType"/>
+                    <xs:element name="DiaChi" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="NhanVien" type="xs:string"/>
+              <xs:element name="ChiTietHoaDon">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ChiTiet" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="MaSP" type="xs:string"/>
+                          <xs:element name="TenSP" type="xs:string"/>
+                          <xs:element name="SoLuong" type="xs:positiveInteger"/>
+                          <xs:element name="DonGia" type="xs:decimal"/>
+                          <xs:element name="ThanhTien" type="xs:decimal"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="TongTien" type="xs:decimal"/>
+              <xs:element name="GhiChu" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <xs:unique name="UniqueMaHD">
+      <xs:selector xpath="HoaDon"/>
+      <xs:field xpath="MaHD"/>
+    </xs:unique>
+  </xs:element>
+
+</xs:schema>

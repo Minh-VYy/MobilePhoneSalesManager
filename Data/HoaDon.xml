@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachHoaDon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="HoaDon.xsd">
+  <HoaDon>
+    <MaHD>HD001</MaHD>
+    <NgayLap>2026-09-15T10:30:00</NgayLap>
+    <KhachHang>
+      <TenKH>Nguyễn Văn An</TenKH>
+      <SoDienThoai>0987654321</SoDienThoai>
+      <DiaChi>123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh</DiaChi>
+    </KhachHang>
+    <NhanVien>Phạm Thị Minh</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SP001</MaSP>
+        <TenSP>iPhone 15 Pro Max 256GB</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>29990000</DonGia>
+        <ThanhTien>29990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>29990000</TongTien>
+    <GhiChu>Khách hàng thanh toán chuyển khoản ngân hàng.</GhiChu>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD002</MaHD>
+    <NgayLap>2026-09-16T14:15:00</NgayLap>
+    <KhachHang>
+      <TenKH>Trần Thị Thu</TenKH>
+      <SoDienThoai>0912345678</SoDienThoai>
+      <DiaChi>456 Đường Nguyễn Huệ, Quận 3, TP. Hồ Chí Minh</DiaChi>
+    </KhachHang>
+    <NhanVien>Lê Hoàng Nam</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SP002</MaSP>
+        <TenSP>Samsung Galaxy S24 Ultra 5G</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>27990000</DonGia>
+        <ThanhTien>27990000</ThanhTien>
+      </ChiTiet>
+      <ChiTiet>
+        <MaSP>SP005</MaSP>
+        <TenSP>Google Pixel 8 Pro</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>18990000</DonGia>
+        <ThanhTien>18990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>46980000</TongTien>
+    <GhiChu>Tặng kèm dán cường lực &amp; ốp lưng cao cấp.</GhiChu>
+  </HoaDon>
+</DanhSachHoaDon>

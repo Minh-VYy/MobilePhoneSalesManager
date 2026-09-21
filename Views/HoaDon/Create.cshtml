@@ -1,0 +1,116 @@
+@model QuanLyBanDienThoai.Models.CreateHoaDonInputModel
+@{
+    ViewData["Title"] = "Lập Hóa Đơn Bán Hàng POS (XML)";
+    var phoneList = (List<QuanLyBanDienThoai.Models.DienThoaiModel>)ViewBag.PhoneList;
+}
+
+<div class="glass-card">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-cart-shopping text-emerald"></i>
+            <span>LẬP HÓA ĐƠN BÁN HÀNG MỚI (GHI VÀO XML &amp; XSD VALIDATE)</span>
+        </div>
+        <a asp-action="Index" class="btn-custom btn-secondary-custom">
+            <i class="fa-solid fa-arrow-left"></i> Trở về Danh sách
+        </a>
+    </div>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert-custom alert-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>@ViewBag.ErrorMessage</div>
+        </div>
+    }
+
+    <form asp-action="Create" method="post" id="posForm">
+        @Html.AntiForgeryToken()
+
+        <div class="row g-4 mb-4">
+            <!-- THÔNG TIN KHÁCH HÀNG -->
+            <div class="col-md-5">
+                <div class="glass-card" style="padding: 1.2rem; background: var(--bg-glass); margin-bottom: 0;">
+                    <h4 class="text-info mb-3"><i class="fa-solid fa-user"></i> Thông Tin Khách Hàng</h4>
+                    
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Họ và Tên KH (*):</label>
+                        <input asp-for="TenKH" class="form-control-custom" placeholder="Ví dụ: Nguyễn Văn A" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label font-weight-bold">Số Điện Thoại (*):</label>
+                        <input asp-for="SoDienThoai" class="form-control-custom" placeholder="Ví dụ: 0987654321" required />
+                        <small class="text-muted">Regex XSD: 10 chữ số bắt đầu bằng 03, 05, 07, 08, 09.</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Địa Chỉ Giao Hàng (*):</label>
+                        <input asp-for="DiaChi" class="form-control-custom" placeholder="Ví dụ: 123 Lê Lợi, Q.1, TP.HCM" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tên Nhân Viên Thu Ngân:</label>
+                        <input asp-for="NhanVien" class="form-control-custom" value="Phạm Minh Thu" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ghi Chú Đơn Hàng:</label>
+                        <textarea asp-for="GhiChu" rows="2" class="form-control-custom" placeholder="Thanh toán chuyển khoản / Quà tặng kèm..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DANH SÁCH SẢN PHẨM MUA -->
+            <div class="col-md-7">
+                <div class="glass-card" style="padding: 1.2rem; background: var(--bg-glass); margin-bottom: 0;">
+                    <h4 class="text-success mb-3"><i class="fa-solid fa-mobile-button"></i> Danh Sách Sản Phẩm Mua</h4>
+
+                    <table class="custom-table" id="posTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;">Sản Phẩm XML</th>
+                                <th style="width: 15%;">Số Lượng</th>
+                                <th style="width: 20%;">Đơn Giá</th>
+                                <th style="width: 20%;">Thành Tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < 3; i++)
+                            {
+                                <tr class="pos-item-row">
+                                    <td>
+                                        <select name="Items[@i].MaSP" class="form-select-custom pos-item-select">
+                                            <option value="" data-price="0">-- Chọn điện thoại --</option>
+                                            @foreach (var phone in phoneList)
+                                            {
+                                                <option value="@phone.MaSP" data-price="@phone.GiaBan">
+                                                    @phone.TenSP (Tồn: @phone.SoLuongTon)
+                                                </option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="Items[@i].SoLuong" value="@(i == 0 ? 1 : 0)" min="0" class="form-control-custom pos-qty-input" />
+                                    </td>
+                                    <td class="pos-price-cell text-muted">0 VNĐ</td>
+                                    <td class="pos-subtotal-cell fw-bold text-success">0 VNĐ</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4 p-3" style="background: rgba(0,0,0,0.3); border-radius: 8px;">
+                        <span class="fs-5 font-weight-bold">TỔNG THÀNH TIỀN:</span>
+                        <span class="fs-4 font-weight-bold text-success" id="posGrandTotal">0 VNĐ</span>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn-custom btn-success-custom p-3 fs-6">
+                            <i class="fa-solid fa-check-to-slot"></i> TẠO HÓA ĐƠN &amp; XUẤT XSLT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

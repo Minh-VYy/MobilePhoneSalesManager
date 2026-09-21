@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachTruyVanXPath>
+  <TruyVan id="1">
+    <MucDich>Lấy toàn bộ danh sách điện thoại của hãng Apple (MaHang='APPLE')</MucDich>
+    <CauLenhXPath>//DienThoai[MaHang='APPLE']</CauLenhXPath>
+  </TruyVan>
+
+  <TruyVan id="2">
+    <MucDich>Tìm kiếm điện thoại có mức giá bán lớn hơn hoặc bằng 25,000,000 VNĐ</MucDich>
+    <CauLenhXPath>//DienThoai[GiaBan &gt;= 25000000]</CauLenhXPath>
+  </TruyVan>
+
+  <TruyVan id="3">
+    <MucDich>Lọc các sản phẩm điện thoại có số lượng tồn kho dưới 5 cái (Sắp hết hàng)</MucDich>
+    <CauLenhXPath>//DienThoai[SoLuongTon &lt; 5]</CauLenhXPath>
+  </TruyVan>
+
+  <TruyVan id="4">
+    <MucDich>Tìm điện thoại trang bị chip Snapdragon (dùng hàm contains trong XPath)</MucDich>
+    <CauLenhXPath>//DienThoai[contains(ThongSoKyThuat/Chip, 'Snapdragon')]</CauLenhXPath>
+  </TruyVan>
+
+  <TruyVan id="5">
+    <MucDich>Lấy danh sách các hóa đơn có tổng tiền giao dịch trên 30,000,000 VNĐ</MucDich>
+    <CauLenhXPath>//HoaDon[TongTien &gt; 30000000]</CauLenhXPath>
+  </TruyVan>
+
+  <TruyVan id="6">
+    <MucDich>Truy vấn thông tin khách hàng mua sản phẩm iPhone (SP001) trong danh sách hóa đơn</MucDich>
+    <CauLenhXPath>//HoaDon[ChiTietHoaDon/ChiTiet/MaSP='SP001']/KhachHang</CauLenhXPath>
+  </TruyVan>
+</DanhSachTruyVanXPath>

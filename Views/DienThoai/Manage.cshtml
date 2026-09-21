@@ -1,0 +1,76 @@
+@model List<QuanLyBanDienThoai.Models.DienThoaiModel>
+@{
+    ViewData["Title"] = "Quản Lý Kho Điện Thoại (XML CRUD)";
+}
+
+<div class="glass-card">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-boxes-packing text-info"></i>
+            <span>QUẢN LÝ CƠ SỞ DỮ LIỆU XML ĐIỆN THOẠI</span>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Create" class="btn-custom btn-primary-custom">
+                <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm Mới
+            </a>
+            <a asp-action="ValidateXsd" class="btn-custom btn-success-custom">
+                <i class="fa-solid fa-shield-check"></i> Kiểm Tra XSD Schema
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Mã SP</th>
+                    <th>Hình Ảnh</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Hãng</th>
+                    <th>Đơn Giá (VNĐ)</th>
+                    <th>Tồn Kho</th>
+                    <th>Thông Số Kỹ Thuật</th>
+                    <th style="text-align: right;">Thao Tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><strong class="text-info">@item.MaSP</strong></td>
+                        <td>
+                            <img src="@item.HinhAnh" alt="@item.TenSP" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" 
+                                 onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'" />
+                        </td>
+                        <td><strong>@item.TenSP</strong></td>
+                        <td><span class="badge-xml">@item.TenHang</span></td>
+                        <td><strong style="color: #34d399;">@item.GiaBan.ToString("#,##0")</strong></td>
+                        <td>
+                            <span class="@(item.SoLuongTon < 5 ? "text-danger fw-bold" : "text-light")">
+                                @item.SoLuongTon
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                @item.ThongSo.RAM / @item.ThongSo.BoNhoTrong | @item.ThongSo.Chip
+                            </small>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="d-inline-flex gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.MaSP" class="btn-custom btn-warning-custom" style="padding: 6px 12px; font-size: 0.8rem;">
+                                    <i class="fa-solid fa-pen-to-square"></i> Sửa
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.MaSP" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm XML này?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-custom btn-danger-custom" style="padding: 6px 12px; font-size: 0.8rem;">
+                                        <i class="fa-solid fa-trash-can"></i> Xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

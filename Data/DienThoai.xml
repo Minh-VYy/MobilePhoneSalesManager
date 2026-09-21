@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachDienThoai xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DienThoai.xsd">
+  <DienThoai>
+    <MaSP>SP001</MaSP>
+    <TenSP>iPhone 15 Pro Max 256GB</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>29990000</GiaBan>
+    <SoLuongTon>15</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch OLED Super Retina XDR 120Hz</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>4422 mAh</Pin>
+      <Chip>Apple A17 Pro (3nm)</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
+    <MoTa>Khung vỏ Titan cao cấp, nút Action tiện lợi, camera Zoom quang học 5x đẳng cấp thế giới.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SP002</MaSP>
+    <TenSP>Samsung Galaxy S24 Ultra 5G</TenSP>
+    <MaHang>SAMSUNG</MaHang>
+    <TenHang>Samsung</TenHang>
+    <GiaBan>27990000</GiaBan>
+    <SoLuongTon>20</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.8 inch Dynamic AMOLED 2X 120Hz</ManHinh>
+      <RAM>12GB</RAM>
+      <BoNhoTrong>512GB</BoNhoTrong>
+      <Pin>5000 mAh</Pin>
+      <Chip>Snapdragon 8 Gen 3 for Galaxy</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
+    <MoTa>Trí tuệ nhân tạo Galaxy AI đỉnh cao, tích hợp bút S-Pen quyền năng và camera 200MP xuất sắc.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SP003</MaSP>
+    <TenSP>Xiaomi 14 Ultra 512GB</TenSP>
+    <MaHang>XIAOMI</MaHang>
+    <TenHang>Xiaomi</TenHang>
+    <GiaBan>24990000</GiaBan>
+    <SoLuongTon>8</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.73 inch LTPO AMOLED 120Hz 3000 nits</ManHinh>
+      <RAM>16GB</RAM>
+      <BoNhoTrong>512GB</BoNhoTrong>
+      <Pin>5000 mAh, sạc nhanh 90W</Pin>
+      <Chip>Snapdragon 8 Gen 3</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
+    <MoTa>Hợp tác huyền thoại cùng Leica, cảm biến 1 inch khẩu độ thay đổi cực đỉnh cho nhiếp ảnh gia.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SP004</MaSP>
+    <TenSP>OPPO Find X7 Ultra 5G</TenSP>
+    <MaHang>OPPO</MaHang>
+    <TenHang>OPPO</TenHang>
+    <GiaBan>21990000</GiaBan>
+    <SoLuongTon>3</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.82 inch AMOLED 1B colors 120Hz</ManHinh>
+      <RAM>16GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>5000 mAh, sạc 100W SuperVOOC</Pin>
+      <Chip>Snapdragon 8 Gen 3</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
+    <MoTa>Camera tiềm vọng kép Hasselblad đầu tiên trên thế giới, chân thực đến từng chi tiết.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SP005</MaSP>
+    <TenSP>Google Pixel 8 Pro</TenSP>
+    <MaHang>GOOGLE</MaHang>
+    <TenHang>Google</TenHang>
+    <GiaBan>18990000</GiaBan>
+    <SoLuongTon>4</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch LTPO OLED 120Hz</ManHinh>
+      <RAM>12GB</RAM>
+      <BoNhoTrong>128GB</BoNhoTrong>
+      <Pin>5050 mAh</Pin>
+      <Chip>Google Tensor G3</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
+    <MoTa>Trải nghiệm Android thuần khiết nhất từ Google, thuật toán nhiếp ảnh AI thông minh hàng đầu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SP006</MaSP>
+    <TenSP>iPhone 14 Plus 128GB</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>19990000</GiaBan>
+    <SoLuongTon>12</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch Super Retina XDR OLED</ManHinh>
+      <RAM>6GB</RAM>
+      <BoNhoTrong>128GB</BoNhoTrong>
+      <Pin>4325 mAh</Pin>
+      <Chip>Apple A15 Bionic</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
+    <MoTa>Màn hình lớn trải nghiệm ấn tượng, thời lượng pin siêu khủng vượt trội.</MoTa>
+  </DienThoai>
+</DanhSachDienThoai>

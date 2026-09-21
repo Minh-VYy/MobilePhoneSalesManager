@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Định nghĩa kiểu mã sản phẩm SPxxx -->
+  <xs:simpleType name="MaSPType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="SP[0-9]{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Định nghĩa kiểu mã hãng -->
+  <xs:simpleType name="MaHangType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="APPLE"/>
+      <xs:enumeration value="SAMSUNG"/>
+      <xs:enumeration value="XIAOMI"/>
+      <xs:enumeration value="OPPO"/>
+      <xs:enumeration value="GOOGLE"/>
+      <xs:enumeration value="KHAC"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Phân tử gốc DanhSachDienThoai -->
+  <xs:element name="DanhSachDienThoai">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="DienThoai" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MaSP" type="MaSPType"/>
+              <xs:element name="TenSP" type="xs:string"/>
+              <xs:element name="MaHang" type="MaHangType"/>
+              <xs:element name="TenHang" type="xs:string"/>
+              <xs:element name="GiaBan">
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="SoLuongTon" type="xs:nonNegativeInteger"/>
+              <xs:element name="ThongSoKyThuat">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ManHinh" type="xs:string"/>
+                    <xs:element name="RAM" type="xs:string"/>
+                    <xs:element name="BoNhoTrong" type="xs:string"/>
+                    <xs:element name="Pin" type="xs:string"/>
+                    <xs:element name="Chip" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="HinhAnh" type="xs:string"/>
+              <xs:element name="MoTa" type="xs:string" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Đảm bảo Mã SP là duy nhất -->
+    <xs:unique name="UniqueMaSP">
+      <xs:selector xpath="DienThoai"/>
+      <xs:field xpath="MaSP"/>
+    </xs:unique>
+  </xs:element>
+
+</xs:schema>

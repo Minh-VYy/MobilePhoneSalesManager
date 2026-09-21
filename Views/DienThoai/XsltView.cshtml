@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Xem Catalogue bằng XSLT Engine";
+}
+
+<div class="glass-card">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-wand-magic-sparkles text-warning"></i>
+            <span>KẾT QUẢ BIẾN ĐỔI XML + XSLT (XslCompiledTransform in C#)</span>
+        </div>
+        <a asp-action="Index" class="btn-custom btn-secondary-custom">
+            <i class="fa-solid fa-arrow-left"></i> Quay lại Catalogue
+        </a>
+    </div>
+
+    <div class="mb-3">
+        <p class="text-muted">
+            <i class="fa-solid fa-info-circle"></i>
+            Trang này sử dụng đối tượng <code>XslCompiledTransform</code> của C# để thực thi file <code>Data/DienThoai.xml</code> kết hợp với mẫu stylesheet <code>XSLT/DienThoaiCatalogue.xslt</code> và sinh trực tiếp mã HTML.
+        </p>
+    </div>
+
+    <div class="xslt-rendered-box">
+        @Html.Raw(ViewBag.HtmlContent)
+    </div>
+</div>

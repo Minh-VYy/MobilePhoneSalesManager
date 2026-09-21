@@ -1,0 +1,94 @@
+@model QuanLyBanDienThoai.Models.SearchFilterViewModel
+@{
+    ViewData["Title"] = "Catalogue Sản Phẩm Điện Thoại";
+}
+
+<div class="glass-card">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-mobile-screen-button text-primary"></i>
+            <span>CATALOGUE ĐIỆN THOẠI DI ĐỘNG</span>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="XsltView" class="btn-custom btn-secondary-custom">
+                <i class="fa-solid fa-code"></i> Xem bằng XSLT Engine
+            </a>
+            <a asp-action="ValidateXsd" class="btn-custom btn-success-custom">
+                <i class="fa-solid fa-check-double"></i> Validate XSD Schema
+            </a>
+        </div>
+    </div>
+
+    <!-- FILTER BAR VỚI TRUY VẤN XPATH TRONG C# -->
+    <form method="get" asp-action="Index" class="filter-bar">
+        <div>
+            <input type="text" name="keyword" value="@Model.Keyword" placeholder="Nhập tên sản phẩm, chip, RAM..." class="form-control-custom" />
+        </div>
+        <div>
+            <select name="maHang" class="form-select-custom">
+                <option value="ALL" selected="@(Model.MaHang == "ALL")">-- Tất cả hãng --</option>
+                <option value="APPLE" selected="@(Model.MaHang == "APPLE")">Apple (iPhone)</option>
+                <option value="SAMSUNG" selected="@(Model.MaHang == "SAMSUNG")">Samsung</option>
+                <option value="XIAOMI" selected="@(Model.MaHang == "XIAOMI")">Xiaomi</option>
+                <option value="OPPO" selected="@(Model.MaHang == "OPPO")">OPPO</option>
+                <option value="GOOGLE" selected="@(Model.MaHang == "GOOGLE")">Google Pixel</option>
+            </select>
+        </div>
+        <div>
+            <input type="number" name="minGia" value="@Model.MinGia" placeholder="Giá từ (VNĐ)" class="form-control-custom" />
+        </div>
+        <div>
+            <input type="number" name="maxGia" value="@Model.MaxGia" placeholder="Giá đến (VNĐ)" class="form-control-custom" />
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn-custom btn-primary-custom">
+                <i class="fa-solid fa-filter"></i> Lọc XPath
+            </button>
+            <a asp-action="Index" class="btn-custom btn-secondary-custom" title="Đặt lại">
+                <i class="fa-solid fa-rotate-left"></i>
+            </a>
+        </div>
+    </form>
+
+    <!-- GRID SẢN PHẨM VỚI HIỆU ỨNG SCROLL REVEAL STAGGER ANIMATION -->
+    @if (Model.Items == null || Model.Items.Count == 0)
+    {
+        <div class="alert-custom alert-warning">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>Không tìm thấy điện thoại nào phù hợp với điều kiện tìm kiếm.</div>
+        </div>
+    }
+    else
+    {
+        <div class="phone-grid">
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                var phone = Model.Items[i];
+                int delay = (i % 6) * 75; // Stagger effect lệch nhau 75ms
+                
+                <div class="phone-card scroll-reveal" data-delay="@delay">
+                    <span class="phone-badge">@phone.TenHang</span>
+                    <div class="phone-img-box">
+                        <img src="@phone.HinhAnh" alt="@phone.TenSP" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'" />
+                    </div>
+                    <div class="phone-info">
+                        <span class="phone-code">XML Code: @phone.MaSP</span>
+                        <h3 class="phone-title">@phone.TenSP</h3>
+
+                        <div class="phone-specs">
+                            <div><strong>Màn hình:</strong> @phone.ThongSo.ManHinh</div>
+                            <div><strong>RAM / ROM:</strong> @phone.ThongSo.RAM - @phone.ThongSo.BoNhoTrong</div>
+                            <div><strong>Chip:</strong> @phone.ThongSo.Chip</div>
+                            <div><strong>Pin:</strong> @phone.ThongSo.Pin</div>
+                        </div>
+
+                        <div class="phone-footer">
+                            <div class="phone-price">@phone.GiaBan.ToString("#,##0") VNĐ</div>
+                            <div class="phone-stock">Tồn: <span class="stock-num">@phone.SoLuongTon</span></div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,128 @@
+@model QuanLyBanDienThoai.Models.DienThoaiModel
+@{
+    ViewData["Title"] = "Thêm Sản Phẩm Điện Thoại Mới (XML)";
+}
+
+<div class="glass-card" style="max-width: 850px; margin: 0 auto;">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-square-plus text-success"></i>
+            <span>THÊM ĐIỆN THOẠI MỚI VÀO CƠ SỞ DỮ LIỆU XML</span>
+        </div>
+        <a asp-action="Manage" class="btn-custom btn-secondary-custom">
+            <i class="fa-solid fa-arrow-left"></i> Trở về Quản lý
+        </a>
+    </div>
+
+    @if (ViewBag.ErrorMessage != null)
+    {
+        <div class="alert-custom alert-danger">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <div>
+                <strong>LỖI XSD SCHEMA VALIDATION:</strong> @ViewBag.ErrorMessage
+            </div>
+        </div>
+    }
+
+    @if (ViewBag.ValidationResult != null)
+    {
+        var val = (QuanLyBanDienThoai.Models.ValidationResultModel)ViewBag.ValidationResult;
+        if (!val.IsValid)
+        {
+            <div class="alert-custom alert-danger" style="flex-direction: column; align-items: flex-start;">
+                <strong>CHI TIẾT LỖI XSD SCHEMA:</strong>
+                <ul class="mb-0 mt-2 ps-3">
+                    @foreach (var err in val.Errors)
+                    {
+                        <li>[Dòng @err.LineNumber, Cột @err.LinePosition]: @err.Message</li>
+                    }
+                </ul>
+            </div>
+        }
+    }
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="row g-3">
+            <div class="col-md-6 mb-3">
+                <label class="form-label font-weight-bold">Mã Sản Phẩm (Định dạng XSD: SPxxx):</label>
+                <input asp-for="MaSP" class="form-control-custom" placeholder="Ví dụ: SP007 (Để trống để tự sinh)" />
+                <small class="text-muted">Nếu để trống, hệ thống C# sẽ tự tăng theo chuẩn SPxxx.</small>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label font-weight-bold">Tên Điện Thoại (*):</label>
+                <input asp-for="TenSP" class="form-control-custom" placeholder="Ví dụ: iPhone 15 Pro Max" required />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label font-weight-bold">Hãng Sản Xuất (*):</label>
+                <select asp-for="MaHang" class="form-select-custom">
+                    <option value="APPLE">Apple (iPhone)</option>
+                    <option value="SAMSUNG">Samsung</option>
+                    <option value="XIAOMI">Xiaomi</option>
+                    <option value="OPPO">OPPO</option>
+                    <option value="GOOGLE">Google Pixel</option>
+                    <option value="KHAC">Hãng khác</option>
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label font-weight-bold">Giá Bán (VNĐ) (*):</label>
+                <input asp-for="GiaBan" type="number" step="100000" class="form-control-custom" required />
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label font-weight-bold">Số Lượng Tồn Kho (*):</label>
+                <input asp-for="SoLuongTon" type="number" class="form-control-custom" required />
+            </div>
+
+            <h4 class="mt-4 mb-3 text-info" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;">
+                <i class="fa-solid fa-microchip"></i> Thông Số Kỹ Thuật (Node XML ThongSoKyThuat)
+            </h4>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Màn hình:</label>
+                <input asp-for="ThongSo.ManHinh" class="form-control-custom" placeholder="Ví dụ: 6.7 inch OLED 120Hz" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Dung lượng RAM:</label>
+                <input asp-for="ThongSo.RAM" class="form-control-custom" placeholder="Ví dụ: 8GB" />
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Bộ nhớ trong (ROM):</label>
+                <input asp-for="ThongSo.BoNhoTrong" class="form-control-custom" placeholder="Ví dụ: 256GB" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Dung lượng Pin / Sạc:</label>
+                <input asp-for="ThongSo.Pin" class="form-control-custom" placeholder="Ví dụ: 5000 mAh, sạc 90W" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Vi xử lý (Chip):</label>
+                <input asp-for="ThongSo.Chip" class="form-control-custom" placeholder="Ví dụ: Snapdragon 8 Gen 3" />
+            </div>
+
+            <div class="col-md-12 mb-3">
+                <label class="form-label">Đường dẫn Hình ảnh (URL):</label>
+                <input asp-for="HinhAnh" class="form-control-custom" placeholder="https://..." />
+            </div>
+
+            <div class="col-md-12 mb-4">
+                <label class="form-label">Mô tả sản phẩm:</label>
+                <textarea asp-for="MoTa" rows="3" class="form-control-custom" placeholder="Mô tả chi tiết tính năng sản phẩm..."></textarea>
+            </div>
+
+            <div class="col-md-12 d-flex justify-content-end gap-2">
+                <a asp-action="Manage" class="btn-custom btn-secondary-custom">Hủy bỏ</a>
+                <button type="submit" class="btn-custom btn-success-custom">
+                    <i class="fa-solid fa-floppy-disk"></i> Ghi Vào File DienThoai.xml
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,67 @@
+@model QuanLyBanDienThoai.Models.ValidationResultModel
+@{
+    ViewData["Title"] = "Kết Quả Kiểm Tra XSD Schema";
+}
+
+<div class="glass-card">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-shield-halved text-success"></i>
+            <span>BÁO CÁO KIỂM TRA TÍNH HỢP LỆ XSD SCHEMA</span>
+        </div>
+        <a asp-action="Manage" class="btn-custom btn-secondary-custom">
+            <i class="fa-solid fa-arrow-left"></i> Trở về Quản lý
+        </a>
+    </div>
+
+    <div class="mb-4">
+        <p><strong>Tệp dữ liệu XML:</strong> <code>@Model.FileName</code></p>
+        <p><strong>Tệp Lược đồ Schema:</strong> <code>@Model.SchemaName</code></p>
+    </div>
+
+    @if (Model.IsValid)
+    {
+        <div class="alert-custom alert-success" style="padding: 2rem;">
+            <i class="fa-solid fa-circle-check" style="font-size: 2.5rem;"></i>
+            <div>
+                <h4 style="margin-bottom: 6px;">TỆP XML HOÀN TOÀN HỢP LỆ (VALID)!</h4>
+                <p class="mb-0">Dữ liệu trong tệp <code>@Model.FileName</code> tuân thủ chính xác 100% tất cả các quy tắc, kiểu dữ liệu và ràng buộc của tệp <code>@Model.SchemaName</code>.</p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert-custom alert-danger" style="padding: 1.5rem; flex-direction: column; align-items: flex-start;">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="fa-solid fa-circle-xmark" style="font-size: 1.8rem;"></i>
+                <h4 class="mb-0">TỆP XML KHÔNG HỢP LỆ (INVALID)!</h4>
+            </div>
+            <p>Hệ thống phát hiện @Model.Errors.Count lỗi vi phạm ràng buộc XSD Schema:</p>
+            
+            <table class="custom-table mt-2">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Dòng</th>
+                        <th>Cột</th>
+                        <th>Mức độ</th>
+                        <th>Nội dung thông báo lỗi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Errors.Count; i++)
+                    {
+                        var err = Model.Errors[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td><strong class="text-warning">@err.LineNumber</strong></td>
+                            <td><strong class="text-warning">@err.LinePosition</strong></td>
+                            <td><span class="badge-xml" style="background: var(--accent-rose);">@err.Severity</span></td>
+                            <td class="text-danger">@err.Message</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

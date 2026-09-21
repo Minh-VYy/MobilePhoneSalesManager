@@ -1,0 +1,125 @@
+@model QuanLyBanDienThoai.Models.ThongKeViewModel
+@{
+    ViewData["Title"] = "Thống Kê Báo Cáo (XML Data Analytics)";
+}
+
+<div class="glass-card">
+    <div class="glass-card-header">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-chart-pie text-purple"></i>
+            <span>BÁO CÁO THỐNG KÊ &amp; PHÂN TÍCH DỮ LIỆU XML</span>
+        </div>
+    </div>
+
+    <!-- STATS SUMMARY CARDS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon-box icon-blue">
+                <i class="fa-solid fa-mobile-button"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@Model.TongSoSanPham</div>
+                <div class="stat-label">Sản phẩm điện thoại XML</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon-box icon-emerald">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value text-success">@Model.TongDoanhThu.ToString("#,##0") VNĐ</div>
+                <div class="stat-label">Tổng doanh thu bán hàng</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon-box icon-purple">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value">@Model.TongSoHoaDon</div>
+                <div class="stat-label">Tổng số hóa đơn đã bán</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon-box icon-rose">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="stat-info">
+                <div class="stat-value text-danger">@Model.SoSanPhamSapHetHang</div>
+                <div class="stat-label">Cảnh báo tồn kho ít (&lt; 5)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BẢNG THỐNG KÊ THEO HÃNG -->
+    <div class="glass-card mb-4" style="background: var(--bg-glass);">
+        <h3 class="glass-card-title mb-3 fs-5 text-info">
+            <i class="fa-solid fa-tags"></i> Phân Tích Doanh Thu &amp; Tồn Kho Theo Hãng
+        </h3>
+        
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Mã Hãng</th>
+                        <th>Tên Hãng</th>
+                        <th>Tổng Số Tồn Kho</th>
+                        <th>Số Lượng Đã Bán</th>
+                        <th>Doanh Thu Đạt Được (VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var h in Model.DoanhThuTheoHang)
+                    {
+                        <tr>
+                            <td><strong class="text-info">@h.MaHang</strong></td>
+                            <td><strong>@h.TenHang</strong></td>
+                            <td><span class="badge-xml" style="background: rgba(59, 130, 246, 0.3);">@h.SoLuongTon máy</span></td>
+                            <td><span class="badge-xml">@h.SoLuongDaBan máy</span></td>
+                            <td><strong style="color: #34d399; font-size: 1.05rem;">@h.TongTienBan.ToString("#,##0")</strong></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SẢN PHẨM CẢNH BÁO HẾT HÀNG -->
+    @if (Model.SanPhamSapHetHang != null && Model.SanPhamSapHetHang.Count > 0)
+    {
+        <div class="glass-card" style="background: rgba(244, 63, 94, 0.08); border-color: rgba(244, 63, 94, 0.3);">
+            <h3 class="glass-card-title mb-3 fs-5 text-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i> Danh Sách Điện Thoại Cần Nhập Thêm (SoLuongTon &lt; 5)
+            </h3>
+
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Mã SP</th>
+                            <th>Tên Điện Thoại</th>
+                            <th>Hãng</th>
+                            <th>Đơn Giá</th>
+                            <th>Số Lượng Tồn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sp in Model.SanPhamSapHetHang)
+                        {
+                            <tr>
+                                <td><strong class="text-danger">@sp.MaSP</strong></td>
+                                <td><strong>@sp.TenSP</strong></td>
+                                <td>@sp.TenHang</td>
+                                <td>@sp.GiaBan.ToString("#,##0") VNĐ</td>
+                                <td><strong class="text-danger fs-6">@sp.SoLuongTon máy</strong></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

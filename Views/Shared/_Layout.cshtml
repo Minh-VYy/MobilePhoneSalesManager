@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản Lý Bán Điện Thoại (Công nghệ XML)</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    <header class="navbar-custom">
+        <div class="nav-container">
+            <a class="brand-logo" asp-controller="DienThoai" asp-action="Index">
+                <img src="~/images/logo.png" alt="TechStore XML Logo" style="height: 38px; width: auto; border-radius: 8px; object-fit: contain; box-shadow: 0 2px 6px rgba(47, 111, 237, 0.2);" />
+                <span>TECHSTORE XML</span>
+            </a>
+            <ul class="nav-menu">
+                <li>
+                    <a class="nav-link-custom @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" 
+                       asp-controller="DienThoai" asp-action="Index">
+                        <i class="fa-solid fa-store"></i> Catalogue
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")" 
+                       asp-controller="DienThoai" asp-action="XsltView">
+                        <i class="fa-solid fa-code"></i> XSLT View
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-custom @(ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")" 
+                       asp-controller="DienThoai" asp-action="Manage">
+                        <i class="fa-solid fa-boxes-stacked"></i> Quản Lý Kho
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-custom @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")" 
+                       asp-controller="HoaDon" asp-action="Index">
+                        <i class="fa-solid fa-receipt"></i> Hóa Đơn (POS)
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link-custom @(ViewContext.RouteData.Values["controller"]?.ToString() == "ThongKe" ? "active" : "")" 
+                       asp-controller="ThongKe" asp-action="Index">
+                        <i class="fa-solid fa-chart-pie"></i> Thống Kê
+                    </a>
+                </li>
+                <li>
+                    <span class="badge-xml"><i class="fa-solid fa-shield-halved"></i> XML + XSD + C# .NET 9</span>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <main role="main" class="main-wrapper">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert-custom alert-success">
+                <i class="fa-solid fa-circle-check"></i>
+                <div>@TempData["SuccessMessage"]</div>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert-custom alert-danger">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>@TempData["ErrorMessage"]</div>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <footer class="footer-custom">
+        <p>&copy; 2026 - Đồ án Học phần Công nghệ XML | Đề tài: Quản Lý Bán Điện Thoại Di Động | Nền tảng C# .NET 9</p>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,16 @@
+## Ignore Visual Studio / .NET build artifacts
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+.vscode/
+.idea/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+## ASP.NET temp files
+appsettings*.Local.json
