@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="PhoneStore — Cửa hàng điện thoại flagship cao cấp. iPhone, Samsung, Xiaomi. Hệ thống POS tích hợp XML hiện đại." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* ── Home-page layout override ── */
+        html, body { overflow-x: hidden; }
+        /* The body already has the dark radial background from site.css.
+           We just need to make sure the page wrapper does NOT add any
+           extra padding/max-width on the home page. */
+        body { padding: 0; margin: 0; }
+    </style>
+</head>
+<body>
+    <!-- ===================================================
+         FIXED CANVAS + VIGNETTE (rendered here so they are
+         truly fixed to the viewport, not inside <main>)
+         =================================================== -->
+    <canvas id="gl-tech" aria-hidden="true"></canvas>
+    <div id="vignette-tech" aria-hidden="true"></div>
+
+    <!-- ===================================================
+         ANIMATED TOP DOCK — same as _LayoutUser but
+         we need it here too for the full-page layout
+         =================================================== -->
+    <header class="atd-modern-wrapper" id="site-header">
+        <div class="atd-modern__aurora" aria-hidden="true"></div>
+        <nav class="atd-modern__bar" aria-label="Điều hướng chính">
+            <!-- Brand -->
+            <a asp-controller="Home" asp-action="Index" class="atd-modern__brand">
+                <span class="atd-modern__mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="7" y="2" width="10" height="20" rx="2.4"/>
+                        <line x1="11" y1="18.3" x2="13" y2="18.3"/>
+                    </svg>
+                </span>
+                <span class="atd-modern__word">PhoneStore</span>
+            </a>
+
+            <!-- Dock Center (Search & Actions) -->
+            <div class="atd-modern__dock ps-nav-new" aria-label="Primary">
+                <!-- Khu vực -->
+                <div class="ps-nav-loc">
+                    <span>Khu vực</span>
+                    <b>Đà Nẵng <i class="fa-solid fa-caret-down"></i></b>
+                </div>
+
+                <!-- Search -->
+                <div class="ps-nav-search">
+                    <input type="text" placeholder="Bạn cần tìm gì ..." />
+                    <button type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+
+                <!-- Hotline -->
+                <a href="tel:0901176222" class="ps-nav-item">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div class="ps-nav-tx"><span>Hotline</span><b>0901.176.222</b></div>
+                </a>
+
+                <!-- Bảo hành -->
+                <a href="#" class="ps-nav-item">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="ps-nav-tx"><span>Chính sách</span><b>bảo hành</b></div>
+                </a>
+
+                <!-- Kiểm tra đơn hàng -->
+                <a asp-controller="DienThoai" asp-action="XsltView" class="ps-nav-item ps-nav-item--box">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="ps-nav-tx"><span>Kiểm Tra</span><b>Đơn Hàng</b></div>
+                </a>
+                
+                <!-- Giỏ hàng -->
+                <a asp-controller="HoaDon" asp-action="Create" class="ps-nav-item">
+                    <div class="ps-nav-icon ps-nav-cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="ps-cart-badge">0</span>
+                    </div>
+                    <div class="ps-nav-tx"><span>Giỏ</span><b>Hàng</b></div>
+                </a>
+            </div>
+
+            <!-- Actions Right (Login, Theme) -->
+            <div class="atd-modern__actions">
+                <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện" title="Đổi giao diện sáng/tối"
+                        style="width:34px;height:34px;border-radius:50%">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px">
+                        <circle cx="12" cy="12" r="4.5"/>
+                        <path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/>
+                    </svg>
+                </button>
+
+                @if (Context.Session.GetString("IsLoggedIn") == "true")
+                {
+                    <span class="atd-modern__ghost desktop-only">@Context.Session.GetString("Username")</span>
+                    <a asp-controller="Account" asp-action="Logout" class="atd-modern__cta desktop-only">
+                        <span>Đăng Xuất</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="ps-nav-login desktop-only">
+                        <div class="ps-nav-icon"><i class="fa-regular fa-user"></i></div>
+                        <div class="ps-nav-tx"><span>Đăng</span><b>Nhập</b></div>
+                    </a>
+                }
+
+                <button class="atd-mobile-toggle" id="mobile-menu-toggle" aria-label="Mở menu" aria-expanded="false">
+                    <i class="fa-solid fa-bars icon-open"></i>
+                    <i class="fa-solid fa-xmark icon-close" style="display:none"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Drawer -->
+        <div class="atd-mobile-drawer" id="mobile-drawer-menu" aria-hidden="true">
+            <div class="atd-mobile-drawer__content">
+                <a asp-controller="Home" asp-action="Index"
+                   class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    <i class="fa-solid fa-house"></i> Trang Chủ
+                </a>
+                <a asp-controller="DienThoai" asp-action="Index"
+                   class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" ? "active" : "")">
+                    <i class="fa-solid fa-mobile-screen"></i> Sản Phẩm Điện Thoại
+                </a>
+                <a asp-controller="HoaDon" asp-action="Create"
+                   class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")">
+                    <i class="fa-solid fa-cart-shopping"></i> Bán Hàng POS XML
+                </a>
+                <a asp-controller="DienThoai" asp-action="XsltView"
+                   class="atd-mobile-item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")">
+                    <i class="fa-solid fa-receipt"></i> Tra Cứu Hóa Đơn
+                </a>
+                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-mobile-item">
+                    <i class="fa-solid fa-user-shield"></i> Bảng Quản Lý Admin
+                </a>
+                <div class="atd-mobile-drawer__divider"></div>
+                @if (Context.Session.GetString("IsLoggedIn") == "true")
+                {
+                    <div style="font-size:13px;color:var(--text-muted);padding:4px 16px">
+                        <i class="fa-solid fa-user"></i> Tài khoản: <b style="color:var(--text)">@Context.Session.GetString("Username")</b>
+                    </div>
+                    <a asp-controller="Account" asp-action="Logout" class="atd-mobile-item" style="color:var(--danger)">
+                        <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+                    </a>
+                }
+                else
+                {
+                    <div style="display:flex;gap:8px;padding:4px 6px">
+                        <a asp-controller="Account" asp-action="Login" class="ps-ghost" style="flex:1;justify-content:center">Đăng Nhập</a>
+                        <a asp-controller="Account" asp-action="Register" class="ps-cta" style="flex:1;justify-content:center"><i class="ps-cta__fill"></i><span>Đăng Ký</span></a>
+                    </div>
+                }
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================================================
+         PAGE BODY — full-bleed, no padding wrapper
+         =================================================== -->
+    @RenderBody()
+
+    <!-- Toast -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -161,26 +161,45 @@
             </a>
 
             <!-- Dock Items Center (Capsule Proximity Dock - Desktop & Tablet) -->
-            <div class="atd-modern__dock" aria-label="Primary">
-                <a asp-controller="Home" asp-action="Index" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-house"></i></span>
-                    <span>Trang Chủ</span>
+            <!-- Dock Center (Search & Actions) -->
+            <div class="atd-modern__dock ps-nav-new" aria-label="Primary">
+                <!-- Khu vực -->
+                <div class="ps-nav-loc">
+                    <span>Khu vực</span>
+                    <b>Đà Nẵng <i class="fa-solid fa-caret-down"></i></b>
+                </div>
+
+                <!-- Search -->
+                <div class="ps-nav-search">
+                    <input type="text" placeholder="Bạn cần tìm gì ..." />
+                    <button type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+
+                <!-- Hotline -->
+                <a href="tel:0901176222" class="ps-nav-item">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-phone-volume"></i></div>
+                    <div class="ps-nav-tx"><span>Hotline</span><b>0901.176.222</b></div>
                 </a>
-                <a asp-controller="DienThoai" asp-action="Index" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-mobile-screen"></i></span>
-                    <span>Sản Phẩm</span>
+
+                <!-- Bảo hành -->
+                <a href="#" class="ps-nav-item">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="ps-nav-tx"><span>Chính sách</span><b>bảo hành</b></div>
                 </a>
-                <a asp-controller="HoaDon" asp-action="Create" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-cart-shopping"></i></span>
-                    <span>Bán Hàng POS</span>
+
+                <!-- Kiểm tra đơn hàng -->
+                <a asp-controller="DienThoai" asp-action="XsltView" class="ps-nav-item ps-nav-item--box">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-box-open"></i></div>
+                    <div class="ps-nav-tx"><span>Kiểm Tra</span><b>Đơn Hàng</b></div>
                 </a>
-                <a asp-controller="DienThoai" asp-action="XsltView" class="atd-modern__item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
-                    <span>Tra Cứu / Invoice</span>
-                </a>
-                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-modern__item" title="Chuyển sang Bảng Quản Lý Admin">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-user-shield"></i></span>
-                    <span>Quản Lý Kho</span>
+                
+                <!-- Giỏ hàng -->
+                <a asp-controller="HoaDon" asp-action="Create" class="ps-nav-item">
+                    <div class="ps-nav-icon ps-nav-cart">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="ps-cart-badge">0</span>
+                    </div>
+                    <div class="ps-nav-tx"><span>Giỏ</span><b>Hàng</b></div>
                 </a>
             </div>
 
@@ -200,12 +219,9 @@
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" class="atd-modern__ghost desktop-only">Đăng Nhập</a>
-                    <a asp-controller="Account" asp-action="Register" class="atd-modern__cta desktop-only">
-                        <span>Đăng Ký</span>
-                        <span class="atd-modern__cta-arrow">
-                            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8h9.1M8.6 4.3 12.4 8l-3.8 3.7" /></svg>
-                        </span>
+                    <a asp-controller="Account" asp-action="Login" class="ps-nav-login desktop-only">
+                        <div class="ps-nav-icon"><i class="fa-regular fa-user"></i></div>
+                        <div class="ps-nav-tx"><span>Đăng</span><b>Nhập</b></div>
                     </a>
                 }
 

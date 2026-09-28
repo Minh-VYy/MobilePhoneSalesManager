@@ -1,36 +1,26 @@
 @{
     ViewData["Title"] = "PhoneStore — Flagship Điện Thoại Cao Cấp";
-    Layout = "_LayoutUser";
+    Layout = "_LayoutHome";
 }
 
-@* =========================================================
-   LAYER 0: Fixed Background Canvas + Vignette overlay
-   ========================================================= *@
-<canvas id="gl-tech" aria-hidden="true"></canvas>
-<div id="vignette-tech" aria-hidden="true"></div>
-
-@* =========================================================
-   PROGRESS RAIL — fixed right side scroll indicator
-   ========================================================= *@
+@* ── PROGRESS RAIL ── *@
 <nav class="rail" aria-label="Điều hướng trang">
-    <button type="button" class="on" data-target="sec-hero" title="Trang Chủ"><i></i></button>
-    <button type="button" data-target="sec-exploded" title="Công Nghệ"><i></i></button>
-    <button type="button" data-target="sec-catalog" title="Sản Phẩm"><i></i></button>
-    <button type="button" data-target="sec-stats" title="Thống Kê"><i></i></button>
+    <button type="button" class="on" data-target="sec-hero"     title="Trang Chủ"><i></i></button>
+    <button type="button"           data-target="sec-exploded"  title="Công Nghệ"><i></i></button>
+    <button type="button"           data-target="sec-catalog"   title="Sản Phẩm"><i></i></button>
+    <button type="button"           data-target="sec-stats"     title="Thống Kê"><i></i></button>
 </nav>
 
-@* =========================================================
-   SEC 1 — HERO FLAGSHIP
-   ========================================================= *@
+@* ── SEC 1 · HERO ── *@
 <section id="sec-hero" class="ps-hero">
 
-    @* --- Floating peek window (top-right corner) --- *@
+    @* Floating peek (desktop only) *@
     <a href="#sec-exploded" class="ps-peek" aria-label="Xem bóc tách 3D">
         <span class="ps-peek__fr">
             <img src="~/images/phone_exploded_chipset.png" alt="Chipset 3D" loading="eager" />
             <span class="ps-peek__play">
                 <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
-                    <circle cx="22" cy="22" r="20" fill="rgba(108,107,245,0.75)" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+                    <circle cx="22" cy="22" r="20" fill="rgba(108,107,245,.76)" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
                     <polygon points="18,14 30,22 18,30" fill="#fff"/>
                 </svg>
             </span>
@@ -41,86 +31,50 @@
         </span>
     </a>
 
-    @* --- Left: Eyebrow + Heading + CTA --- *@
+    @* Left copy *@
     <div class="ps-hero__copy">
         <div class="ps-eyebrow" data-rv="up">
             <span class="ps-eyebrow__dot"></span>
-            ĐỘT PHÁ CÔNG NGHỆ FLAGSHIP 2026
+            Đột Phá Công Nghệ Flagship 2026
         </div>
 
         <h1 class="ps-hero__h1 word-reveal" data-rv="up">
-            ĐỈNH CAO THIẾT KẾ &amp; VI XỬ LÝ 3NM
+            Đỉnh Cao Thiết Kế &amp; Vi Xử Lý 3nm
         </h1>
 
+
         <p class="ps-hero__sub" data-rv="up">
-            Trải nghiệm dòng điện thoại Flagship thế hệ mới với chất liệu Titan siêu bền, cụm camera 200MP cảm biến 1&Prime; và vi xử lý tiến trình 3nm vượt trội.
+            Trải nghiệm dòng điện thoại Flagship thế hệ mới với Titan siêu bền,
+            camera 200 MP cảm biến 1″ và chip 3 nm vượt trội.
+            Hệ thống POS &amp; XML tích hợp hoàn chỉnh.
         </p>
 
-        @* Color swatches *@
         <div class="ps-swatches" data-rv="up">
-            <span class="ps-swatches__label">Phiên bản màu:</span>
+            <span class="ps-swatches__label">Màu sắc:</span>
             <div class="ps-swatches__list">
-                <button type="button" class="ps-swatch active"
-                        data-color-name="Titan Tự Nhiên"
-                        data-img="/images/phone_hero_3d.png"
-                        style="background:#A0A5AD"
-                        title="Titan Tự Nhiên"></button>
-                <button type="button" class="ps-swatch"
-                        data-color-name="Titan Sa Mạc"
-                        data-img="/images/phone_color_variants.png"
-                        style="background:#C4A482"
-                        title="Titan Sa Mạc"></button>
-                <button type="button" class="ps-swatch"
-                        data-color-name="Đen Midnight"
-                        data-img="/images/phone_hero_3d.png"
-                        style="background:#1C1E24"
-                        title="Đen Nhám Midnight"></button>
+                <button class="ps-swatch active" data-color-name="Titan Tự Nhiên" data-img="/images/phone_hero_3d.png"       style="background:#A0A5AD" title="Titan Tự Nhiên"></button>
+                <button class="ps-swatch"         data-color-name="Titan Sa Mạc"  data-img="/images/phone_color_variants.png" style="background:#C4A482" title="Titan Sa Mạc"></button>
+                <button class="ps-swatch"         data-color-name="Đen Midnight"  data-img="/images/phone_hero_3d.png"       style="background:#1C1E24" title="Đen Midnight"></button>
             </div>
         </div>
 
-        @* CTA Buttons *@
         <div class="ps-hero__actions" data-rv="up">
             <a asp-controller="DienThoai" asp-action="Index" class="ps-cta">
                 <i class="ps-cta__fill"></i>
                 <span>Xem Tất Cả Sản Phẩm</span>
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
             </a>
             <a asp-controller="HoaDon" asp-action="Create" class="ps-ghost">
-                <i class="fa-solid fa-cart-shopping"></i>
-                Mua Hàng POS
+                <i class="fa-solid fa-cart-shopping"></i> Mua Hàng POS
             </a>
         </div>
     </div>
 
-    @* --- Right: Phone 3D Stage --- *@
+    @* Right phone stage — clean, no floating badges *@
     <div class="ps-hero__stage">
-        <div class="ps-float-badge ps-float-badge--tr">
-            <div class="ps-float-badge__icon">
-                <i class="fa-solid fa-camera-retro"></i>
-            </div>
-            <div class="ps-float-badge__tx">
-                <b>200 MP</b>
-                <small>Triple Camera 3D</small>
-            </div>
-        </div>
-
         <div class="ps-phone-wrap">
-            <img src="~/images/phone_hero_3d.png"
-                 id="hero-main-phone"
-                 alt="Flagship Smartphone 3D"
-                 class="ps-phone-img"
-                 loading="eager" />
+            <img src="~/images/phone_hero_3d.png" id="hero-main-phone" alt="Flagship 3D" class="ps-phone-img" loading="eager" />
             <div class="ps-phone-glow"></div>
-        </div>
-
-        <div class="ps-float-badge ps-float-badge--bl">
-            <div class="ps-float-badge__icon" style="background:linear-gradient(135deg,#00C2A8,#2ECC71)">
-                <i class="fa-solid fa-microchip"></i>
-            </div>
-            <div class="ps-float-badge__tx">
-                <b>3 nm Chip</b>
-                <small>Bionic A18 / SD 8 Gen 3</small>
-            </div>
         </div>
     </div>
 
@@ -131,13 +85,11 @@
     </div>
 </section>
 
-@* =========================================================
-   SEC 2 — EXPLODED TECH
-   ========================================================= *@
+@* ── SEC 2 · EXPLODED TECH ── *@
 <section id="sec-exploded" class="ps-sec ps-feature" data-rv="fade">
     <div class="ps-sec__rule">
-        <div class="ps-sec__k"><b>02</b> — KIẾN TRÚC CHIPSET</div>
-        <div class="ps-rule"></div>
+        <span class="ps-sec__k">Kiến Trúc &amp; Công Nghệ</span>
+        <span class="ps-rule"></span>
     </div>
 
     <div class="ps-feature__grid">
@@ -149,77 +101,58 @@
 
         <div class="ps-feature__copy">
             <div class="ps-tag ps-tag--teal" data-rv="up">
-                <i class="fa-solid fa-layer-group"></i> KIẾN TRÚC VI XỬ LÝ &amp; CẢM BIẾN
+                <i class="fa-solid fa-layer-group"></i> Kiến Trúc Vi Xử Lý &amp; CẢM BIẾN
             </div>
-
-            <h2 class="ps-h2 word-reveal" data-rv="up">
-                BÓC TÁCH CHI TIẾT LINH KIỆN 3D
-            </h2>
-
+            <h2 class="ps-h2 word-reveal" data-rv="up">Bóc Tách Chi Tiết Linh Kiện 3D</h2>
             <p class="ps-body" data-rv="up">
-                Hệ thống camera thấu kính 5 lớp kết hợp ống kính zoom quang học 5×, vi xử lý tiến trình 3nm tối ưu pin và tản nhiệt buồng hơi hiệu suất cao.
+                Hệ thống camera thấu kính 5 lớp, ống kính zoom quang học 5×, vi xử lý 3 nm tối ưu pin và tản nhiệt buồng hơi hiệu suất cao.
             </p>
-
             <div class="ps-specs" data-rv="up">
-                <div class="ps-spec">
-                    <div class="ps-spec__val">3 nm</div>
-                    <div class="ps-spec__lbl">Tiến trình Chipset</div>
-                </div>
-                <div class="ps-spec">
-                    <div class="ps-spec__val">200 MP</div>
-                    <div class="ps-spec__lbl">Ống kính chính</div>
-                </div>
-                <div class="ps-spec">
-                    <div class="ps-spec__val">5 000 mAh</div>
-                    <div class="ps-spec__lbl">Dung lượng Pin</div>
-                </div>
+                <div class="ps-spec"><div class="ps-spec__val">3 nm</div><div class="ps-spec__lbl">Tiến trình Chipset</div></div>
+                <div class="ps-spec"><div class="ps-spec__val">200 MP</div><div class="ps-spec__lbl">Ống kính chính</div></div>
+                <div class="ps-spec"><div class="ps-spec__val">5 000 mAh</div><div class="ps-spec__lbl">Dung lượng Pin</div></div>
             </div>
-
             <a asp-controller="DienThoai" asp-action="Index" class="ps-arrowlink" data-rv="up">
                 Xem thông số đầy đủ
                 <span class="ps-arrowlink__ar">
-                    <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
                 </span>
             </a>
         </div>
     </div>
 </section>
 
-@* =========================================================
-   SEC 3 — PRODUCT CATALOG CARDS (staggered mosaic)
-   ========================================================= *@
+@* ── SEC 3 · CATALOG CARDS ── *@
 <section id="sec-catalog" class="ps-sec ps-catalog" data-rv="fade">
     <div class="ps-sec__rule">
-        <div class="ps-sec__k"><b>03</b> — SẢN PHẨM NỔI BẬT</div>
-        <div class="ps-rule"></div>
+        <span class="ps-sec__k">Sản Phẩm Nổi Bật</span>
+        <span class="ps-rule"></span>
         <a asp-controller="DienThoai" asp-action="Index" class="ps-sec__more">
             Xem tất cả
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
     </div>
 
     <div class="ps-cards">
-        @* Card 1 *@
-        <div class="ps-card">
+        @* CARD 1 — iPhone 15 Pro Max *@
+        <div class="ps-card" data-rv="up">
             <span class="ps-card__chip">A17 Pro · 3nm</span>
             <div class="ps-card__fr">
-                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium"
-                     alt="iPhone 15 Pro Max" loading="lazy" />
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium" alt="iPhone 15 Pro Max" loading="lazy" />
                 <div class="ps-card__overlay"></div>
                 <div class="ps-card__ar">
-                    <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H6M12 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12L12 2M12 2H6M12 2v6"/></svg>
                 </div>
             </div>
             <div class="ps-card__body">
                 <div class="ps-card__brand">APPLE</div>
                 <div class="ps-card__name">iPhone 15 Pro Max 256GB — Titan Tự Nhiên</div>
                 <div class="ps-card__meta">
-                    <span>Titan Tự Nhiên</span>
-                    <span>Mới 100% VN/A</span>
+                    <span>Titan Tự Nhiên</span><span>Mới 100% VN/A</span>
                 </div>
                 <div class="ps-card__foot">
                     <div class="ps-card__price">29.490.000 ₫</div>
-                    <span class="ps-stock-badge ps-stock-badge--in">Còn 25 máy</span>
+                    <span class="ps-stock-badge ps-stock-badge--in">Còn 25</span>
                 </div>
                 <button class="ps-card__cta" onclick="showToast('Đã thêm iPhone 15 Pro Max vào giỏ hàng!')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
@@ -228,58 +161,54 @@
             </div>
         </div>
 
-        @* Card 2 *@
-        <div class="ps-card">
-            <span class="ps-card__chip" style="--chip-c:rgba(0,194,168,0.18);--chip-t:#00C2A8;--chip-b:rgba(0,194,168,0.3)">Snapdragon 8 Gen 3</span>
+        @* CARD 2 — Galaxy S24 Ultra *@
+        <div class="ps-card" data-rv="up" style="--card-delay:120ms">
+            <span class="ps-card__chip" style="--chip-c:rgba(0,194,168,.18);--chip-t:#00C2A8;--chip-b:rgba(0,194,168,.3)">Snapdragon 8 Gen 3</span>
             <div class="ps-card__fr">
-                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991"
-                     alt="Galaxy S24 Ultra" loading="lazy" />
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991" alt="Galaxy S24 Ultra" loading="lazy" />
                 <div class="ps-card__overlay"></div>
                 <div class="ps-card__ar">
-                    <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H6M12 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12L12 2M12 2H6M12 2v6"/></svg>
                 </div>
             </div>
             <div class="ps-card__body">
                 <div class="ps-card__brand">SAMSUNG</div>
                 <div class="ps-card__name">Samsung Galaxy S24 Ultra 5G — Galaxy AI</div>
                 <div class="ps-card__meta">
-                    <span>Titan Xám</span>
-                    <span>Galaxy AI</span>
+                    <span>Titan Xám</span><span>Galaxy AI</span>
                 </div>
                 <div class="ps-card__foot">
                     <div class="ps-card__price">26.990.000 ₫</div>
-                    <span class="ps-stock-badge ps-stock-badge--in">Còn 18 máy</span>
+                    <span class="ps-stock-badge ps-stock-badge--in">Còn 18</span>
                 </div>
-                <button class="ps-card__cta" onclick="showToast('Đã thêm Samsung Galaxy S24 Ultra vào giỏ hàng!')">
+                <button class="ps-card__cta" onclick="showToast('Đã thêm Samsung Galaxy S24 Ultra vào giỏ!')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                     Thêm Vào Giỏ
                 </button>
             </div>
         </div>
 
-        @* Card 3 *@
-        <div class="ps-card">
-            <span class="ps-card__chip" style="--chip-c:rgba(240,180,41,0.18);--chip-t:#F0B429;--chip-b:rgba(240,180,41,0.3)">Leica 1-Inch</span>
+        @* CARD 3 — Xiaomi 14 Ultra *@
+        <div class="ps-card" data-rv="up" style="--card-delay:240ms">
+            <span class="ps-card__chip" style="--chip-c:rgba(240,180,41,.18);--chip-t:#F0B429;--chip-b:rgba(240,180,41,.3)">Leica 1-Inch</span>
             <div class="ps-card__fr">
-                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80"
-                     alt="Xiaomi 14 Ultra" loading="lazy" />
+                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80" alt="Xiaomi 14 Ultra" loading="lazy" />
                 <div class="ps-card__overlay"></div>
                 <div class="ps-card__ar">
-                    <svg viewBox="0 0 14 14" fill="none"><path d="M2 12L12 2M12 2H6M12 2v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12L12 2M12 2H6M12 2v6"/></svg>
                 </div>
             </div>
             <div class="ps-card__body">
                 <div class="ps-card__brand">XIAOMI</div>
                 <div class="ps-card__name">Xiaomi 14 Ultra 512GB — Camera Leica</div>
                 <div class="ps-card__meta">
-                    <span>Đen Giả Da</span>
-                    <span>Sạc 90W</span>
+                    <span>Đen Giả Da</span><span>Sạc 90W</span>
                 </div>
                 <div class="ps-card__foot">
                     <div class="ps-card__price">27.990.000 ₫</div>
-                    <span class="ps-stock-badge ps-stock-badge--low">Còn 8 máy</span>
+                    <span class="ps-stock-badge ps-stock-badge--low">Còn 8</span>
                 </div>
-                <button class="ps-card__cta" onclick="showToast('Đã thêm Xiaomi 14 Ultra vào giỏ hàng!')">
+                <button class="ps-card__cta" onclick="showToast('Đã thêm Xiaomi 14 Ultra vào giỏ!')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                     Thêm Vào Giỏ
                 </button>
@@ -288,13 +217,11 @@
     </div>
 </section>
 
-@* =========================================================
-   SEC 4 — STATS (animated counters)
-   ========================================================= *@
+@* ── SEC 4 · STATS ── *@
 <section id="sec-stats" class="ps-sec ps-stats" data-rv="fade">
     <div class="ps-sec__rule">
-        <div class="ps-sec__k"><b>04</b> — CHỈ SỐ CỬA HÀNG</div>
-        <div class="ps-rule"></div>
+        <span class="ps-sec__k"><b>04</b> — Thống Kê Hoạt Động</span>
+        <span class="ps-rule"></span>
     </div>
 
     <div class="ps-stats__head" data-rv="up">
@@ -306,7 +233,7 @@
         <div class="ps-stat-card" style="--accent:#6C6BF5" data-rv="up">
             <div class="ps-stat-card__top">
                 <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
                 </div>
                 <span class="ps-stat-card__trend">+29 Dòng</span>
             </div>
@@ -318,7 +245,7 @@
         <div class="ps-stat-card" style="--accent:#00C2A8" data-rv="up">
             <div class="ps-stat-card__top">
                 <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                 </div>
                 <span class="ps-stat-card__trend">Hôm nay</span>
             </div>
@@ -330,7 +257,7 @@
         <div class="ps-stat-card" style="--accent:#F0B429" data-rv="up">
             <div class="ps-stat-card__top">
                 <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
                 </div>
                 <span class="ps-stat-card__trend">Kiểm kê 100%</span>
             </div>
@@ -342,90 +269,81 @@
         <div class="ps-stat-card" style="--accent:#3ECF8E" data-rv="up">
             <div class="ps-stat-card__top">
                 <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 </div>
                 <span class="ps-stat-card__trend">+18.4%</span>
             </div>
-            <div class="ps-stat-card__val" data-count="1480" data-suffix=" tr ₫">0</div>
-            <div class="ps-stat-card__lbl">Doanh Thu Tổng Hợp (triệu ₫)</div>
+            <div class="ps-stat-card__val" data-count="1480" data-suffix=" tr">0</div>
+            <div class="ps-stat-card__lbl">Doanh Thu Tổng (triệu ₫)</div>
             <div class="ps-stat-card__bar"><span style="width:95%"></span></div>
         </div>
     </div>
 </section>
 
-@* =========================================================
-   SEC 5 — CLOSING CTA (full-width cinematic)
-   ========================================================= *@
+@* ── CLOSING CTA ── *@
 <section class="ps-closing" data-rv="fade">
     <div class="ps-closing__eyebrow">
         <span class="ps-eyebrow__dot"></span>
-        HỆ THỐNG QUẢN LÝ BÁN HÀNG XML
+        Hệ Thống Quản Lý Bán Hàng
     </div>
     <h2 class="ps-closing__h2 word-reveal">
-        TRẢI NGHIỆM MUA SẮM KHÔNG GIỚI HẠN
+        Trải Nghiệm Mua Sắm Không Giới Hạn
     </h2>
     <p class="ps-closing__sub">
-        Tích hợp POS · XML Database · Báo cáo thời gian thực · Quản lý kho thông minh
+        POS · XML Database · Báo cáo thời gian thực · Quản lý kho thông minh
     </p>
     <div class="ps-closing__actions">
         <a asp-controller="DienThoai" asp-action="Index" class="ps-cta">
             <i class="ps-cta__fill"></i>
             <span>Khám Phá Sản Phẩm</span>
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
         <a asp-controller="HoaDon" asp-action="Create" class="ps-ghost">
-            <i class="fa-solid fa-receipt"></i>
-            Tạo Hóa Đơn Ngay
+            <i class="fa-solid fa-receipt"></i> Tạo Hóa Đơn Ngay
         </a>
     </div>
 </section>
 
-@* =========================================================
-   FOOTER
-   ========================================================= *@
+@* ── FOOTER ── *@
 <footer class="ps-foot">
     <div class="ps-foot__grid">
         <div class="ps-foot__brand">
-            <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
-                <rect width="32" height="32" rx="8" fill="url(#fg)"/>
-                <defs><linearGradient id="fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6C6BF5"/><stop offset="100%" stop-color="#9C7BF0"/></linearGradient></defs>
+            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+                <defs><linearGradient id="ps-fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6C6BF5"/><stop offset="100%" stop-color="#9C7BF0"/></linearGradient></defs>
+                <rect width="32" height="32" rx="8" fill="url(#ps-fg)"/>
                 <rect x="11" y="6" width="10" height="20" rx="2" fill="none" stroke="#fff" stroke-width="1.6"/>
                 <line x1="14" y1="22" x2="18" y2="22" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
             </svg>
             <span><b>Phone</b>Store</span>
             <p>Hệ thống quản lý bán hàng điện thoại tích hợp XML — hiện đại, nhanh chóng, chính xác.</p>
         </div>
-
         <div class="ps-foot__col">
             <h4>Sản Phẩm</h4>
             <ul>
-                <li><a asp-controller="DienThoai" asp-action="Index">Điện thoại iPhone</a></li>
+                <li><a asp-controller="DienThoai" asp-action="Index">iPhone Series</a></li>
                 <li><a asp-controller="DienThoai" asp-action="Index">Samsung Galaxy</a></li>
-                <li><a asp-controller="DienThoai" asp-action="Index">Điện thoại khác</a></li>
+                <li><a asp-controller="DienThoai" asp-action="Index">Xiaomi &amp; Khác</a></li>
             </ul>
         </div>
-
         <div class="ps-foot__col">
             <h4>Quản Lý</h4>
             <ul>
                 <li><a asp-controller="HoaDon" asp-action="Create">Bán Hàng POS</a></li>
-                <li><a asp-controller="HoaDon" asp-action="Index">Tra cứu hóa đơn</a></li>
-                <li><a asp-controller="Admin" asp-action="Index">Bảng quản trị</a></li>
+                <li><a asp-controller="HoaDon" asp-action="Index">Tra Cứu Hóa Đơn</a></li>
+                <li><a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin">Bảng Quản Trị</a></li>
             </ul>
         </div>
-
         <div class="ps-foot__col">
-            <h4>Dữ Liệu XML</h4>
+            <h4>Công Nghệ XML</h4>
             <ul>
-                <li><a asp-controller="Home" asp-action="Rss">RSS Sản Phẩm</a></li>
-                <li><a asp-controller="Home" asp-action="Catalogue">Catalogue PDF</a></li>
-                <li><a asp-controller="Home" asp-action="Index">Báo cáo XML</a></li>
+                <li><a asp-controller="DienThoai" asp-action="RssFeed" target="_blank">RSS 2.0 Feed</a></li>
+                <li><a asp-controller="DienThoai" asp-action="XsltView">XSLT Catalogue</a></li>
+                <li><a asp-controller="DienThoai" asp-action="ValidateXsd">Validate XSD</a></li>
             </ul>
         </div>
     </div>
-
     <div class="ps-foot__base">
         <span>© 2026 PhoneStore — Hệ thống XML</span>
-        <span>Công nghệ XML · ASP.NET Core · Razor Views</span>
+        <span>ASP.NET Core · Razor · XML · XSD · XSLT</span>
     </div>
 </footer>

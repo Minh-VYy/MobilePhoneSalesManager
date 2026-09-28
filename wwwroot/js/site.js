@@ -163,23 +163,33 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 4. Scroll Reveal Observer ([data-rv])
-    const revealObserverOptions = {
-        root: null,
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
-    };
-
+    // Use threshold:0 + rootMargin so elements already in viewport fire immediately on load
     const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
+                // Apply stagger delay from parent card if set
+                const card = entry.target.closest('.ps-card');
+                const delay = card ? getComputedStyle(card).getPropertyValue('--card-delay').trim() : null;
+                if (delay) entry.target.style.transitionDelay = delay;
+
                 entry.target.classList.add('rv-in');
                 entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target); // once is enough
             }
         });
-    }, revealObserverOptions);
+    }, {
+        root: null,
+        threshold: 0,
+        rootMargin: '0px 0px -60px 0px'
+    });
 
-    document.querySelectorAll('[data-rv], section.sec-chapter, .reveal-on-scroll').forEach(el => {
-        revealObserver.observe(el);
+    // Small rAF delay so browser has laid out before we observe
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            document.querySelectorAll('[data-rv], section.sec-chapter, .reveal-on-scroll').forEach(el => {
+                revealObserver.observe(el);
+            });
+        });
     });
 
     // 5. Color Swatch Interactivity for Flagship Phone
