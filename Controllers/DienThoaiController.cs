@@ -146,6 +146,45 @@ namespace QuanLyBanDienThoai.Controllers
             return View(result);
         }
 
+        // 1. XML Web Service Endpoint (Trả về dữ liệu Web Service XML thô)
+        [HttpGet]
+        public IActionResult XmlApi()
+        {
+            string xmlPath = _dienThoaiService.GetXmlPath();
+            string xmlContent = System.IO.File.ReadAllText(xmlPath);
+            return Content(xmlContent, "application/xml", System.Text.Encoding.UTF8);
+        }
+
+        // 2. RSS 2.0 Feed Generator Endpoint (Mô tả ứng dụng RSS XML Feed)
+        [HttpGet]
+        public IActionResult RssFeed()
+        {
+            var items = _dienThoaiService.GetAll();
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            sb.AppendLine("<rss version=\"2.0\">");
+            sb.AppendLine("  <channel>");
+            sb.AppendLine("    <title>PhoneStore 3D — RSS Feed Sản Phẩm Điện Thoại XML</title>");
+            sb.AppendLine("    <link>https://phonestore3d.xml</link>");
+            sb.AppendLine("    <description>Kênh tin RSS XML cập nhật danh mục điện thoại di động NoSQL XML mới nhất</description>");
+            sb.AppendLine("    <language>vi-vn</language>");
+
+            foreach (var item in items)
+            {
+                sb.AppendLine("    <item>");
+                sb.AppendLine($"      <title><![CDATA[{item.TenDienThoai} ({item.TenHang})]]></title>");
+                sb.AppendLine($"      <description><![CDATA[Giá khuyến mãi: {item.GiaGiamFormatted} (Giá niêm yết: {item.GiaGoiFormatted}) | RAM: {item.Ram}, ROM: {item.Rom}, Màu: {item.MauSac}. Số lượng trong kho: {item.SoLuongTon} chiếc.]]></description>");
+                sb.AppendLine($"      <link>/DienThoai/Index?keyword={item.MaDienThoai}</link>");
+                sb.AppendLine($"      <guid>{item.MaDienThoai}</guid>");
+                sb.AppendLine("    </item>");
+            }
+
+            sb.AppendLine("  </channel>");
+            sb.AppendLine("</rss>");
+
+            return Content(sb.ToString(), "application/xml", System.Text.Encoding.UTF8);
+        }
+
         private string GetTenHangByMa(string maHang)
         {
             return maHang switch
@@ -160,3 +199,4 @@ namespace QuanLyBanDienThoai.Controllers
         }
     }
 }
+

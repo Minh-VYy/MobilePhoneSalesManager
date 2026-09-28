@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Orders>
+  <Order id="ORD-20260928-001" createdAt="2026-09-28T10:45:00">
+    <CustomerId>CUS-001</CustomerId>
+    <CustomerInfo>
+      <Name>Nguyễn Văn An</Name>
+      <Phone>0901234567</Phone>
+      <Address>Quận Hải Châu, TP. Đà Nẵng</Address>
+    </CustomerInfo>
+    <Items>
+      <Item productId="IPH-14PM-99-256-PUR">
+        <ProductName>iPhone 14 Pro Max 256GB - Bản Quốc tế (Cũ 99%)</ProductName>
+        <UnitPrice>19890000</UnitPrice>
+        <Quantity>1</Quantity>
+        <Subtotal>19890000</Subtotal>
+      </Item>
+    </Items>
+    <PaymentSummary>
+      <SubtotalAmount>19890000</SubtotalAmount>
+      <VoucherApplied code="VIPAPPLE500">500000</VoucherApplied>
+      <TotalAmount>19390000</TotalAmount>
+      <PaymentMethod>Chuyển khoản QR POS</PaymentMethod>
+      <PointsEarned>193</PointsEarned>
+    </PaymentSummary>
+    <Status>Completed</Status>
+  </Order>
+</Orders>

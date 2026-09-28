@@ -50,28 +50,160 @@ function showToast(message) {
     }, 2500);
 }
 
-// Scroll Reveal & Dynamic Interactions
+// Scroll Reveal & Dynamic Interactions (Kage Architecture Engine)
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Intersection Observer for Scroll Animations
-    const observerOptions = {
-        root: null,
-        threshold: 0.15,
-        rootMargin: '0px 0px -40px 0px'
-    };
+    // 1. Custom Animated Cursor Dot
+    const cursor = document.createElement('div');
+    cursor.className = 'cur-dot';
+    document.body.appendChild(cursor);
 
-    const scrollObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
-        });
-    }, observerOptions);
-
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
-        scrollObserver.observe(el);
+    let mouseX = 0, mouseY = 0, curX = 0, curY = 0;
+    document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
     });
 
-    // 2. Color Swatch Interactivity for Flagship Phone
+    function animateCursor() {
+        curX += (mouseX - curX) * 0.15;
+        curY += (mouseY - curY) * 0.15;
+        cursor.style.transform = `translate3d(${curX}px, ${curY}px, 0)`;
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Hover expansion for interactive elements
+    const hoverTargets = 'a, button, input, select, .product-card-3d, .spec-box, .swatch-btn, .chip';
+    document.addEventListener('mouseover', e => {
+        if (e.target.closest(hoverTargets)) {
+            cursor.classList.add('act');
+        }
+    });
+    document.addEventListener('mouseout', e => {
+        if (e.target.closest(hoverTargets)) {
+            cursor.classList.remove('act');
+        }
+    });
+
+    // 2. Interactive Canvas Background Particle Engine (#gl-tech)
+    const canvas = document.getElementById('gl-tech');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = Array.from({ length: 45 }, () => ({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 2 + 0.8,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            alpha: Math.random() * 0.5 + 0.2
+        }));
+
+        function renderCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw floating tech particles & connecting lines
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0) p.x = width;
+                if (p.x > width) p.x = 0;
+                if (p.y < 0) p.y = height;
+                if (p.y > height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(108, 107, 245, ${p.alpha})`;
+                ctx.fill();
+
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(0, 194, 168, ${(1 - dist / 130) * 0.15})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(renderCanvas);
+        }
+        renderCanvas();
+    }
+
+    // 3. Word-by-Word Clip-Mask Reveal Builder
+    document.querySelectorAll('.word-reveal').forEach(heading => {
+        const text = heading.textContent.trim();
+        heading.textContent = '';
+        const words = text.split(/\s+/);
+        
+        words.forEach((wordText, i) => {
+            const wordMask = document.createElement('span');
+            wordMask.className = 'word-mask';
+            
+            const wordSpan = document.createElement('span');
+            wordSpan.className = 'word';
+            wordSpan.style.setProperty('--word-delay', `${i * 65}ms`);
+            wordSpan.textContent = wordText + (i < words.length - 1 ? '\u00A0' : '');
+            
+            wordMask.appendChild(wordSpan);
+            heading.appendChild(wordMask);
+        });
+    });
+
+    // 4. Chapter Observer & Progress Rail Observer ([data-rv] & .rail)
+    const chapterObserverOptions = {
+        root: null,
+        threshold: 0.2,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const chapterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('rv-in');
+                entry.target.classList.add('is-visible');
+
+                // Sync Rail Buttons
+                const chapterId = entry.target.getAttribute('id');
+                if (chapterId) {
+                    const railBtn = document.querySelector(`.rail button[data-target="${chapterId}"]`);
+                    if (railBtn) {
+                        document.querySelectorAll('.rail button').forEach(b => b.classList.remove('on'));
+                        railBtn.classList.add('on');
+                    }
+                }
+            }
+        });
+    }, chapterObserverOptions);
+
+    document.querySelectorAll('[data-rv], section.sec-chapter, .reveal-on-scroll').forEach(el => {
+        chapterObserver.observe(el);
+    });
+
+    // Rail Button Click Scroll Navigation
+    document.querySelectorAll('.rail button').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const targetEl = document.getElementById(targetId);
+            if (targetEl) {
+                targetEl.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+
+    // 5. Color Swatch Interactivity for Flagship Phone
     const swatchBtns = document.querySelectorAll('.swatch-btn');
     const heroPhoneImg = document.getElementById('hero-main-phone');
 
@@ -97,6 +229,83 @@ document.addEventListener('DOMContentLoaded', function () {
                 showToast(`Đã chọn phiên bản màu: ${colorName}`);
             });
         });
+    }
+
+    // 6. Animated Top Dock Proximity Spring Physics Engine (ThreeUI Spec)
+    const dockContainer = document.querySelector('.atd-modern__dock');
+    if (dockContainer) {
+        const items = Array.from(dockContainer.querySelectorAll('.atd-modern__item'));
+        const PROXIMITY = 120;
+        const MAX_SCALE = 1.15;
+        let animFrame = null;
+        let isHovering = false;
+        let pointerX = 0;
+
+        const itemStates = items.map(() => ({ targetScale: 1, currentScale: 1, translateY: 0, targetY: 0 }));
+
+        function updateProximity() {
+            let activeAnim = false;
+            items.forEach((item, index) => {
+                const rect = item.getBoundingClientRect();
+                const itemCenterX = rect.left + rect.width / 2;
+                const state = itemStates[index];
+
+                if (isHovering) {
+                    const dist = Math.abs(pointerX - itemCenterX);
+                    if (dist < PROXIMITY) {
+                        const factor = Math.cos((dist / PROXIMITY) * (Math.PI / 2));
+                        state.targetScale = 1 + (MAX_SCALE - 1) * factor;
+                        state.targetY = -3.5 * factor;
+                    } else {
+                        state.targetScale = 1;
+                        state.targetY = 0;
+                    }
+                } else {
+                    state.targetScale = 1;
+                    state.targetY = 0;
+                }
+
+                state.currentScale += (state.targetScale - state.currentScale) * 0.22;
+                state.translateY += (state.targetY - state.translateY) * 0.22;
+
+                if (Math.abs(state.targetScale - state.currentScale) > 0.001 || Math.abs(state.targetY - state.translateY) > 0.01) {
+                    activeAnim = true;
+                }
+
+                item.style.transform = `scale(${state.currentScale.toFixed(3)}) translateY(${state.translateY.toFixed(2)}px)`;
+            });
+
+            if (isHovering || activeAnim) {
+                animFrame = requestAnimationFrame(updateProximity);
+            } else {
+                animFrame = null;
+            }
+        }
+
+        dockContainer.addEventListener('mousemove', (e) => {
+            pointerX = e.clientX;
+            isHovering = true;
+            if (!animFrame) animFrame = requestAnimationFrame(updateProximity);
+        });
+
+        dockContainer.addEventListener('mouseleave', () => {
+            isHovering = false;
+            if (!animFrame) animFrame = requestAnimationFrame(updateProximity);
+        });
+    }
+
+    // 7. Scroll-Triggered Dynamic Glassmorphism Header
+    const headerWrapper = document.querySelector('.atd-modern-wrapper');
+    if (headerWrapper) {
+        function updateHeaderGlassOnScroll() {
+            if (window.scrollY > 15) {
+                headerWrapper.classList.add('is-scrolled');
+            } else {
+                headerWrapper.classList.remove('is-scrolled');
+            }
+        }
+        window.addEventListener('scroll', updateHeaderGlassOnScroll, { passive: true });
+        updateHeaderGlassOnScroll();
     }
 });
 

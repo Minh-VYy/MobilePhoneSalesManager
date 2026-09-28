@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Vouchers>
+  <Voucher code="VIPAPPLE500">
+    <Title>Giảm giá mua iPhone cao cấp</Title>
+    <DiscountType>FixedAmount</DiscountType>
+    <DiscountValue>500000</DiscountValue>
+    <MinOrderAmount>15000000</MinOrderAmount>
+    <ExpiryDate>2026-12-31</ExpiryDate>
+    <Status>unused</Status>
+  </Voucher>
+  <Voucher code="TRIAN200">
+    <Title>Tri ân khách hàng thân thiết</Title>
+    <DiscountType>FixedAmount</DiscountType>
+    <DiscountValue>200000</DiscountValue>
+    <MinOrderAmount>5000000</MinOrderAmount>
+    <ExpiryDate>2026-10-30</ExpiryDate>
+    <Status>unused</Status>
+  </Voucher>
+  <Voucher code="SALE100K">
+    <Title>Mã giảm giá đơn hàng phụ kiện hoặc máy cũ</Title>
+    <DiscountType>FixedAmount</DiscountType>
+    <DiscountValue>100000</DiscountValue>
+    <MinOrderAmount>3000000</MinOrderAmount>
+    <ExpiryDate>2026-08-15</ExpiryDate>
+    <Status>used</Status>
+  </Voucher>
+</Vouchers>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AppConfig>
+  <LoyaltySettings>
+    <!-- Quy tắc: 100,000 VND doanh số = tích 1 điểm -->
+    <VndPerPoint>100000</VndPerPoint>
+    
+    <!-- Quy tắc tiêu điểm: 1 điểm = 1,000 VND khi thanh toán -->
+    <PointToVndValue>1000</PointToVndValue>
+    
+    <!-- Điều kiện sinh mã voucher tặng tự động sau đơn hàng -->
+    <RewardRules>
+      <Rule minOrderValue="15000000">
+        <GiftVoucherPrefix>AUTO500K</GiftVoucherPrefix>
+        <DiscountAmount>500000</DiscountAmount>
+        <ValidDays>30</ValidDays>
+      </Rule>
+      <Rule minOrderValue="5000000">
+        <GiftVoucherPrefix>AUTO200K</GiftVoucherPrefix>
+        <DiscountAmount>200000</DiscountAmount>
+        <ValidDays>15</ValidDays>
+      </Rule>
+    </RewardRules>
+  </LoyaltySettings>
+</AppConfig>

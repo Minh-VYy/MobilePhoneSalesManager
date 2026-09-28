@@ -15,6 +15,7 @@ builder.Services.AddSingleton<XmlValidationService>();
 builder.Services.AddTransient<DienThoaiXmlService>();
 builder.Services.AddTransient<HoaDonXmlService>();
 builder.Services.AddTransient<XsltTransformService>();
+builder.Services.AddTransient<XmlOrderService>();
 
 var app = builder.Build();
 

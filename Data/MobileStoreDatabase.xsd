@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <!-- ROOT ELEMENT -->
+  <xs:element name="MobileStoreDatabase">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Categories" type="CategoriesType" />
+        <xs:element name="Products" type="ProductsType" />
+      </xs:sequence>
+    </xs:complexType>
+    <xs:key name="CategoryKey">
+      <xs:selector xpath="Categories/Category" />
+      <xs:field xpath="@id" />
+    </xs:key>
+    <xs:keyref name="ProductCategoryRef" refer="CategoryKey">
+      <xs:selector xpath="Products/Product" />
+      <xs:field xpath="@categoryId" />
+    </xs:keyref>
+  </xs:element>
+
+  <!-- DANH MỤC -->
+  <xs:complexType name="CategoriesType">
+    <xs:sequence>
+      <xs:element name="Category" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:attribute name="id" type="xs:string" use="required" />
+          <xs:attribute name="name" type="xs:string" use="required" />
+          <xs:attribute name="slug" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- DANH SÁCH SẢN PHẨM -->
+  <xs:complexType name="ProductsType">
+    <xs:sequence>
+      <xs:element name="Product" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="BasicInfo">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Name" type="xs:string" />
+                  <xs:element name="Brand" type="xs:string" />
+                  <xs:element name="ModelSeries" type="xs:string" />
+                  <xs:element name="Condition">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="type" use="required">
+                            <xs:simpleType>
+                              <xs:restriction base="xs:string">
+                                <xs:enumeration value="New" />
+                                <xs:enumeration value="Used" />
+                                <xs:enumeration value="Refurbished" />
+                              </xs:restriction>
+                            </xs:simpleType>
+                          </xs:attribute>
+                          <xs:attribute name="grade" type="xs:string" use="required" />
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="WarrantyMonths" type="xs:positiveInteger" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
+            <xs:element name="ColorVariant">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="ColorName" type="xs:string" />
+                  <xs:element name="ColorCode" type="xs:string" />
+                  <xs:element name="PrimaryImage" type="xs:anyURI" />
+                  <xs:element name="Gallery">
+                    <xs:complexType>
+                      <xs:sequence>
+                        <xs:element name="Image" maxOccurs="unbounded">
+                          <xs:complexType>
+                            <xs:attribute name="url" type="xs:anyURI" use="required" />
+                            <xs:attribute name="caption" type="xs:string" />
+                          </xs:complexType>
+                        </xs:element>
+                      </xs:sequence>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
+            <xs:element name="PricingAndStock">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="OriginalPrice" type="xs:decimal" />
+                  <xs:element name="SellingPrice" type="xs:decimal" />
+                  <xs:element name="StockQuantity" type="xs:nonNegativeInteger" />
+                  <xs:element name="SKU" type="xs:string" />
+                  <xs:element name="IsFeatured" type="xs:boolean" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+
+            <xs:element name="Specifications" type="xs:anyType" />
+          </xs:sequence>
+          <xs:attribute name="id" type="xs:string" use="required" />
+          <xs:attribute name="categoryId" type="xs:string" use="required" />
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

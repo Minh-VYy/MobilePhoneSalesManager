@@ -3,19 +3,55 @@
     Layout = "_LayoutUser";
 }
 
-<!-- ================= 1. HERO 3D FLAGSHIP SHOWCASE ================= -->
-<section class="hero-3d-banner reveal-on-scroll">
+<!-- Fixed Background Canvas & Vignette (Kage Architecture) -->
+<canvas id="gl-tech"></canvas>
+<div id="vignette-tech"></div>
+
+<!-- Progress Rail (Side Scroll Navigation) -->
+<nav class="rail">
+    <button type="button" class="on" data-target="chapter-hero" title="Chương I: Flagship Showcase"><i></i></button>
+    <button type="button" data-target="chapter-exploded" title="Chương II: Bóc Tách Linh Kiện"><i></i></button>
+    <button type="button" data-target="chapter-ecosystem" title="Chương III: Hệ Sinh Thái"><i></i></button>
+    <button type="button" data-target="chapter-catalog" title="Chương IV: Sản Phẩm Nổi Bật"><i></i></button>
+    <button type="button" data-target="chapter-stats" title="Chương V: Thống Kê XML"><i></i></button>
+</nav>
+
+<!-- ================= CHƯƠNG I: HERO FLAGSHIP SHOWCASE ================= -->
+<section id="chapter-hero" class="sec-chapter hero-3d-banner" data-rv="fade" style="position: relative;">
+    
+    <!-- Floating Peek Detail Window (Kage Peek Component) -->
+    <a href="#chapter-exploded" class="peek-tech">
+        <span class="peek-tech-fr">
+            <img src="~/images/phone_exploded_chipset.png" alt="Xem Chi Tiết 3D" style="width: 100%; height: 100%; object-fit: cover;" />
+            <span class="peek-tech-play">
+                <svg viewBox="0 0 44 44" fill="none">
+                    <circle cx="22" cy="22" r="20" fill="rgba(108,107,245,0.7)" stroke="#fff" stroke-width="1.5"/>
+                    <polygon points="18,14 30,22 18,30" fill="#fff"/>
+                </svg>
+            </span>
+        </span>
+        <span class="peek-tech-cap">
+            <b>BÓC TÁCH 3D</b>
+            <i>Kế tiếp →</i>
+        </span>
+    </a>
+
     <div class="hero-content">
-        <div class="hero-tag">
-            <i class="fa-solid font-awesome fa-sparkles"></i> ĐỘT PHÁ CÔNG NGHỆ 2026
+        <div class="hero-tag" data-rv="up">
+            <i class="fa-solid fa-sparkles"></i> ĐỘT PHÁ CÔNG NGHỆ 2026
         </div>
-        <h1 class="hero-title">ĐỈNH CAO THIẾT KẾ & VI XỬ LÝ 3NM</h1>
-        <p class="hero-desc">
+        
+        <!-- Clip-Mask Word Reveal Heading -->
+        <h1 class="hero-title word-reveal" data-rv="up">
+            ĐỈNH CAO THIẾT KẾ & VI XỬ LÝ 3NM
+        </h1>
+        
+        <p class="hero-desc" data-rv="up">
             Khám phá dòng điện thoại Flagship thế hệ mới với chất liệu Titan siêu nhẹ, camera cảm biến 200MP và hiệu năng vượt trội. Nền tảng quản lý bán hàng chuẩn dữ liệu XML hiện đại.
         </p>
 
-        <!-- Color Swatch Selector Interaction -->
-        <div class="swatch-group">
+        <!-- Interactive Color Swatches -->
+        <div class="swatch-group" data-rv="up">
             <span class="swatch-label">Phiên bản màu:</span>
             <div class="swatch-list">
                 <button type="button" class="swatch-btn active" data-color-name="Titan Tự Nhiên" data-img="/images/phone_hero_3d.png" style="background: #A0A5AD;" title="Titan Tự Nhiên"></button>
@@ -24,14 +60,13 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;" data-rv="up">
             <a asp-controller="DienThoai" asp-action="Index" class="btn btn-primary">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                Khám Phá Danh Mục
+                <span>Khám Phá Danh Mục</span>
+                <svg viewBox="0 0 16 16" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><path d="M3.2 8h9.1M8.6 4.3 12.4 8l-3.8 3.7" /></svg>
             </a>
-            <a asp-controller="HoaDon" asp-action="Create" class="btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-                Bán Hàng POS XML
+            <a asp-controller="HoaDon" asp-action="Create" class="btn btn-ghost">
+                <span><i class="fa-solid fa-cart-shopping"></i> Bán Hàng POS XML</span>
             </a>
         </div>
     </div>
@@ -64,67 +99,32 @@
     </div>
 </section>
 
-<!-- ================= 2. QUICK XML STATS OVERVIEW ================= -->
-<div class="stat-row reveal-on-scroll delay-1">
-    <div class="glass stat-card" style="--stat-accent: #6C6BF5;">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
-            </div>
-            <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-up"></i> +12.5%</span>
-        </div>
-        <div class="stat-value">24 Dòng Máy</div>
-        <div class="stat-label">Sản phẩm trong cơ sở dữ liệu XML</div>
-    </div>
-
-    <div class="glass stat-card" style="--stat-accent: #00C2A8;">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-            </div>
-            <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-up"></i> Hôm nay</span>
-        </div>
-        <div class="stat-value">158 Hóa Đơn</div>
-        <div class="stat-label">Giao dịch POS xử lý tự động</div>
-    </div>
-
-    <div class="glass stat-card" style="--stat-accent: #F0B429;">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            </div>
-            <span class="stat-trend trend-up">Kiểm kê 100%</span>
-        </div>
-        <div class="stat-value">842 Máy</div>
-        <div class="stat-label">Tổng tồn kho điện thoại an toàn</div>
-    </div>
-
-    <div class="glass stat-card" style="--stat-accent: #3ECF8E;">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            </div>
-            <span class="stat-trend trend-up">+18.4%</span>
-        </div>
-        <div class="stat-value">1.48 tỷ ₫</div>
-        <div class="stat-label">Doanh thu tổng hợp từ XML</div>
-    </div>
+<!-- Chapter Divider -->
+<div class="chapter-divider">
+    <span class="chapter-num">CHƯƠNG I // CHƯƠNG II</span>
+    <div class="chapter-rule"></div>
 </div>
 
-<!-- ================= 3. FEATURE CHAPTER 1: BÓC TÁCH CÔNG NGHỆ (EXPLODED VIEW) ================= -->
-<section class="feature-chapter reveal-on-scroll delay-2" style="margin-top: 36px;">
-    <div class="chapter-media">
+<!-- ================= CHƯƠNG II: EXPLODED TECH & LIGHT GLOWS ================= -->
+<section id="chapter-exploded" class="sec-chapter feature-chapter" data-rv="fade">
+    <div class="chapter-media" style="position: relative;">
+        <!-- Pulsing Light Spot Hotspots (Kage Glow Lights) -->
+        <div class="glow-spot" style="top: 35%; left: 45%;"></div>
+        <div class="glow-spot" style="top: 65%; left: 70%; animation-delay: -1.5s;"></div>
+
         <img src="~/images/phone_exploded_chipset.png" alt="Phân rã linh kiện 3D Chipset" />
     </div>
 
     <div class="chapter-info">
         <div class="hero-tag" style="background: rgba(0, 194, 168, 0.12); color: #00C2A8; border-color: rgba(0, 194, 168, 0.3);">
-            <i class="fa-solid fa-layer-group"></i> KIẾN TRÚC VI XỬ LÝ & CẢM BIẾN
+            <i class="fa-solid fa-layer-group"></i> CHƯƠNG II — KIẾN TRÚC VI XỬ LÝ & CẢM BIẾN
         </div>
-        <h2 style="font-family: var(--font-head); font-size: 26px; font-weight: 800; margin: 0 0 12px;">
+        
+        <h2 class="word-reveal" style="font-family: var(--font-head); font-size: 28px; font-weight: 800; margin: 0 0 14px;">
             BÓC TÁCH CHI TIẾT LINH KIỆN 3D
         </h2>
-        <p style="color: var(--text-muted); font-size: 14.5px; line-height: 1.65; margin: 0;">
+        
+        <p style="color: var(--text-muted); font-size: 15px; line-height: 1.7; margin: 0 0 20px;">
             Hệ thống camera ống kính 5 lớp kết hợp thấu kính zoom quang học 5x, bộ vi xử lý sản xuất trên tiến trình 3nm tối ưu điện năng tiêu thụ và cụm tản nhiệt buồng hơi lớn.
         </p>
 
@@ -145,48 +145,64 @@
     </div>
 </section>
 
-<!-- ================= 4. FEATURE CHAPTER 2: HỆ SINH THÁI THIẾT BỊ ================= -->
-<section class="reveal-on-scroll delay-3" style="margin-bottom: 36px;">
+<!-- Chapter Divider -->
+<div class="chapter-divider">
+    <span class="chapter-num">CHƯƠNG II // CHƯƠNG III</span>
+    <div class="chapter-rule"></div>
+</div>
+
+<!-- ================= CHƯƠNG III: HỆ SINH THÁI THIẾT BỊ ================= -->
+<section id="chapter-ecosystem" class="sec-chapter" data-rv="fade" style="margin-bottom: 36px;">
     <div class="section-header-wrap">
         <div>
-            <h2 class="section-title" style="font-size: 22px; margin: 0;">
-                Hệ Sinh Thái Thiết Bị Điện Tử
-                <small>Đồng bộ trải nghiệm giữa Điện thoại, Tai nghe TWS và Smartwatch</small>
+            <div class="hero-tag" style="background: rgba(240, 180, 41, 0.12); color: #F0B429; border-color: rgba(240, 180, 41, 0.3); margin-bottom: 10px;">
+                <i class="fa-solid fa-cubes"></i> CHƯƠNG III — KẾT NỐI HỆ SINH THÁI
+            </div>
+            <h2 class="section-title word-reveal" style="font-size: 26px; margin: 0;">
+                Hệ Sinh Thái Thiết Bị Điện Tử Thông Minh
             </h2>
         </div>
     </div>
 
-    <div class="glass" style="padding: 24px; border-radius: var(--radius-lg); display: grid; grid-template-columns: 1fr 1.2fr; gap: 24px; align-items: center;">
+    <div class="glass" style="padding: 28px; border-radius: var(--radius-lg); display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; align-items: center;">
         <div>
-            <h3 style="font-family: var(--font-head); font-size: 20px; font-weight: 700; margin: 0 0 10px;">
+            <h3 style="font-family: var(--font-head); font-size: 21px; font-weight: 700; margin: 0 0 12px;">
                 TƯƠNG THÍCH HOÀN HẢO MỌI THIẾT BỊ
             </h3>
-            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 18px;">
+            <p style="color: var(--text-muted); font-size: 14.5px; line-height: 1.65; margin-bottom: 22px;">
                 Quản lý mã linh kiện, phụ kiện kèm theo và bộ thiết bị thông minh thông qua bảng dữ liệu XML thống nhất. Dễ dàng tra cứu và bán hàng POS cho cả bộ phụ kiện.
             </p>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <span class="spec-tag" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-headphones"></i> Tai nghe Noise-Canceling</span>
-                <span class="spec-tag" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-clock"></i> Smartwatch Ultra</span>
-                <span class="spec-tag" style="padding: 6px 12px; font-size: 12px;"><i class="fa-solid fa-bolt"></i> Sạc nhanh 120W</span>
+                <span class="spec-tag" style="padding: 8px 14px; font-size: 12.5px;"><i class="fa-solid fa-headphones"></i> Tai nghe Noise-Canceling</span>
+                <span class="spec-tag" style="padding: 8px 14px; font-size: 12.5px;"><i class="fa-solid fa-clock"></i> Smartwatch Ultra</span>
+                <span class="spec-tag" style="padding: 8px 14px; font-size: 12.5px;"><i class="fa-solid fa-bolt"></i> Sạc nhanh 120W</span>
             </div>
         </div>
-        <div style="border-radius: var(--radius-md); overflow: hidden; height: 220px; border: 1px solid var(--border);">
+        <div style="border-radius: var(--radius-md); overflow: hidden; height: 250px; border: 1px solid var(--border-strong); position: relative;">
             <img src="~/images/gadgets_ecosystem.png" alt="Hệ sinh thái thiết bị thông minh" style="width: 100%; height: 100%; object-fit: cover;" />
         </div>
     </div>
 </section>
 
-<!-- ================= 5. HOT PRODUCTS SHOWCASE GRID ================= -->
-<section class="reveal-on-scroll delay-4">
+<!-- Chapter Divider -->
+<div class="chapter-divider">
+    <span class="chapter-num">CHƯƠNG III // CHƯƠNG IV</span>
+    <div class="chapter-rule"></div>
+</div>
+
+<!-- ================= CHƯƠNG IV: SẢN PHẨM NỔI BẬT ================= -->
+<section id="chapter-catalog" class="sec-chapter" data-rv="fade">
     <div class="section-header-wrap">
         <div>
-            <h2 class="section-title" style="font-size: 22px; margin: 0;">
-                Sản Phẩm Điện Thoại Nổi Bật
-                <small>Dữ liệu được nạp động từ file XML (DienThoai.xml)</small>
+            <div class="hero-tag" style="margin-bottom: 10px;">
+                <i class="fa-solid fa-mobile"></i> CHƯƠNG IV — CATALOG ĐIỆN THOẠI NỔI BẬT
+            </div>
+            <h2 class="section-title word-reveal" style="font-size: 26px; margin: 0;">
+                Sản Phẩm Điện Thoại Bán Chạy
             </h2>
         </div>
-        <a asp-controller="DienThoai" asp-action="Index" class="btn btn-ghost btn-sm">
-            Xem tất cả <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <a asp-controller="DienThoai" asp-action="Index" class="btn btn-ghost">
+            Xem Tất Cả <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
     </div>
 
@@ -207,7 +223,7 @@
                 <div class="price">34.990.000 ₫</div>
                 <span class="stock-tag in-stock">Còn 18 máy</span>
             </div>
-            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm iPhone 16 Pro Max vào danh sách chọn!')">
+            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm iPhone 16 Pro Max vào giỏ hàng!')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                 Thêm Vào Giỏ
             </button>
@@ -229,7 +245,7 @@
                 <div class="price">29.990.000 ₫</div>
                 <span class="stock-tag in-stock">Còn 12 máy</span>
             </div>
-            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm Samsung Galaxy S24 Ultra vào danh sách chọn!')">
+            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm Samsung Galaxy S24 Ultra vào giỏ hàng!')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                 Thêm Vào Giỏ
             </button>
@@ -251,7 +267,7 @@
                 <div class="price">27.490.000 ₫</div>
                 <span class="stock-tag low-stock">Còn 3 máy</span>
             </div>
-            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm Xiaomi 14 Ultra vào danh sách chọn!')">
+            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm Xiaomi 14 Ultra vào giỏ hàng!')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                 Thêm Vào Giỏ
             </button>
@@ -273,10 +289,76 @@
                 <div class="price">11.990.000 ₫</div>
                 <span class="stock-tag in-stock">Còn 25 máy</span>
             </div>
-            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm Nothing Phone (2a) vào danh sách chọn!')">
+            <button class="btn btn-primary add-cart-btn-dynamic" onclick="showToast('Đã thêm Nothing Phone (2a) vào giỏ hàng!')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
                 Thêm Vào Giỏ
             </button>
+        </div>
+    </div>
+</section>
+
+<!-- Chapter Divider -->
+<div class="chapter-divider">
+    <span class="chapter-num">CHƯƠNG IV // CHƯƠNG V</span>
+    <div class="chapter-rule"></div>
+</div>
+
+<!-- ================= CHƯƠNG V: THỐNG KÊ XML & KIẾN TRÚC HỆ THỐNG ================= -->
+<section id="chapter-stats" class="sec-chapter" data-rv="fade" style="margin-top: 20px;">
+    <div class="section-header-wrap">
+        <div>
+            <div class="hero-tag" style="background: rgba(62, 207, 142, 0.12); color: #3ECF8E; border-color: rgba(62, 207, 142, 0.3); margin-bottom: 10px;">
+                <i class="fa-solid fa-chart-line"></i> CHƯƠNG V — THỐNG KÊ BÁO CÁO XML
+            </div>
+            <h2 class="section-title word-reveal" style="font-size: 26px; margin: 0;">
+                Chỉ Số Tổng Quan Hệ Thống XML
+            </h2>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="glass stat-card" style="--stat-accent: #6C6BF5;">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
+                </div>
+                <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-up"></i> +12.5%</span>
+            </div>
+            <div class="stat-value">24 Dòng Máy</div>
+            <div class="stat-label">Sản phẩm trong cơ sở dữ liệu XML</div>
+        </div>
+
+        <div class="glass stat-card" style="--stat-accent: #00C2A8;">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
+                </div>
+                <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-up"></i> Hôm nay</span>
+            </div>
+            <div class="stat-value">158 Hóa Đơn</div>
+            <div class="stat-label">Giao dịch POS xử lý tự động</div>
+        </div>
+
+        <div class="glass stat-card" style="--stat-accent: #F0B429;">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <span class="stat-trend trend-up">Kiểm kê 100%</span>
+            </div>
+            <div class="stat-value">842 Máy</div>
+            <div class="stat-label">Tổng tồn kho điện thoại an toàn</div>
+        </div>
+
+        <div class="glass stat-card" style="--stat-accent: #3ECF8E;">
+            <div class="stat-top">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <span class="stat-trend trend-up">+18.4%</span>
+            </div>
+            <div class="stat-value">1.48 tỷ ₫</div>
+            <div class="stat-label">Doanh thu tổng hợp từ XML</div>
         </div>
     </div>
 </section>

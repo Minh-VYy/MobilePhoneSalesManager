@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Customers>
+  <Customer id="CUS-001">
+    <FullName>Nguyễn Văn An</FullName>
+    <Phone>0901234567</Phone>
+    <Email>an.nguyen@gmail.com</Email>
+    <Address>Quận Hải Châu, TP. Đà Nẵng</Address>
+    <LoyaltyPoints>150</LoyaltyPoints>
+    <MembershipLevel>Silver</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-002">
+    <FullName>Trần Thị Thu</FullName>
+    <Phone>0918889999</Phone>
+    <Email>thu.tran@gmail.com</Email>
+    <Address>Quận 1, TP. Hồ Chí Minh</Address>
+    <LoyaltyPoints>620</LoyaltyPoints>
+    <MembershipLevel>Gold</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>TRIAN200</VoucherCode>
+      <VoucherCode>SALE100K</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+</Customers>
