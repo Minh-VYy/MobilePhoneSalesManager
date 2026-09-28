@@ -261,7 +261,7 @@ button { font-family: inherit; cursor: pointer; }
   height: 52px;
   padding: 5px 6px 5px 18px;
   gap: clamp(14px, 2vw, 36px);
-  /* TRUE GLASS: dark mode — dark-tinted frosted glass */
+  /* TRUE GLASS: dark mode */
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 999px;
   background: rgba(12, 20, 40, 0.38);
@@ -271,7 +271,24 @@ button { font-family: inherit; cursor: pointer; }
     inset 0 -1px 0 rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(32px) saturate(200%) brightness(1.05);
   -webkit-backdrop-filter: blur(32px) saturate(200%) brightness(1.05);
+  /* 3D perspective for lift effect */
+  transform-style: preserve-3d;
+  perspective: 800px;
   transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+/* 3D glass lift when hovering the bar itself */
+.atd-modern__bar:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(12, 20, 40, 0.50);
+  box-shadow:
+    0 16px 48px -10px rgba(0, 0, 0, 0.65),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    0 0 40px rgba(108, 107, 245, 0.12);
+  backdrop-filter: blur(40px) saturate(220%) brightness(1.08);
+  -webkit-backdrop-filter: blur(40px) saturate(220%) brightness(1.08);
+  transform: translateY(-2px);
 }
 
 /* Deeper glass when page scrolled */
@@ -390,8 +407,9 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text);
   border-color: var(--border);
   background: var(--glass-strong);
-  transform: translateY(-1.5px) scale(1.04);
-  box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.5);
+  /* Scale up instead of translateY — keeps item inside glass bar */
+  transform: scale(1.06);
+  box-shadow: 0 4px 16px -6px rgba(108, 107, 245, 0.4), inset 0 1px 0 rgba(255,255,255,0.15);
 }
 
 .atd-modern__item.active,
@@ -551,31 +569,22 @@ button { font-family: inherit; cursor: pointer; }
   transform: translateX(-50%) translateY(0);
 }
 
-.atd-mobile-drawer__content {
-  /* TRUE GLASS drawer — same frosted glass as the bar */
-  background: rgba(12, 20, 40, 0.42);
-  backdrop-filter: blur(36px) saturate(200%) brightness(1.06);
-  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.06);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+/* Force dark glass on mobile drawer regardless of theme */
+.atd-mobile-drawer__content,
+:root[data-theme="light"] .atd-mobile-drawer__content {
+  background: rgba(8, 14, 30, 0.72) !important;
+  backdrop-filter: blur(40px) saturate(200%) brightness(1.06) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: var(--radius-lg);
   padding: 16px;
   box-shadow:
-    0 24px 60px -12px rgba(0, 0, 0, 0.70),
+    0 24px 60px -12px rgba(0, 0, 0, 0.80),
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+    inset 0 -1px 0 rgba(0, 0, 0, 0.10) !important;
   display: flex;
   flex-direction: column;
   gap: 6px;
-}
-
-:root[data-theme="light"] .atd-mobile-drawer__content {
-  background: rgba(255, 255, 255, 0.50);
-  border-color: rgba(80, 80, 120, 0.18);
-  backdrop-filter: blur(36px) saturate(200%) brightness(1.1);
-  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.1);
-  box-shadow:
-    0 20px 48px -10px rgba(80, 80, 160, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .atd-mobile-item {
@@ -2087,15 +2096,15 @@ td.num, th.num { text-align: right; font-family: var(--font-code); }
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
 }
-.ps-nav-loc:hover { transform: translateY(-2px); opacity: 0.9; }
+.ps-nav-loc:hover { transform: scale(1.04); opacity: 1; }
 .ps-nav-loc span { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; transition: color 0.25s ease; }
 .ps-nav-loc:hover span { color: var(--text-faint); }
 .ps-nav-loc b { font-size: 13px; color: var(--text); display: flex; align-items: center; gap: 4px; transition: color 0.25s ease; }
 .ps-nav-loc:hover b { color: var(--primary); }
 .ps-nav-loc i { font-size: 10px; color: var(--primary); transition: transform 0.25s ease; }
-.ps-nav-loc:hover i { transform: translateY(2px); }
+.ps-nav-loc:hover i { transform: rotate(180deg); }
 
 .ps-nav-search {
   flex: 1;
@@ -2138,9 +2147,10 @@ td.num, th.num { text-align: right; font-family: var(--font-code); }
   gap: 10px;
   text-decoration: none;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.ps-nav-item:hover, .ps-nav-login:hover { transform: translateY(-3px); }
+/* scale instead of translateY — items stay inside glass bar */
+.ps-nav-item:hover, .ps-nav-login:hover { transform: scale(1.06); }
 
 .ps-nav-icon {
   width: 34px; height: 34px;
