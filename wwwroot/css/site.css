@@ -474,6 +474,159 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ==========================================================================
+   MOBILE & RESPONSIVE HEADER DOCK EXTENSIONS
+   ========================================================================== */
+
+/* Mobile Hamburger Toggle Button */
+.atd-mobile-toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  color: var(--text);
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: none;
+}
+
+.atd-mobile-toggle:hover {
+  background: var(--glass-strong);
+  border-color: var(--border-strong);
+  transform: scale(1.05);
+}
+
+/* Mobile Glass Drawer Dropdown Card */
+.atd-mobile-drawer {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  z-index: 99;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.atd-mobile-drawer.is-open {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.atd-mobile-drawer__content {
+  background: color-mix(in srgb, var(--bg-1) 90%, transparent);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.65), inset 0 1px rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+:root[data-theme="light"] .atd-mobile-drawer__content {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: 0 18px 40px -10px rgba(15, 23, 42, 0.18), inset 0 1px rgba(255, 255, 255, 1);
+}
+
+.atd-mobile-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.18s ease;
+}
+
+.atd-mobile-item i {
+  width: 20px;
+  text-align: center;
+  color: var(--primary-2);
+  font-size: 16px;
+}
+
+.atd-mobile-item:hover,
+.atd-mobile-item.active {
+  background: var(--glass-strong);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.atd-mobile-item.active {
+  background: linear-gradient(135deg, rgba(108, 107, 245, 0.18), rgba(156, 123, 240, 0.12));
+  color: var(--primary-2);
+  border: 1px solid rgba(108, 107, 245, 0.3);
+}
+
+.atd-mobile-drawer__divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS (TABLET & MOBILE SCREEN SIZES)
+   ========================================================================== */
+
+@media (max-width: 1120px) {
+  .atd-modern__bar {
+    gap: 12px;
+    padding: 4px 6px 4px 14px;
+  }
+  .atd-modern__item {
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 960px) {
+  .atd-modern__dock {
+    display: none !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  .atd-mobile-toggle {
+    display: inline-flex !important;
+  }
+  .atd-modern__bar {
+    width: calc(100% - 24px);
+    max-width: 520px;
+    height: 48px;
+    padding: 4px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .atd-modern-wrapper {
+    padding: 10px 0 2px;
+  }
+  .atd-modern__bar {
+    width: calc(100% - 16px);
+    height: 46px;
+  }
+  .atd-modern__word {
+    font-size: 14px;
+  }
+}
+
+/* ==========================================================================
    REDESIGNED BUTTON SYSTEM (INSPIRED BY ANIMATED TOP DOCK - COMMAND BAR)
    ========================================================================== */
 

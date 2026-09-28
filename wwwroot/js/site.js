@@ -307,5 +307,46 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('scroll', updateHeaderGlassOnScroll, { passive: true });
         updateHeaderGlassOnScroll();
     }
+
+    // 8. Mobile Navigation Drawer Toggle Handler
+    const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
+    const mobileDrawer = document.getElementById('mobile-drawer-menu');
+
+    if (mobileToggleBtn && mobileDrawer) {
+        const iconOpen = mobileToggleBtn.querySelector('.icon-open');
+        const iconClose = mobileToggleBtn.querySelector('.icon-close');
+
+        function toggleMobileMenu(show) {
+            const isOpen = show !== undefined ? show : !mobileDrawer.classList.contains('is-open');
+            if (isOpen) {
+                mobileDrawer.classList.add('is-open');
+                mobileToggleBtn.setAttribute('aria-expanded', 'true');
+                if (iconOpen) iconOpen.style.display = 'none';
+                if (iconClose) iconClose.style.display = 'inline-block';
+            } else {
+                mobileDrawer.classList.remove('is-open');
+                mobileToggleBtn.setAttribute('aria-expanded', 'false');
+                if (iconOpen) iconOpen.style.display = 'inline-block';
+                if (iconClose) iconClose.style.display = 'none';
+            }
+        }
+
+        mobileToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileDrawer.contains(e.target) && !mobileToggleBtn.contains(e.target)) {
+                toggleMobileMenu(false);
+            }
+        });
+
+        // Close menu on ESC key press
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') toggleMobileMenu(false);
+        });
+    }
 });
 

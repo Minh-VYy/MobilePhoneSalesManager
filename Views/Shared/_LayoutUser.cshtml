@@ -160,7 +160,7 @@
                 <span class="atd-modern__word">PhoneStore</span>
             </a>
 
-            <!-- Dock Items Center (Capsule Proximity Dock) -->
+            <!-- Dock Items Center (Capsule Proximity Dock - Desktop & Tablet) -->
             <div class="atd-modern__dock" aria-label="Primary">
                 <a asp-controller="Home" asp-action="Index" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "true" : "false")">
                     <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-house"></i></span>
@@ -168,23 +168,23 @@
                 </a>
                 <a asp-controller="DienThoai" asp-action="Index" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "true" : "false")">
                     <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-mobile-screen"></i></span>
-                    <span>Danh Mục Sản Phẩm</span>
+                    <span>Sản Phẩm</span>
                 </a>
                 <a asp-controller="HoaDon" asp-action="Create" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "true" : "false")">
                     <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-cart-shopping"></i></span>
                     <span>Bán Hàng POS</span>
                 </a>
                 <a asp-controller="DienThoai" asp-action="XsltView" class="atd-modern__item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-file-pdf"></i></span>
-                    <span>Báo Cáo Catalog</span>
+                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-receipt"></i></span>
+                    <span>Tra Cứu / Invoice</span>
                 </a>
-                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-modern__item" title="Chuyển sang Bảng Quản Trị Admin">
+                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-modern__item" title="Chuyển sang Bảng Quản Lý Admin">
                     <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-user-shield"></i></span>
-                    <span>Quản Trị Admin</span>
+                    <span>Quản Lý Kho</span>
                 </a>
             </div>
 
-            <!-- Actions Right (Paired Sign-in & Gradient CTA Capsule) -->
+            <!-- Actions Right (Theme Toggle, Auth Capsule & Mobile Toggle) -->
             <div class="atd-modern__actions">
                 <!-- Theme Toggle -->
                 <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối" style="width: 34px; height: 34px; border-radius: 50%;">
@@ -193,23 +193,67 @@
 
                 @if (Context.Session.GetString("IsLoggedIn") == "true")
                 {
-                    <span class="atd-modern__ghost">@Context.Session.GetString("Username")</span>
-                    <a asp-controller="Account" asp-action="Logout" class="atd-modern__cta">
+                    <span class="atd-modern__ghost desktop-only">@Context.Session.GetString("Username")</span>
+                    <a asp-controller="Account" asp-action="Logout" class="atd-modern__cta desktop-only">
                         <span>Đăng Xuất</span>
                     </a>
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" class="atd-modern__ghost">Đăng Nhập</a>
-                    <a asp-controller="Account" asp-action="Register" class="atd-modern__cta">
+                    <a asp-controller="Account" asp-action="Login" class="atd-modern__ghost desktop-only">Đăng Nhập</a>
+                    <a asp-controller="Account" asp-action="Register" class="atd-modern__cta desktop-only">
                         <span>Đăng Ký</span>
                         <span class="atd-modern__cta-arrow">
                             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8h9.1M8.6 4.3 12.4 8l-3.8 3.7" /></svg>
                         </span>
                     </a>
                 }
+
+                <!-- Mobile Menu Hamburger Toggle Button -->
+                <button class="atd-mobile-toggle" id="mobile-menu-toggle" aria-label="Mở menu điều hướng" aria-expanded="false">
+                    <i class="fa-solid fa-bars icon-open"></i>
+                    <i class="fa-solid fa-xmark icon-close" style="display: none;"></i>
+                </button>
             </div>
         </nav>
+
+        <!-- Mobile Drawer Glass Menu Card -->
+        <div class="atd-mobile-drawer" id="mobile-drawer-menu" aria-hidden="true">
+            <div class="atd-mobile-drawer__content">
+                <a asp-controller="Home" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                    <i class="fa-solid fa-house"></i> Trang Chủ
+                </a>
+                <a asp-controller="DienThoai" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                    <i class="fa-solid fa-mobile-screen"></i> Sản Phẩm Điện Thoại
+                </a>
+                <a asp-controller="HoaDon" asp-action="Create" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")">
+                    <i class="fa-solid fa-cart-shopping"></i> Bán Hàng POS XML
+                </a>
+                <a asp-controller="DienThoai" asp-action="XsltView" class="atd-mobile-item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")">
+                    <i class="fa-solid fa-receipt"></i> Tra Cứu Hóa Đơn / Catalog
+                </a>
+                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-mobile-item">
+                    <i class="fa-solid fa-user-shield"></i> Bảng Quản Lý Admin
+                </a>
+
+                <div class="atd-mobile-drawer__divider"></div>
+
+                <div class="atd-mobile-drawer__auth">
+                    @if (Context.Session.GetString("IsLoggedIn") == "true")
+                    {
+                        <div class="user-info-pill mb-2" style="font-size: 13.5px; color: var(--text-muted);"><i class="fa-solid fa-user"></i> Tài khoản: <b style="color: var(--text);">@Context.Session.GetString("Username")</b></div>
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-primary w-100" style="justify-content: center; width: 100%;">Đăng Xuất</a>
+                    }
+                    else
+                    {
+                        <div style="display: flex; gap: 8px;">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-ghost" style="flex: 1; justify-content: center;">Đăng Nhập</a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary" style="flex: 1; justify-content: center;">Đăng Ký</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </header>
 
 
