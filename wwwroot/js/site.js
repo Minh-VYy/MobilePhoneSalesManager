@@ -315,17 +315,105 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleMobileMenu();
         });
 
-        // Close when clicking outside
         document.addEventListener('click', (e) => {
             if (!mobileDrawer.contains(e.target) && !mobileToggleBtn.contains(e.target)) {
                 toggleMobileMenu(false);
             }
         });
 
-        // Close menu on ESC key press
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') toggleMobileMenu(false);
         });
     }
+
+    // 9. Animated Number Counters for Stat Cards
+    function animateCounter(el) {
+        const target = parseInt(el.getAttribute('data-count') || '0', 10);
+        const suffix = el.getAttribute('data-suffix') || '';
+        const duration = 1400;
+        const start = performance.now();
+
+        function step(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(eased * target);
+            el.textContent = current.toLocaleString('vi-VN') + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+    }
+
+    const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const valEl = entry.target.querySelector('[data-count]');
+                if (valEl && !valEl.dataset.counted) {
+                    valEl.dataset.counted = '1';
+                    animateCounter(valEl);
+                }
+            }
+        });
+    }, { threshold: 0.35 });
+
+    document.querySelectorAll('.ps-stat-card').forEach(card => counterObserver.observe(card));
+
+    // 10. Progress Rail — track active section
+    const railBtns = document.querySelectorAll('.rail button[data-target]');
+    const railSections = Array.from(railBtns)
+        .map(btn => document.getElementById(btn.dataset.target))
+        .filter(Boolean);
+
+    if (railSections.length) {
+        const railObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    railBtns.forEach(btn => {
+                        btn.classList.toggle('on', btn.dataset.target === id);
+                    });
+                }
+            });
+        }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+
+        railSections.forEach(sec => railObserver.observe(sec));
+
+        railBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    }
+
+    // 11. New Color Swatch (ps-swatch) interactivity
+    const psSwatches = document.querySelectorAll('.ps-swatch');
+    const psHeroPhone = document.getElementById('hero-main-phone');
+
+    if (psSwatches.length && psHeroPhone) {
+        psSwatches.forEach(btn => {
+            btn.addEventListener('click', function () {
+                psSwatches.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const colorName = this.getAttribute('data-color-name');
+                const imageSrc = this.getAttribute('data-img');
+
+                if (imageSrc) {
+                    psHeroPhone.style.opacity = '0.2';
+                    psHeroPhone.style.transform = 'scale(0.94) translateY(6px)';
+                    setTimeout(() => {
+                        psHeroPhone.src = imageSrc;
+                        psHeroPhone.style.opacity = '1';
+                        psHeroPhone.style.transform = '';
+                    }, 220);
+                }
+
+                showToast(`Đã chọn màu: ${colorName}`);
+            });
+        });
+    }
 });
+
 
