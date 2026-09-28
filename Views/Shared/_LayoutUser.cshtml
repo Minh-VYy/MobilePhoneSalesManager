@@ -163,31 +163,31 @@
             <!-- Dock Items Center (Capsule Proximity Dock) -->
             <div class="atd-modern__dock" aria-label="Primary">
                 <a asp-controller="Home" asp-action="Index" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-cube"></i></span>
+                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-house"></i></span>
                     <span>Trang Chủ</span>
                 </a>
                 <a asp-controller="DienThoai" asp-action="Index" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
-                    <span>Danh Mục SP</span>
+                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-mobile-screen"></i></span>
+                    <span>Danh Mục Sản Phẩm</span>
                 </a>
                 <a asp-controller="HoaDon" asp-action="Create" class="atd-modern__item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
+                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-cart-shopping"></i></span>
                     <span>Bán Hàng POS</span>
                 </a>
                 <a asp-controller="DienThoai" asp-action="XsltView" class="atd-modern__item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")" aria-pressed="@(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "true" : "false")">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-file-code"></i></span>
-                    <span>XSLT Catalog</span>
+                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-file-pdf"></i></span>
+                    <span>Báo Cáo Catalog</span>
                 </a>
-                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-modern__item" title="Chuyển sang Giao diện Admin">
-                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span>
-                    <span>Admin View</span>
+                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-modern__item" title="Chuyển sang Bảng Quản Trị Admin">
+                    <span class="atd-modern__icon" aria-hidden="true"><i class="fa-solid fa-user-shield"></i></span>
+                    <span>Quản Trị Admin</span>
                 </a>
             </div>
 
             <!-- Actions Right (Paired Sign-in & Gradient CTA Capsule) -->
             <div class="atd-modern__actions">
                 <!-- Theme Toggle -->
-                <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối" style="width: 32px; height: 32px; border-radius: 50%;">
+                <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối" style="width: 34px; height: 34px; border-radius: 50%;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px;"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
                 </button>
 
@@ -200,9 +200,9 @@
                 }
                 else
                 {
-                    <a asp-controller="Account" asp-action="Login" class="atd-modern__ghost">Sign in</a>
+                    <a asp-controller="Account" asp-action="Login" class="atd-modern__ghost">Đăng Nhập</a>
                     <a asp-controller="Account" asp-action="Register" class="atd-modern__cta">
-                        <span>Start building</span>
+                        <span>Đăng Ký</span>
                         <span class="atd-modern__cta-arrow">
                             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8h9.1M8.6 4.3 12.4 8l-3.8 3.7" /></svg>
                         </span>
@@ -211,6 +211,7 @@
             </div>
         </nav>
     </header>
+
 
     <!-- ================= MAIN STOREFRONT VIEW ================= -->
     <main role="main" class="view">

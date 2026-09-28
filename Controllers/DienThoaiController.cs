@@ -172,10 +172,10 @@ namespace QuanLyBanDienThoai.Controllers
             foreach (var item in items)
             {
                 sb.AppendLine("    <item>");
-                sb.AppendLine($"      <title><![CDATA[{item.TenDienThoai} ({item.TenHang})]]></title>");
-                sb.AppendLine($"      <description><![CDATA[Giá khuyến mãi: {item.GiaGiamFormatted} (Giá niêm yết: {item.GiaGoiFormatted}) | RAM: {item.Ram}, ROM: {item.Rom}, Màu: {item.MauSac}. Số lượng trong kho: {item.SoLuongTon} chiếc.]]></description>");
-                sb.AppendLine($"      <link>/DienThoai/Index?keyword={item.MaDienThoai}</link>");
-                sb.AppendLine($"      <guid>{item.MaDienThoai}</guid>");
+                sb.AppendLine($"      <title><![CDATA[{item.TenSP} ({item.TenHang})]]></title>");
+                sb.AppendLine($"      <description><![CDATA[Giá bán: {item.GiaBan:N0} VNĐ | RAM: {item.ThongSo?.RAM}, ROM: {item.ThongSo?.BoNhoTrong}, Chip: {item.ThongSo?.Chip}. Số lượng tồn kho: {item.SoLuongTon} chiếc.]]></description>");
+                sb.AppendLine($"      <link>/DienThoai/Index?keyword={item.MaSP}</link>");
+                sb.AppendLine($"      <guid>{item.MaSP}</guid>");
                 sb.AppendLine("    </item>");
             }
 

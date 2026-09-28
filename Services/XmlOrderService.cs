@@ -42,15 +42,16 @@ namespace QuanLyBanDienThoai.Services
         // 2. Validate XML bằng XSD
         public bool ValidateWithXsd(XDocument xmlDoc, string xsdFileName, out List<string> errors)
         {
-            errors = new List<string>();
+            var errorList = new List<string>();
             var schemas = new XmlSchemaSet();
             schemas.Add("", Path.Combine(_envPath, xsdFileName));
 
             bool isValid = true;
             xmlDoc.Validate(schemas, (o, e) => {
-                errors.Add(e.Message);
+                errorList.Add(e.Message);
                 isValid = false;
             });
+            errors = errorList;
             return isValid;
         }
 
