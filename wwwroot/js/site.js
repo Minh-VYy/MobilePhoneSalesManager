@@ -1,87 +1,102 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. SCROLL REVEAL ANIMATION WITH STAGGER EFFECT (INTERSECTION OBSERVER API)
-    const revealElements = document.querySelectorAll('.scroll-reveal');
-    
-    if ('IntersectionObserver' in window && revealElements.length > 0) {
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px 0px -40px 0px',
-            threshold: 0.15
-        };
+// Theme Toggle & Dark/Light Mode Preference
+(function () {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
 
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const el = entry.target;
-                    // Lấy stagger delay từ data-delay nếu có
-                    const delay = el.getAttribute('data-delay') || 0;
-                    setTimeout(() => {
-                        el.classList.add('revealed');
-                    }, delay);
-                    // Đã reveal xong thì unobserve
-                    observer.unobserve(el);
-                }
+    document.addEventListener('DOMContentLoaded', function () {
+        const themeBtn = document.getElementById('theme-toggle');
+        if (themeBtn) {
+            themeBtn.addEventListener('click', function () {
+                const currentTheme = document.documentElement.getAttribute('data-theme') || 
+                    (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                localStorage.setItem('theme', nextTheme);
+                showToast(`Đã chuyển sang giao diện ${nextTheme === 'light' ? 'Sáng' : 'Tối'}`);
             });
-        }, observerOptions);
-
-        revealElements.forEach((el, index) => {
-            // Tự động gán stagger delay nếu chưa gán
-            if (!el.hasAttribute('data-delay')) {
-                const staggerDelay = (index % 6) * 75; // Thời gian lệch nhau 75ms
-                el.setAttribute('data-delay', staggerDelay);
-            }
-            revealObserver.observe(el);
-        });
-    } else {
-        // Fallback nếu trình duyệt cũ không hỗ trợ IntersectionObserver
-        revealElements.forEach(el => el.classList.add('revealed'));
-    }
-
-    // 2. POS AUTO CALCULATE SUBTOTALS
-    const itemSelects = document.querySelectorAll('.pos-item-select');
-    itemSelects.forEach(select => {
-        select.addEventListener('change', updatePosSubtotals);
-    });
-
-    const qtyInputs = document.querySelectorAll('.pos-qty-input');
-    qtyInputs.forEach(input => {
-        input.addEventListener('input', updatePosSubtotals);
-    });
-
-    function updatePosSubtotals() {
-        let grandTotal = 0;
-        const rows = document.querySelectorAll('.pos-item-row');
-        
-        rows.forEach(row => {
-            const select = row.querySelector('.pos-item-select');
-            const qtyInput = row.querySelector('.pos-qty-input');
-            const priceCell = row.querySelector('.pos-price-cell');
-            const subtotalCell = row.querySelector('.pos-subtotal-cell');
-
-            if (select && qtyInput && priceCell && subtotalCell) {
-                const selectedOption = select.options[select.selectedIndex];
-                const price = parseFloat(selectedOption.getAttribute('data-price') || 0);
-                const qty = parseInt(qtyInput.value || 0);
-                const subtotal = price * qty;
-
-                priceCell.textContent = price > 0 ? price.toLocaleString('vi-VN') + ' VNĐ' : '0 VNĐ';
-                subtotalCell.textContent = subtotal > 0 ? subtotal.toLocaleString('vi-VN') + ' VNĐ' : '0 VNĐ';
-
-                grandTotal += subtotal;
-            }
-        });
-
-        const grandTotalElement = document.getElementById('posGrandTotal');
-        if (grandTotalElement) {
-            grandTotalElement.textContent = grandTotal.toLocaleString('vi-VN') + ' VNĐ';
         }
-    }
+    });
+})();
 
-    // Run POS calculation on initial load
-    updatePosSubtotals();
+// Toast notification helper
+function showToast(message) {
+    let toast = document.getElementById('app-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'app-toast';
+        toast.className = 'toast';
+        toast.hidden = true;
+        toast.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/>
+            </svg>
+            <span id="toast-message"></span>
+        `;
+        document.body.appendChild(toast);
+    }
+    
+    document.getElementById('toast-message').innerText = message;
+    toast.hidden = false;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        setTimeout(() => { toast.hidden = true; }, 250);
+    }, 2500);
+}
+
+// Scroll Reveal & Dynamic Interactions
+document.addEventListener('DOMContentLoaded', function () {
+    // 1. Intersection Observer for Scroll Animations
+    const observerOptions = {
+        root: null,
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
+    };
+
+    const scrollObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+        scrollObserver.observe(el);
+    });
+
+    // 2. Color Swatch Interactivity for Flagship Phone
+    const swatchBtns = document.querySelectorAll('.swatch-btn');
+    const heroPhoneImg = document.getElementById('hero-main-phone');
+
+    if (swatchBtns.length && heroPhoneImg) {
+        swatchBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                swatchBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const colorName = this.getAttribute('data-color-name');
+                const imageSrc = this.getAttribute('data-img');
+
+                if (imageSrc) {
+                    heroPhoneImg.style.opacity = '0.3';
+                    heroPhoneImg.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        heroPhoneImg.src = imageSrc;
+                        heroPhoneImg.style.opacity = '1';
+                        heroPhoneImg.style.transform = 'scale(1)';
+                    }, 200);
+                }
+
+                showToast(`Đã chọn phiên bản màu: ${colorName}`);
+            });
+        });
+    }
 });
 
-// Print Invoice Function
-function printInvoice() {
-    window.print();
-}

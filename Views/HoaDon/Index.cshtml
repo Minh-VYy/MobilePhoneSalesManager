@@ -1,67 +1,70 @@
 @model List<QuanLyBanDienThoai.Models.HoaDonModel>
 @{
-    ViewData["Title"] = "Danh Sách Hóa Đơn (XML)";
+    ViewData["Title"] = "Danh sách hóa đơn XML";
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-receipt text-success"></i>
-            <span>QUẢN LÝ HÓA ĐƠN BÁN HÀNG XML</span>
+<div class="glass">
+    <div class="table-toolbar">
+        <div class="section-title" style="margin:0;">
+            Danh sách hóa đơn bán hàng XML
+            <small>Đọc trực tiếp từ HoaDon.xml — Sắp xếp theo ngày lập mới nhất</small>
         </div>
         <div class="d-flex gap-2">
-            <a asp-action="Create" class="btn-custom btn-success-custom">
-                <i class="fa-solid fa-cart-shopping"></i> Lập Hóa Đơn Mới (POS)
+            <a asp-action="Create" class="btn btn-primary btn-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                Lập hóa đơn mới (POS)
             </a>
-            <a asp-action="ValidateXsd" class="btn-custom btn-secondary-custom">
-                <i class="fa-solid fa-shield-check"></i> Validate XSD Hóa Đơn
+            <a asp-action="ValidateXsd" class="btn btn-ghost btn-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Validate HoaDon.xsd
             </a>
         </div>
     </div>
 
     @if (Model == null || Model.Count == 0)
     {
-        <div class="alert-custom alert-warning">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <div>Chưa có hóa đơn nào trong tệp XML.</div>
+        <div class="p-4 text-center text-muted">
+            <i class="fa-solid fa-receipt fs-2 mb-2 text-faint d-block"></i>
+            Chưa có dữ liệu hóa đơn nào trong tệp HoaDon.xml
         </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="custom-table">
-                <thead>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã HĐ</th>
+                    <th>Ngày lập</th>
+                    <th>Khách hàng</th>
+                    <th>Số điện thoại</th>
+                    <th>Thu ngân</th>
+                    <th class="num">Tổng sản phẩm</th>
+                    <th class="num">Tổng tiền (VNĐ)</th>
+                    <th>Trạng thái XML</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inv in Model)
+                {
                     <tr>
-                        <th>Mã HĐ</th>
-                        <th>Ngày Lập</th>
-                        <th>Khách Hàng</th>
-                        <th>Số Điện Thoại</th>
-                        <th>Thu Ngân</th>
-                        <th>Số Sản Phẩm</th>
-                        <th>Tổng Tiền (VNĐ)</th>
-                        <th style="text-align: right;">Thao Tác</th>
+                        <td class="mono"><strong>@inv.MaHD</strong></td>
+                        <td>@inv.NgayLap.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td><b>@inv.KhachHang.TenKH</b></td>
+                        <td class="mono">@inv.KhachHang.SoDienThoai</td>
+                        <td>@inv.NhanVien</td>
+                        <td class="num">@inv.ChiTiet.Sum(x => x.SoLuong) máy</td>
+                        <td class="num" style="color:var(--gold); font-weight:700;">@inv.TongTien.ToString("#,##0") đ</td>
+                        <td><span class="status-dot st-ok">Hoàn tất (Valid)</span></td>
+                        <td class="row-actions">
+                            <a asp-action="Print" asp-route-id="@inv.MaHD" class="btn btn-ghost btn-sm">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                                In XSLT
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var inv in Model)
-                    {
-                        <tr>
-                            <td><strong class="text-success">@inv.MaHD</strong></td>
-                            <td>@inv.NgayLap.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td><strong>@inv.KhachHang.TenKH</strong></td>
-                            <td><span class="text-muted">@inv.KhachHang.SoDienThoai</span></td>
-                            <td>@inv.NhanVien</td>
-                            <td><span class="badge-xml">@inv.ChiTiet.Sum(x => x.SoLuong) SP</span></td>
-                            <td><strong style="color: #34d399; font-size: 1.05rem;">@inv.TongTien.ToString("#,##0")</strong></td>
-                            <td style="text-align: right;">
-                                <a asp-action="Print" asp-route-id="@inv.MaHD" class="btn-custom btn-primary-custom" style="padding: 6px 14px; font-size: 0.85rem;">
-                                    <i class="fa-solid fa-print"></i> Xem &amp; In XSLT
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     }
 </div>

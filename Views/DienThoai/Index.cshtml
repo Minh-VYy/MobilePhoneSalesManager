@@ -1,94 +1,131 @@
 @model QuanLyBanDienThoai.Models.SearchFilterViewModel
 @{
-    ViewData["Title"] = "Catalogue Sản Phẩm Điện Thoại";
+    ViewData["Title"] = "Danh mục sản phẩm";
+    
+    // Dynamic XPath expression query preview
+    string xpathQuery = "//DienThoai";
+    List<string> xpathConditions = new List<string>();
+
+    if (!string.IsNullOrEmpty(Model.Keyword))
+    {
+        xpathConditions.Add($"contains(translate(TenSP, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '{Model.Keyword.ToLower()}')");
+    }
+    if (!string.IsNullOrEmpty(Model.MaHang) && Model.MaHang != "ALL")
+    {
+        xpathConditions.Add($"MaHang='{Model.MaHang}'");
+    }
+    if (Model.MaxGia.HasValue)
+    {
+        xpathConditions.Add($"GiaBan <= {Model.MaxGia.Value}");
+    }
+    if (Model.MinGia.HasValue)
+    {
+        xpathConditions.Add($"GiaBan >= {Model.MinGia.Value}");
+    }
+
+    if (xpathConditions.Count > 0)
+    {
+        xpathQuery += "[" + string.Join(" and ", xpathConditions) + "]";
+    }
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-mobile-screen-button text-primary"></i>
-            <span>CATALOGUE ĐIỆN THOẠI DI ĐỘNG</span>
-        </div>
-        <div class="d-flex gap-2">
-            <a asp-action="XsltView" class="btn-custom btn-secondary-custom">
-                <i class="fa-solid fa-code"></i> Xem bằng XSLT Engine
-            </a>
-            <a asp-action="ValidateXsd" class="btn-custom btn-success-custom">
-                <i class="fa-solid fa-check-double"></i> Validate XSD Schema
-            </a>
+<!-- FILTER BAR WITH BRAND CHIPS & PRICE SLIDER -->
+<div class="glass filter-bar mb-3">
+    <a asp-action="Index" asp-route-maHang="ALL" class="chip @(Model.MaHang == "ALL" || string.IsNullOrEmpty(Model.MaHang) ? "active" : "")">Tất cả</a>
+    <a asp-action="Index" asp-route-maHang="APPLE" class="chip @(Model.MaHang == "APPLE" ? "active" : "")">APPLE</a>
+    <a asp-action="Index" asp-route-maHang="SAMSUNG" class="chip @(Model.MaHang == "SAMSUNG" ? "active" : "")">SAMSUNG</a>
+    <a asp-action="Index" asp-route-maHang="XIAOMI" class="chip @(Model.MaHang == "XIAOMI" ? "active" : "")">XIAOMI</a>
+    <a asp-action="Index" asp-route-maHang="OPPO" class="chip @(Model.MaHang == "OPPO" ? "active" : "")">OPPO</a>
+    <a asp-action="Index" asp-route-maHang="GOOGLE" class="chip @(Model.MaHang == "GOOGLE" ? "active" : "")">GOOGLE</a>
+
+    <form method="get" asp-action="Index" id="catalogue-form" class="price-mini ms-auto d-flex align-items-center gap-2">
+        <input type="hidden" name="maHang" value="@Model.MaHang" />
+        <input type="hidden" name="keyword" value="@Model.Keyword" />
+        
+        <span>Tối đa:</span>
+        <input type="range" name="maxGia" min="5000000" max="50000000" step="1000000" 
+               value="@(Model.MaxGia.HasValue ? Model.MaxGia.Value : 50000000)" 
+               oninput="document.getElementById('price-val').innerText = (this.value / 1000000) + 'tr'; " 
+               onchange="this.form.submit()" />
+        <span class="mono" id="price-val">@(Model.MaxGia.HasValue ? (Model.MaxGia.Value / 1000000).ToString("0") + "tr" : "50tr")</span>
+    </form>
+</div>
+
+<!-- XPATH EXPRESSION READOUT -->
+<div class="xpath-readout mb-4">
+    <i class="fa-solid fa-code text-primary me-1"></i> 
+    XPath: <strong>@xpathQuery</strong> &nbsp;·&nbsp; Khớp <strong>@Model.Items.Count</strong> kết quả trong DienThoai.xml
+</div>
+
+<!-- SEARCH KEYWORD FORM -->
+<form method="get" asp-action="Index" class="d-flex gap-2 mb-4">
+    <input type="hidden" name="maHang" value="@Model.MaHang" />
+    <input type="hidden" name="maxGia" value="@Model.MaxGia" />
+    <div class="search-box w-100" style="background: var(--bg-1);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+        <input type="text" name="keyword" value="@Model.Keyword" placeholder="Nhập tên sản phẩm, chip, RAM để lọc bằng C# XPath..." />
+    </div>
+    <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-filter"></i> Lọc XPath
+    </button>
+    <a asp-action="Index" class="btn btn-ghost" title="Đặt lại">
+        <i class="fa-solid fa-rotate-left"></i>
+    </a>
+</form>
+
+<!-- PRODUCT GRID CARDS -->
+@if (Model.Items == null || Model.Items.Count == 0)
+{
+    <div class="validate-line v-err">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/></svg>
+        <div>
+            <b>Không tìm thấy điện thoại nào</b>
+            <span>Không có mẫu sản phẩm XML nào khớp với truy vấn XPath của bạn. Hãy thử thay đổi bộ lọc.</span>
         </div>
     </div>
-
-    <!-- FILTER BAR VỚI TRUY VẤN XPATH TRONG C# -->
-    <form method="get" asp-action="Index" class="filter-bar">
-        <div>
-            <input type="text" name="keyword" value="@Model.Keyword" placeholder="Nhập tên sản phẩm, chip, RAM..." class="form-control-custom" />
-        </div>
-        <div>
-            <select name="maHang" class="form-select-custom">
-                <option value="ALL" selected="@(Model.MaHang == "ALL")">-- Tất cả hãng --</option>
-                <option value="APPLE" selected="@(Model.MaHang == "APPLE")">Apple (iPhone)</option>
-                <option value="SAMSUNG" selected="@(Model.MaHang == "SAMSUNG")">Samsung</option>
-                <option value="XIAOMI" selected="@(Model.MaHang == "XIAOMI")">Xiaomi</option>
-                <option value="OPPO" selected="@(Model.MaHang == "OPPO")">OPPO</option>
-                <option value="GOOGLE" selected="@(Model.MaHang == "GOOGLE")">Google Pixel</option>
-            </select>
-        </div>
-        <div>
-            <input type="number" name="minGia" value="@Model.MinGia" placeholder="Giá từ (VNĐ)" class="form-control-custom" />
-        </div>
-        <div>
-            <input type="number" name="maxGia" value="@Model.MaxGia" placeholder="Giá đến (VNĐ)" class="form-control-custom" />
-        </div>
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn-custom btn-primary-custom">
-                <i class="fa-solid fa-filter"></i> Lọc XPath
-            </button>
-            <a asp-action="Index" class="btn-custom btn-secondary-custom" title="Đặt lại">
-                <i class="fa-solid fa-rotate-left"></i>
-            </a>
-        </div>
-    </form>
-
-    <!-- GRID SẢN PHẨM VỚI HIỆU ỨNG SCROLL REVEAL STAGGER ANIMATION -->
-    @if (Model.Items == null || Model.Items.Count == 0)
-    {
-        <div class="alert-custom alert-warning">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <div>Không tìm thấy điện thoại nào phù hợp với điều kiện tìm kiếm.</div>
-        </div>
-    }
-    else
-    {
-        <div class="phone-grid">
-            @for (int i = 0; i < Model.Items.Count; i++)
+}
+else
+{
+    <div class="product-grid">
+        @foreach (var phone in Model.Items)
+        {
+            string pmGradient = phone.MaHang.ToUpper() switch
             {
-                var phone = Model.Items[i];
-                int delay = (i % 6) * 75; // Stagger effect lệch nhau 75ms
-                
-                <div class="phone-card scroll-reveal" data-delay="@delay">
-                    <span class="phone-badge">@phone.TenHang</span>
-                    <div class="phone-img-box">
-                        <img src="@phone.HinhAnh" alt="@phone.TenSP" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'" />
-                    </div>
-                    <div class="phone-info">
-                        <span class="phone-code">XML Code: @phone.MaSP</span>
-                        <h3 class="phone-title">@phone.TenSP</h3>
+                "APPLE" => "linear-gradient(140deg,#6C6BF5,#3B3A9E)",
+                "SAMSUNG" => "linear-gradient(140deg,#3ECF8E,#1E8F5F)",
+                "XIAOMI" => "linear-gradient(140deg,#F0B429,#B87A0C)",
+                "OPPO" => "linear-gradient(140deg,#F0596B,#A02F41)",
+                "GOOGLE" => "linear-gradient(140deg,#9C7BF0,#5B3FA0)",
+                _ => "linear-gradient(140deg,#6C6BF5,#3B3A9E)"
+            };
 
-                        <div class="phone-specs">
-                            <div><strong>Màn hình:</strong> @phone.ThongSo.ManHinh</div>
-                            <div><strong>RAM / ROM:</strong> @phone.ThongSo.RAM - @phone.ThongSo.BoNhoTrong</div>
-                            <div><strong>Chip:</strong> @phone.ThongSo.Chip</div>
-                            <div><strong>Pin:</strong> @phone.ThongSo.Pin</div>
-                        </div>
-
-                        <div class="phone-footer">
-                            <div class="phone-price">@phone.GiaBan.ToString("#,##0") VNĐ</div>
-                            <div class="phone-stock">Tồn: <span class="stock-num">@phone.SoLuongTon</span></div>
-                        </div>
-                    </div>
+            <div class="glass product-card">
+                <div class="product-media" style="--pm-bg: @pmGradient;">
+                    <img src="@phone.HinhAnh" alt="@phone.TenSP" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.6\'><rect x=\'7\' y=\'2\' width=\'10\' height=\'20\' rx=\'2.4\'/></svg>'" />
                 </div>
-            }
-        </div>
-    }
-</div>
+                <div>
+                    <div class="product-brand">@phone.TenHang &bull; @phone.MaSP</div>
+                    <div class="product-name">@phone.TenSP</div>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-tag">@phone.ThongSo.RAM</span>
+                    <span class="spec-tag">@phone.ThongSo.BoNhoTrong</span>
+                    <span class="spec-tag">@phone.ThongSo.Chip</span>
+                </div>
+                <div class="price-row">
+                    <span class="price">@phone.GiaBan.ToString("#,##0")đ</span>
+                    @if (phone.SoLuongTon < 5)
+                    {
+                        <span class="stock-tag low-stock">Còn @phone.SoLuongTon máy</span>
+                    }
+                    else
+                    {
+                        <span class="stock-tag in-stock">Còn hàng (@phone.SoLuongTon)</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}

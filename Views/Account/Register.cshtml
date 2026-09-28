@@ -1,0 +1,68 @@
+@{
+    ViewData["Title"] = "Đăng Ký Tài Khoản — PhoneStore 3D";
+    Layout = "_LayoutUser";
+}
+
+<div style="max-width: 500px; margin: 40px auto; padding: 0 16px;">
+    <div class="glass" style="padding: 36px 32px; border-radius: var(--radius-lg); box-shadow: 0 20px 50px -15px rgba(0,0,0,0.4);">
+        <div style="text-align: center; margin-bottom: 28px;">
+            <div class="brand-mark" style="margin: 0 auto 14px; width: 48px; height: 48px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
+            </div>
+            <h2 style="font-family: var(--font-head); font-weight: 800; font-size: 24px; margin: 0 0 6px;">ĐĂNG KÝ TÀI KHOẢN</h2>
+            <p style="color: var(--text-muted); font-size: 13.5px; margin: 0;">Tạo tài khoản Khách hàng để trải nghiệm mua sắm công nghệ 3D</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="validate-line v-err" style="margin-bottom: 20px; border-radius: 10px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/></svg>
+                <div><b>Lỗi đăng ký:</b><span>@ViewBag.Error</span></div>
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="field">
+                <label for="fullname">HỌ VÀ TÊN KHÁCH HÀNG</label>
+                <input type="text" id="fullname" name="fullname" placeholder="Nguyễn Văn A..." required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="field">
+                    <label for="email">EMAIL</label>
+                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required />
+                </div>
+                <div class="field">
+                    <label for="phone">SỐ ĐIỆN THOẠI</label>
+                    <input type="tel" id="phone" name="phone" placeholder="0987654321" required />
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="username">TÊN ĐĂNG NHẬP</label>
+                <input type="text" id="username" name="username" placeholder="Chủ tài khoản..." required />
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="field">
+                    <label for="password">MẬT KHẨU</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required />
+                </div>
+                <div class="field">
+                    <label for="confirmPassword">XÁC NHẬN MẬT KHẨU</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; font-size: 14.5px; margin-top: 10px;">
+                <i class="fa-solid fa-user-plus"></i> Đăng Ký Tài Khoản
+            </button>
+        </form>
+
+        <div style="margin-top: 24px; text-align: center; font-size: 13px; color: var(--text-muted);">
+            Đã có tài khoản? <a asp-controller="Account" asp-action="Login" style="color: var(--primary-2); font-weight: 600;">Đăng nhập ngay</a>
+        </div>
+    </div>
+</div>

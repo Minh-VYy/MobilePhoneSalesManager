@@ -1,116 +1,210 @@
 @model QuanLyBanDienThoai.Models.CreateHoaDonInputModel
 @{
-    ViewData["Title"] = "Lập Hóa Đơn Bán Hàng POS (XML)";
+    ViewData["Title"] = "Bán hàng (POS)";
     var phoneList = (List<QuanLyBanDienThoai.Models.DienThoaiModel>)ViewBag.PhoneList;
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-cart-shopping text-emerald"></i>
-            <span>LẬP HÓA ĐƠN BÁN HÀNG MỚI (GHI VÀO XML &amp; XSD VALIDATE)</span>
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="validate-line v-err mb-4">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/></svg>
+        <div>
+            <b>Không thể lập hóa đơn XML</b>
+            <span>@ViewBag.ErrorMessage</span>
         </div>
-        <a asp-action="Index" class="btn-custom btn-secondary-custom">
-            <i class="fa-solid fa-arrow-left"></i> Trở về Danh sách
-        </a>
     </div>
+}
 
-    @if (ViewBag.ErrorMessage != null)
-    {
-        <div class="alert-custom alert-danger">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <div>@ViewBag.ErrorMessage</div>
-        </div>
-    }
+<form asp-action="Create" method="post" id="posForm">
+    @Html.AntiForgeryToken()
 
-    <form asp-action="Create" method="post" id="posForm">
-        @Html.AntiForgeryToken()
-
-        <div class="row g-4 mb-4">
-            <!-- THÔNG TIN KHÁCH HÀNG -->
-            <div class="col-md-5">
-                <div class="glass-card" style="padding: 1.2rem; background: var(--bg-glass); margin-bottom: 0;">
-                    <h4 class="text-info mb-3"><i class="fa-solid fa-user"></i> Thông Tin Khách Hàng</h4>
-                    
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Họ và Tên KH (*):</label>
-                        <input asp-for="TenKH" class="form-control-custom" placeholder="Ví dụ: Nguyễn Văn A" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label font-weight-bold">Số Điện Thoại (*):</label>
-                        <input asp-for="SoDienThoai" class="form-control-custom" placeholder="Ví dụ: 0987654321" required />
-                        <small class="text-muted">Regex XSD: 10 chữ số bắt đầu bằng 03, 05, 07, 08, 09.</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Địa Chỉ Giao Hàng (*):</label>
-                        <input asp-for="DiaChi" class="form-control-custom" placeholder="Ví dụ: 123 Lê Lợi, Q.1, TP.HCM" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Tên Nhân Viên Thu Ngân:</label>
-                        <input asp-for="NhanVien" class="form-control-custom" value="Phạm Minh Thu" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Ghi Chú Đơn Hàng:</label>
-                        <textarea asp-for="GhiChu" rows="2" class="form-control-custom" placeholder="Thanh toán chuyển khoản / Quà tặng kèm..."></textarea>
-                    </div>
+    <div class="pos-grid">
+        <!-- LEFT: PRODUCT PICK GRID -->
+        <div class="glass">
+            <div class="table-toolbar" style="padding-bottom:0;">
+                <div class="section-title" style="margin:0;">
+                    Chọn sản phẩm điện thoại XML
+                    <small>Nhấp chuột vào thẻ sản phẩm để thêm trực tiếp vào hóa đơn bán lẻ</small>
                 </div>
             </div>
 
-            <!-- DANH SÁCH SẢN PHẨM MUA -->
-            <div class="col-md-7">
-                <div class="glass-card" style="padding: 1.2rem; background: var(--bg-glass); margin-bottom: 0;">
-                    <h4 class="text-success mb-3"><i class="fa-solid fa-mobile-button"></i> Danh Sách Sản Phẩm Mua</h4>
+            <div class="pos-pick-grid" id="pick-grid">
+                @if (phoneList != null)
+                {
+                    foreach (var phone in phoneList)
+                    {
+                        string pmGradient = phone.MaHang.ToUpper() switch
+                        {
+                            "APPLE" => "linear-gradient(140deg,#6C6BF5,#3B3A9E)",
+                            "SAMSUNG" => "linear-gradient(140deg,#3ECF8E,#1E8F5F)",
+                            "XIAOMI" => "linear-gradient(140deg,#F0B429,#B87A0C)",
+                            "OPPO" => "linear-gradient(140deg,#F0596B,#A02F41)",
+                            "GOOGLE" => "linear-gradient(140deg,#9C7BF0,#5B3FA0)",
+                            _ => "linear-gradient(140deg,#6C6BF5,#3B3A9E)"
+                        };
 
-                    <table class="custom-table" id="posTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 45%;">Sản Phẩm XML</th>
-                                <th style="width: 15%;">Số Lượng</th>
-                                <th style="width: 20%;">Đơn Giá</th>
-                                <th style="width: 20%;">Thành Tiền</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (int i = 0; i < 3; i++)
-                            {
-                                <tr class="pos-item-row">
-                                    <td>
-                                        <select name="Items[@i].MaSP" class="form-select-custom pos-item-select">
-                                            <option value="" data-price="0">-- Chọn điện thoại --</option>
-                                            @foreach (var phone in phoneList)
-                                            {
-                                                <option value="@phone.MaSP" data-price="@phone.GiaBan">
-                                                    @phone.TenSP (Tồn: @phone.SoLuongTon)
-                                                </option>
-                                            }
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="Items[@i].SoLuong" value="@(i == 0 ? 1 : 0)" min="0" class="form-control-custom pos-qty-input" />
-                                    </td>
-                                    <td class="pos-price-cell text-muted">0 VNĐ</td>
-                                    <td class="pos-subtotal-cell fw-bold text-success">0 VNĐ</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                    <div class="d-flex justify-content-between align-items-center mt-4 p-3" style="background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <span class="fs-5 font-weight-bold">TỔNG THÀNH TIỀN:</span>
-                        <span class="fs-4 font-weight-bold text-success" id="posGrandTotal">0 VNĐ</span>
-                    </div>
-
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn-custom btn-success-custom p-3 fs-6">
-                            <i class="fa-solid fa-check-to-slot"></i> TẠO HÓA ĐƠN &amp; XUẤT XSLT
-                        </button>
-                    </div>
-                </div>
+                        <div class="pick-card glass" 
+                             onclick="addToCart('@phone.MaSP', '@phone.TenSP', @phone.GiaBan, '@pmGradient', @phone.SoLuongTon)">
+                            <div class="pick-media" style="--pm-bg: @pmGradient;">
+                                <img src="@phone.HinhAnh" alt="@phone.TenSP" style="max-height: 50px; max-width: 90%; object-fit: contain;" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.6\'><rect x=\'7\' y=\'2\' width=\'10\' height=\'20\' rx=\'2.4\'/></svg>'" />
+                            </div>
+                            <div class="pick-name">@phone.TenSP</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span class="pick-price">@phone.GiaBan.ToString("#,##0")đ</span>
+                                <span class="pick-add">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
-    </form>
-</div>
+
+        <!-- RIGHT: LIVE CART & CUSTOMER FORM -->
+        <div class="glass cart-panel">
+            <div class="section-title" style="margin-bottom:8px;">
+                Hóa đơn đang lập (XML)
+                <small id="cart-count">Chưa chọn sản phẩm</small>
+            </div>
+
+            <!-- DYNAMIC CART ITEMS -->
+            <div id="cart-items">
+                <div class="cart-empty" id="cart-empty-msg">
+                    <i class="fa-solid fa-cart-arrow-down fs-3 d-block mb-2 text-faint"></i>
+                    Nhấp chọn sản phẩm bên trái để thêm vào hóa đơn
+                </div>
+            </div>
+
+            <!-- HIDDEN INPUTS FOR ASP.NET BINDING -->
+            <div id="hidden-inputs-container"></div>
+
+            <div style="margin-top:6px; border-top: 1px solid var(--border); padding-top: 12px;">
+                <div class="field">
+                    <label>Tên khách hàng (*)</label>
+                    <input asp-for="TenKH" id="kh-name" placeholder="Nguyễn Văn A" required />
+                </div>
+                <div class="field">
+                    <label>Số điện thoại (*)</label>
+                    <input asp-for="SoDienThoai" id="kh-phone" placeholder="09xxxxxxxx" required />
+                    <span class="hint">Regex Schema XSD: (0[3|5|7|8|9])+([0-9]{8})</span>
+                </div>
+                <div class="field">
+                    <label>Địa chỉ giao hàng (*)</label>
+                    <input asp-for="DiaChi" placeholder="123 Nguyễn Huệ, Q.1, TP.HCM" required />
+                </div>
+                <div class="field">
+                    <label>Thu ngân xử lý</label>
+                    <input asp-for="NhanVien" value="Phạm Minh Thu (Admin)" />
+                </div>
+                <div class="field">
+                    <label>Ghi chú đơn hàng</label>
+                    <input asp-for="GhiChu" placeholder="Giao giờ hành chính / quà tặng kèm..." />
+                </div>
+            </div>
+
+            <div class="cart-total-row">
+                <span>Tổng tiền hóa đơn:</span>
+                <b id="cart-total">0đ</b>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="btn-checkout" style="justify-content:center;margin-top:4px;" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/></svg>
+                Lập &amp; Ghi Hóa Đơn XML
+            </button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        const cartState = {}; // maSp -> { maSp, tenSp, giaBan, qty, gradient, maxStock }
+
+        function addToCart(maSp, tenSp, giaBan, gradient, maxStock) {
+            if (!cartState[maSp]) {
+                cartState[maSp] = { maSp, tenSp, giaBan, qty: 1, gradient, maxStock };
+            } else {
+                if (cartState[maSp].qty < maxStock) {
+                    cartState[maSp].qty++;
+                } else {
+                    showToast(`Sản phẩm ${tenSp} chỉ còn tồn ${maxStock} máy trong kho!`);
+                }
+            }
+            renderCart();
+        }
+
+        function changeQty(maSp, delta) {
+            if (cartState[maSp]) {
+                cartState[maSp].qty += delta;
+                if (cartState[maSp].qty <= 0) {
+                    delete cartState[maSp];
+                }
+            }
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const hiddenContainer = document.getElementById('hidden-inputs-container');
+            const emptyMsg = document.getElementById('cart-empty-msg');
+            const checkoutBtn = document.getElementById('btn-checkout');
+            const cartCountEl = document.getElementById('cart-count');
+            const cartTotalEl = document.getElementById('cart-total');
+
+            const keys = Object.keys(cartState);
+            hiddenContainer.innerHTML = '';
+
+            if (keys.length === 0) {
+                container.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fa-solid fa-cart-arrow-down fs-3 d-block mb-2 text-faint"></i>
+                        Nhấp chọn sản phẩm bên trái để thêm vào hóa đơn
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+                cartCountEl.innerText = 'Chưa chọn sản phẩm';
+                cartTotalEl.innerText = '0đ';
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            let total = 0;
+            let totalQty = 0;
+            let html = '';
+
+            keys.forEach((maSp, index) => {
+                const item = cartState[maSp];
+                const itemTotal = item.giaBan * item.qty;
+                total += itemTotal;
+                totalQty += item.qty;
+
+                html += `
+                    <div class="cart-item mb-2 p-2 glass" style="border-radius: 10px;">
+                        <div class="stock-thumb" style="background: ${item.gradient};">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/></svg>
+                        </div>
+                        <div class="cart-info">
+                            <b>${item.tenSp}</b>
+                            <small>${item.giaBan.toLocaleString('vi-VN')}đ</small>
+                        </div>
+                        <div class="qty-stepper">
+                            <button type="button" onclick="changeQty('${item.maSp}', -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button type="button" onclick="changeQty('${item.maSp}', 1)">+</button>
+                        </div>
+                    </div>
+                `;
+
+                // Append hidden inputs for ASP.NET MVC model binding (Items[i].MaSP & Items[i].SoLuong)
+                hiddenContainer.innerHTML += `
+                    <input type="hidden" name="Items[${index}].MaSP" value="${item.maSp}" />
+                    <input type="hidden" name="Items[${index}].SoLuong" value="${item.qty}" />
+                `;
+            });
+
+            container.innerHTML = html;
+            cartCountEl.innerText = `${keys.length} mẫu sản phẩm (${totalQty} máy)`;
+            cartTotalEl.innerText = total.toLocaleString('vi-VN') + 'đ';
+        }
+    </script>
+}

@@ -1,69 +1,217 @@
 @model List<QuanLyBanDienThoai.Models.DienThoaiModel>
 @{
     ViewData["Title"] = "Quản Lý Kho Điện Thoại (XML CRUD)";
+
+    int tongSanPham = Model.Count;
+    int tongTonKho = Model.Sum(x => x.SoLuongTon);
+    int sapHetHang = Model.Count(x => x.SoLuongTon < 5);
+    decimal tongGiaTri = Model.Sum(x => x.GiaBan * x.SoLuongTon);
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-boxes-packing text-info"></i>
-            <span>QUẢN LÝ CƠ SỞ DỮ LIỆU XML ĐIỆN THOẠI</span>
+<!-- TOP DASHBOARD STATS -->
+<div class="stats-grid scroll-reveal">
+    <div class="stat-card">
+        <div class="stat-icon-box icon-blue">
+            <i class="fa-solid fa-mobile-screen-button"></i>
         </div>
-        <div class="d-flex gap-2">
+        <div class="stat-info">
+            <div class="stat-value">@tongSanPham</div>
+            <div class="stat-label">Tổng Mẫu Điện Thoại XML</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon-box icon-emerald">
+            <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value">@tongTonKho</div>
+            <div class="stat-label">Tổng Số Lượng Tồn Kho</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon-box icon-rose">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value text-danger">@sapHetHang</div>
+            <div class="stat-label">Mẫu Sắp Hết (Tồn &lt; 5)</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon-box icon-purple">
+            <i class="fa-solid fa-vault"></i>
+        </div>
+        <div class="stat-info">
+            <div class="stat-value" style="font-size: 1.25rem;">@tongGiaTri.ToString("#,##0") <small style="font-size: 0.75rem;">VNĐ</small></div>
+            <div class="stat-label">Tổng Giá Trị Kho Hàng</div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN MANAGEMENT CONTAINER -->
+<div class="glass-card scroll-reveal">
+    <!-- HEADER BAR -->
+    <div class="glass-card-header flex-wrap gap-3">
+        <div class="glass-card-title">
+            <i class="fa-solid fa-boxes-packing text-primary"></i>
+            <span>QUẢN LÝ KHO DỮ LIỆU ĐIỆN THOẠI XML</span>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <!-- VIEW MODE TOGGLER -->
+            <div class="view-toggle-group me-2">
+                <button type="button" class="view-toggle-btn active" id="btnTableView" onclick="switchManageView('table')">
+                    <i class="fa-solid fa-table-list"></i> Bảng Chi Tiết
+                </button>
+                <button type="button" class="view-toggle-btn" id="btnGridView" onclick="switchManageView('grid')">
+                    <i class="fa-solid fa-grip"></i> Thẻ Mẫu Động
+                </button>
+            </div>
+
             <a asp-action="Create" class="btn-custom btn-primary-custom">
-                <i class="fa-solid fa-plus"></i> Thêm Sản Phẩm Mới
+                <i class="fa-solid fa-plus-circle"></i> Thêm Sản Phẩm Mới
             </a>
             <a asp-action="ValidateXsd" class="btn-custom btn-success-custom">
-                <i class="fa-solid fa-shield-check"></i> Kiểm Tra XSD Schema
+                <i class="fa-solid fa-shield-check"></i> Kiểm Tra Schema XSD
             </a>
         </div>
     </div>
 
-    <div class="table-responsive">
+    <!-- LIVE SEARCH & FILTER BAR -->
+    <div class="filter-bar mb-4">
+        <div>
+            <label class="form-label mb-1"><i class="fa-solid fa-magnifying-glass text-muted"></i> Tìm kiếm nhanh</label>
+            <input type="text" id="manageSearchInput" class="form-control-custom" placeholder="Nhập tên sản phẩm, mã SP, chip, RAM..." onkeyup="filterProducts()" />
+        </div>
+        <div>
+            <label class="form-label mb-1"><i class="fa-solid fa-copyright text-muted"></i> Hãng sản xuất</label>
+            <select id="brandFilter" class="form-select-custom" onchange="filterProducts()">
+                <option value="ALL">-- Tất cả hãng --</option>
+                <option value="APPLE">Apple</option>
+                <option value="SAMSUNG">Samsung</option>
+                <option value="XIAOMI">Xiaomi</option>
+                <option value="OPPO">OPPO</option>
+                <option value="GOOGLE">Google</option>
+            </select>
+        </div>
+        <div>
+            <label class="form-label mb-1"><i class="fa-solid fa-warehouse text-muted"></i> Trạng thái kho</label>
+            <select id="stockFilter" class="form-select-custom" onchange="filterProducts()">
+                <option value="ALL">-- Tất cả trạng thái --</option>
+                <option value="AVAILABLE">Còn hàng (>= 5)</option>
+                <option value="LOW">Sắp hết (&lt; 5)</option>
+            </select>
+        </div>
+        <div class="d-flex align-items-end">
+            <button type="button" class="btn-custom btn-secondary-custom w-100" onclick="resetFilters()">
+                <i class="fa-solid fa-rotate-right"></i> Đặt lại
+            </button>
+        </div>
+    </div>
+
+    <!-- VIEW 1: TABLE VIEW -->
+    <div id="tableViewContainer" class="table-responsive">
         <table class="custom-table">
             <thead>
                 <tr>
                     <th>Mã SP</th>
                     <th>Hình Ảnh</th>
-                    <th>Tên Sản Phẩm</th>
+                    <th>Tên Sản Phẩm / Dòng Mẫu</th>
                     <th>Hãng</th>
+                    <th>Mẫu &amp; Màu Sắc Động</th>
                     <th>Đơn Giá (VNĐ)</th>
                     <th>Tồn Kho</th>
                     <th>Thông Số Kỹ Thuật</th>
                     <th style="text-align: right;">Thao Tác</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="manageTableBody">
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td><strong class="text-info">@item.MaSP</strong></td>
+                    string brandClass = item.MaHang.ToUpper() switch
+                    {
+                        "APPLE" => "badge-brand-apple",
+                        "SAMSUNG" => "badge-brand-samsung",
+                        "XIAOMI" => "badge-brand-xiaomi",
+                        "OPPO" => "badge-brand-oppo",
+                        "GOOGLE" => "badge-brand-google",
+                        _ => "badge-brand-other"
+                    };
+
+                    string searchStr = (item.MaSP + " " + item.TenSP + " " + item.TenHang + " " + item.ThongSo.RAM + " " + item.ThongSo.BoNhoTrong + " " + item.ThongSo.Chip).ToLower();
+
+                    <tr class="product-row" 
+                        data-masp="@item.MaSP" 
+                        data-tensp="@item.TenSP" 
+                        data-tenhang="@item.TenHang"
+                        data-mahang="@item.MaHang.ToUpper()"
+                        data-giaban="@item.GiaBan.ToString("#,##0")"
+                        data-giabanraw="@item.GiaBan"
+                        data-stock="@item.SoLuongTon"
+                        data-ram="@item.ThongSo.RAM"
+                        data-bonho="@item.ThongSo.BoNhoTrong"
+                        data-chip="@item.ThongSo.Chip"
+                        data-manhinh="@item.ThongSo.ManHinh"
+                        data-pin="@item.ThongSo.Pin"
+                        data-hinhanh="@item.HinhAnh"
+                        data-mota="@item.MoTa"
+                        data-search="@searchStr">
+                        <td><strong class="text-primary">@item.MaSP</strong></td>
                         <td>
-                            <img src="@item.HinhAnh" alt="@item.TenSP" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;" 
-                                 onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'" />
+                            <div style="position: relative; width: 52px; height: 52px;">
+                                <img src="@item.HinhAnh" alt="@item.TenSP" class="product-thumb-img" style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color);" 
+                                     onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80'" />
+                            </div>
                         </td>
-                        <td><strong>@item.TenSP</strong></td>
-                        <td><span class="badge-xml">@item.TenHang</span></td>
-                        <td><strong style="color: #34d399;">@item.GiaBan.ToString("#,##0")</strong></td>
                         <td>
-                            <span class="@(item.SoLuongTon < 5 ? "text-danger fw-bold" : "text-light")">
-                                @item.SoLuongTon
-                            </span>
+                            <div class="fw-bold text-main mb-1">@item.TenSP</div>
+                            <small class="text-muted d-block text-truncate" style="max-width: 220px;">@item.MoTa</small>
+                        </td>
+                        <td><span class="badge-brand @brandClass"><i class="fa-solid fa-mobile"></i> @item.TenHang</span></td>
+                        <td>
+                            <!-- DYNAMIC COLORS & VARIANTS PREVIEW -->
+                            <div class="color-swatch-list">
+                                <span class="color-dot" style="background: #3c3d3e;" title="Titan Đen / Đen Nhám" onclick="changeRowImage(this, 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span>
+                                <span class="color-dot" style="background: #e2e4e1;" title="Titan Tự Nhiên / Trắng Ngọc" onclick="changeRowImage(this, 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span>
+                                <span class="color-dot" style="background: #465463;" title="Titan Xanh / Xanh Deep Ocean" onclick="changeRowImage(this, 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span>
+                            </div>
+                            <span class="spec-chip mt-1"><i class="fa-solid fa-cubes"></i> 3-4 Mẫu màu</span>
+                        </td>
+                        <td><strong class="text-primary fs-6">@item.GiaBan.ToString("#,##0")</strong></td>
+                        <td>
+                            @if (item.SoLuongTon < 5)
+                            {
+                                <span class="badge bg-danger-subtle text-danger px-2 py-1 rounded-pill fw-bold">
+                                    <span class="pulse-indicator"></span> @item.SoLuongTon (Gần hết)
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success-subtle text-success px-2 py-1 rounded-pill fw-bold">
+                                    @item.SoLuongTon sản phẩm
+                                </span>
+                            }
                         </td>
                         <td>
-                            <small class="text-muted">
-                                @item.ThongSo.RAM / @item.ThongSo.BoNhoTrong | @item.ThongSo.Chip
-                            </small>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="spec-chip"><i class="fa-solid fa-memory"></i> @item.ThongSo.RAM</span>
+                                <span class="spec-chip"><i class="fa-solid fa-hard-drive"></i> @item.ThongSo.BoNhoTrong</span>
+                                <span class="spec-chip"><i class="fa-solid fa-microchip"></i> @item.ThongSo.Chip</span>
+                            </div>
                         </td>
                         <td style="text-align: right;">
-                            <div class="d-inline-flex gap-2">
-                                <a asp-action="Edit" asp-route-id="@item.MaSP" class="btn-custom btn-warning-custom" style="padding: 6px 12px; font-size: 0.8rem;">
-                                    <i class="fa-solid fa-pen-to-square"></i> Sửa
+                            <div class="d-inline-flex gap-1">
+                                <button type="button" class="btn-custom btn-secondary-custom p-1 px-2" style="font-size: 0.8rem;" 
+                                        onclick="openVariantModalFromEl(this)" 
+                                        title="Xem các mẫu động">
+                                    <i class="fa-solid fa-sliders"></i> Mẫu Động
+                                </button>
+                                <a asp-action="Edit" asp-route-id="@item.MaSP" class="btn-custom btn-warning-custom p-1 px-2" style="font-size: 0.8rem;">
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <form asp-action="Delete" asp-route-id="@item.MaSP" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm XML này?');">
+                                <form asp-action="Delete" asp-route-id="@item.MaSP" method="post" style="display:inline;" onsubmit="return confirm('Xác nhận xóa sản phẩm XML này?');">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn-custom btn-danger-custom" style="padding: 6px 12px; font-size: 0.8rem;">
-                                        <i class="fa-solid fa-trash-can"></i> Xóa
+                                    <button type="submit" class="btn-custom btn-danger-custom p-1 px-2" style="font-size: 0.8rem;">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </button>
                                 </form>
                             </div>
@@ -73,4 +221,327 @@
             </tbody>
         </table>
     </div>
+
+    <!-- VIEW 2: DYNAMIC GRID CARDS VIEW (HIDDEN BY DEFAULT) -->
+    <div id="gridViewContainer" class="phone-grid mt-3" style="display: none;">
+        @foreach (var item in Model)
+        {
+            string brandClass = item.MaHang.ToUpper() switch
+            {
+                "APPLE" => "badge-brand-apple",
+                "SAMSUNG" => "badge-brand-samsung",
+                "XIAOMI" => "badge-brand-xiaomi",
+                "OPPO" => "badge-brand-oppo",
+                "GOOGLE" => "badge-brand-google",
+                _ => "badge-brand-other"
+            };
+
+            string searchStr = (item.MaSP + " " + item.TenSP + " " + item.TenHang + " " + item.ThongSo.RAM + " " + item.ThongSo.BoNhoTrong + " " + item.ThongSo.Chip).ToLower();
+
+            <div class="phone-card product-card-item" 
+                 data-masp="@item.MaSP" 
+                 data-tensp="@item.TenSP" 
+                 data-tenhang="@item.TenHang"
+                 data-mahang="@item.MaHang.ToUpper()"
+                 data-giaban="@item.GiaBan.ToString("#,##0")"
+                 data-giabanraw="@item.GiaBan"
+                 data-stock="@item.SoLuongTon"
+                 data-ram="@item.ThongSo.RAM"
+                 data-bonho="@item.ThongSo.BoNhoTrong"
+                 data-chip="@item.ThongSo.Chip"
+                 data-manhinh="@item.ThongSo.ManHinh"
+                 data-pin="@item.ThongSo.Pin"
+                 data-hinhanh="@item.HinhAnh"
+                 data-mota="@item.MoTa"
+                 data-search="@searchStr">
+                
+                <span class="phone-badge">@item.MaSP</span>
+                
+                <div class="phone-img-box position-relative">
+                    <img id="card-img-@item.MaSP" src="@item.HinhAnh" alt="@item.TenSP" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80'" />
+                </div>
+                
+                <div class="phone-info">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge-brand @brandClass">@item.TenHang</span>
+                        <span class="stock-num @(item.SoLuongTon < 5 ? "text-danger" : "")">
+                            <i class="fa-solid fa-cubes-stacked"></i> Tồn: @item.SoLuongTon
+                        </span>
+                    </div>
+
+                    <h3 class="phone-title fs-6">@item.TenSP</h3>
+
+                    <!-- INTERACTIVE DYNAMIC COLOR VARIANTS FOR THIS PHONE -->
+                    <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                        <small class="text-muted fw-semibold">Chọn mẫu màu:</small>
+                        <div class="color-swatch-list mb-0">
+                            <span class="color-dot active" style="background: #2D3748;" title="Màu Tối Titan" onclick="changeCardImage('@item.MaSP', 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&amp;fit=crop&amp;w=600&amp;q=80', this)"></span>
+                            <span class="color-dot" style="background: #E2E8F0;" title="Màu Bạc / Trắng" onclick="changeCardImage('@item.MaSP', 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80', this)"></span>
+                            <span class="color-dot" style="background: #3182CE;" title="Màu Xanh Cực Quang" onclick="changeCardImage('@item.MaSP', 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&amp;fit=crop&amp;w=600&amp;q=80', this)"></span>
+                        </div>
+                    </div>
+
+                    <div class="phone-specs mb-3">
+                        <div><i class="fa-solid fa-microchip text-primary me-1"></i> @item.ThongSo.Chip</div>
+                        <div><i class="fa-solid fa-memory text-primary me-1"></i> RAM: @item.ThongSo.RAM | ROM: @item.ThongSo.BoNhoTrong</div>
+                    </div>
+
+                    <div class="phone-footer">
+                        <div class="phone-price">@item.GiaBan.ToString("#,##0") <small style="font-size: 0.75rem;">đ</small></div>
+                        <div class="d-flex gap-1">
+                            <button type="button" class="btn-custom btn-secondary-custom p-1 px-2" style="font-size: 0.8rem;" 
+                                    onclick="openVariantModalFromEl(this)">
+                                <i class="fa-solid fa-eye"></i> Mẫu Động
+                            </button>
+                            <a asp-action="Edit" asp-route-id="@item.MaSP" class="btn-custom btn-warning-custom p-1 px-2" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+<!-- DYNAMIC VARIANT EXPLORER MODAL -->
+<div id="variantModal" class="modal-backdrop-custom" onclick="if(event.target === this) closeVariantModal()">
+    <div class="modal-card-custom">
+        <div class="modal-header-custom">
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-sliders text-primary fs-5"></i>
+                <h5 class="mb-0 fw-bold" id="modalPhoneTitle">Khám Phá Các Mẫu Điện Thoại Động</h5>
+            </div>
+            <button type="button" class="btn-close" onclick="closeVariantModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body-custom">
+            <div class="row g-4">
+                <div class="col-md-5 text-center">
+                    <div style="background: #FAFAFA; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <img id="modalImgPreview" src="" alt="Phone preview" style="max-height: 260px; max-width: 100%; object-fit: contain;" />
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label mb-2 fw-bold text-muted" style="font-size: 0.85rem;">CHỌN MÀU SẮC ĐỘNG</label>
+                        <div class="d-flex justify-content-center gap-3" id="modalColorDots">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span id="modalBrandBadge" class="badge-brand badge-brand-apple">Brand</span>
+                        <span class="text-muted" style="font-size: 0.85rem;">Mã SP: <strong id="modalMaSP" class="text-primary">SP000</strong></span>
+                    </div>
+
+                    <h4 id="modalName" class="fw-bold mb-3">Tên sản phẩm</h4>
+
+                    <div class="mb-3">
+                        <label class="form-label mb-2 fw-bold text-muted" style="font-size: 0.85rem;">CHỌN PHIÊN BẢN BỘ NHỚ</label>
+                        <div class="d-flex gap-2" id="modalStorageChips">
+                            <button type="button" class="variant-btn-chip active" onclick="selectStorageTier(this, 0)">256GB (Gốc)</button>
+                            <button type="button" class="variant-btn-chip" onclick="selectStorageTier(this, 3000000)">512GB (+3Tr)</button>
+                            <button type="button" class="variant-btn-chip" onclick="selectStorageTier(this, 8000000)">1TB (+8Tr)</button>
+                        </div>
+                    </div>
+
+                    <div class="p-3 mb-3" style="background: #F8FAFC; border-radius: 10px; border: 1px solid var(--border-color);">
+                        <div class="row g-2" style="font-size: 0.88rem;">
+                            <div class="col-6"><strong>Màn hình:</strong> <span id="modalManHinh">-</span></div>
+                            <div class="col-6"><strong>Chip xử lý:</strong> <span id="modalChip">-</span></div>
+                            <div class="col-6"><strong>RAM / Trong:</strong> <span id="modalRamRom">-</span></div>
+                            <div class="col-6"><strong>Dung lượng Pin:</strong> <span id="modalPin">-</span></div>
+                        </div>
+                    </div>
+
+                    <p id="modalMoTa" class="text-muted" style="font-size: 0.88rem; line-height: 1.5;"></p>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top mt-4">
+                        <div>
+                            <small class="text-muted d-block">Giá ước tính phiên bản:</small>
+                            <span class="fs-4 fw-extrabold text-primary" id="modalPrice">0 VNĐ</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a id="modalEditBtn" href="#" class="btn-custom btn-primary-custom">
+                                <i class="fa-solid fa-pen-to-square"></i> Sửa Dữ Liệu XML
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let basePriceNumeric = 0;
+
+        // Dynamic view switcher (Table vs Grid Cards)
+        function switchManageView(viewType) {
+            const tableCont = document.getElementById('tableViewContainer');
+            const gridCont = document.getElementById('gridViewContainer');
+            const btnTable = document.getElementById('btnTableView');
+            const btnGrid = document.getElementById('btnGridView');
+
+            if (viewType === 'grid') {
+                tableCont.style.display = 'none';
+                gridCont.style.display = 'grid';
+                btnGrid.classList.add('active');
+                btnTable.classList.remove('active');
+            } else {
+                tableCont.style.display = 'block';
+                gridCont.style.display = 'none';
+                btnTable.classList.add('active');
+                btnGrid.classList.remove('active');
+            }
+        }
+
+        // Realtime filter and search
+        function filterProducts() {
+            const searchVal = document.getElementById('manageSearchInput').value.toLowerCase().trim();
+            const brandVal = document.getElementById('brandFilter').value;
+            const stockVal = document.getElementById('stockFilter').value;
+
+            // Filter Table rows
+            const rows = document.querySelectorAll('#manageTableBody tr.product-row');
+            rows.forEach(row => {
+                const searchData = row.getAttribute('data-search');
+                const mahang = row.getAttribute('data-mahang');
+                const stock = parseInt(row.getAttribute('data-stock') || '0');
+
+                let matchSearch = !searchVal || searchData.includes(searchVal);
+                let matchBrand = brandVal === 'ALL' || mahang === brandVal;
+                let matchStock = true;
+                if (stockVal === 'AVAILABLE') matchStock = stock >= 5;
+                if (stockVal === 'LOW') matchStock = stock < 5;
+
+                if (matchSearch && matchBrand && matchStock) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filter Grid cards
+            const cards = document.querySelectorAll('#gridViewContainer .product-card-item');
+            cards.forEach(card => {
+                const searchData = card.getAttribute('data-search');
+                const mahang = card.getAttribute('data-mahang');
+                const stock = parseInt(card.getAttribute('data-stock') || '0');
+
+                let matchSearch = !searchVal || searchData.includes(searchVal);
+                let matchBrand = brandVal === 'ALL' || mahang === brandVal;
+                let matchStock = true;
+                if (stockVal === 'AVAILABLE') matchStock = stock >= 5;
+                if (stockVal === 'LOW') matchStock = stock < 5;
+
+                if (matchSearch && matchBrand && matchStock) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('manageSearchInput').value = '';
+            document.getElementById('brandFilter').value = 'ALL';
+            document.getElementById('stockFilter').value = 'ALL';
+            filterProducts();
+        }
+
+        // Change table row image on color dot click
+        function changeRowImage(dotEl, newSrc) {
+            const tr = dotEl.closest('tr');
+            const img = tr.querySelector('.product-thumb-img');
+            if (img) img.src = newSrc;
+
+            const dots = tr.querySelectorAll('.color-dot');
+            dots.forEach(d => d.classList.remove('active'));
+            dotEl.classList.add('active');
+        }
+
+        // Change card image on color dot click
+        function changeCardImage(maSp, newSrc, dotEl) {
+            const img = document.getElementById(`card-img-${maSp}`);
+            if (img) img.src = newSrc;
+
+            const dots = dotEl.closest('.color-swatch-list').querySelectorAll('.color-dot');
+            dots.forEach(d => d.classList.remove('active'));
+            dotEl.classList.add('active');
+        }
+
+        // Open Dynamic Variant Explorer Modal from Element
+        function openVariantModalFromEl(btn) {
+            const el = btn.closest('[data-masp]');
+            if (!el) return;
+
+            const maSp = el.getAttribute('data-masp');
+            const tenSp = el.getAttribute('data-tensp');
+            const tenHang = el.getAttribute('data-tenhang');
+            const giaBan = el.getAttribute('data-giaban');
+            const giaBanRaw = parseFloat(el.getAttribute('data-giabanraw') || '0');
+            const tonKho = el.getAttribute('data-stock');
+            const ram = el.getAttribute('data-ram');
+            const boNho = el.getAttribute('data-bonho');
+            const chip = el.getAttribute('data-chip');
+            const manHinh = el.getAttribute('data-manhinh');
+            const pin = el.getAttribute('data-pin');
+            const hinhAnh = el.getAttribute('data-hinhanh');
+            const moTa = el.getAttribute('data-mota');
+
+            document.getElementById('modalMaSP').innerText = maSp;
+            document.getElementById('modalPhoneTitle').innerText = `Mẫu Điện Thoại Động - ${tenSp}`;
+            document.getElementById('modalName').innerText = tenSp;
+            document.getElementById('modalBrandBadge').innerText = tenHang;
+            document.getElementById('modalImgPreview').src = hinhAnh;
+            document.getElementById('modalManHinh').innerText = manHinh || '6.7 inch High Refresh Rate';
+            document.getElementById('modalChip').innerText = chip;
+            document.getElementById('modalRamRom').innerText = `${ram} / ${boNho}`;
+            document.getElementById('modalPin').innerText = pin || '5000 mAh';
+            document.getElementById('modalMoTa').innerText = moTa;
+            document.getElementById('modalEditBtn').href = `/DienThoai/Edit/${maSp}`;
+
+            basePriceNumeric = giaBanRaw || 25000000;
+            document.getElementById('modalPrice').innerText = giaBan + ' VNĐ';
+
+            // Populate sample color dots dynamically
+            const colorContainer = document.getElementById('modalColorDots');
+            colorContainer.innerHTML = `
+                <span class="color-dot active" style="background: #2c3e50;" title="Màu Xám Không Gian" onclick="selectModalColor(this, '${hinhAnh}')"></span>
+                <span class="color-dot" style="background: #ecf0f1;" title="Màu Bạc Tinh Khiết" onclick="selectModalColor(this, 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80')"></span>
+                <span class="color-dot" style="background: #3498db;" title="Màu Xanh Thạch Anh" onclick="selectModalColor(this, 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=600&q=80')"></span>
+                <span class="color-dot" style="background: #f1c40f;" title="Màu Vàng Ánh Kim" onclick="selectModalColor(this, 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80')"></span>
+            `;
+
+            // Reset storage tier buttons
+            const storageChips = document.querySelectorAll('#modalStorageChips .variant-btn-chip');
+            storageChips.forEach((b, idx) => {
+                if (idx === 0) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+
+            document.getElementById('variantModal').classList.add('show');
+        }
+
+        function closeVariantModal() {
+            document.getElementById('variantModal').classList.remove('show');
+        }
+
+        function selectModalColor(dotEl, imgSrc) {
+            document.getElementById('modalImgPreview').src = imgSrc;
+            const dots = document.querySelectorAll('#modalColorDots .color-dot');
+            dots.forEach(d => d.classList.remove('active'));
+            dotEl.classList.add('active');
+        }
+
+        function selectStorageTier(btnEl, priceDiff) {
+            const chips = document.querySelectorAll('#modalStorageChips .variant-btn-chip');
+            chips.forEach(c => c.classList.remove('active'));
+            btnEl.classList.add('active');
+
+            const finalPrice = basePriceNumeric + priceDiff;
+            document.getElementById('modalPrice').innerText = finalPrice.toLocaleString('vi-VN') + ' VNĐ';
+        }
+    </script>
+}

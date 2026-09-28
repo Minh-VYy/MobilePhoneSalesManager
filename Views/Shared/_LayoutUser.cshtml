@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>@ViewData["Title"] - PhoneStore 3D XML</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        /* Public Storefront Navbar Specific Styles */
+        .user-header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: color-mix(in srgb, var(--bg-0) 85%, transparent);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 32px;
+        }
+
+        .user-nav-wrap {
+            max-width: 1360px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .user-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-menu-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .user-menu-links a {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .user-menu-links a:hover, .user-menu-links a.active {
+            color: var(--primary-2);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .role-switch-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(108, 107, 245, 0.12);
+            border: 1px solid rgba(108, 107, 245, 0.3);
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--primary-2);
+        }
+
+        .role-switch-btn {
+            background: linear-gradient(135deg, #F0596B, #E0231C);
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(240, 89, 107, 0.35);
+            transition: transform 0.15s ease;
+        }
+        .role-switch-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .user-footer {
+            background: var(--bg-1);
+            border-top: 1px solid var(--border);
+            padding: 48px 32px 24px;
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            max-width: 1360px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-family: var(--font-head);
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 16px;
+            color: var(--text);
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-col a {
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--text); }
+
+        .footer-bottom {
+            max-width: 1360px;
+            margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-faint);
+        }
+    </style>
+</head>
+<body>
+    <!-- ================= PUBLIC USER HEADER ================= -->
+    <header class="user-header">
+        <div class="user-nav-wrap">
+            <a asp-controller="Home" asp-action="Index" class="user-brand">
+                <div class="brand-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="7" y="2" width="10" height="20" rx="2.4"/>
+                        <line x1="11" y1="18.3" x2="13" y2="18.3"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-text" style="font-size: 18px;">PhoneStore <span style="color: var(--primary-2);">3D</span></div>
+                    <div class="brand-sub">Storefront XML 2026</div>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <ul class="user-menu-links">
+                <li>
+                    <a asp-controller="Home" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
+                        <i class="fa-solid fa-house"></i> Trang Chủ
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="DienThoai" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" ? "active" : "")">
+                        <i class="fa-solid fa-mobile-screen-button"></i> Danh Mục Điện Thoại
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="HoaDon" asp-action="Create">
+                        <i class="fa-solid fa-cart-shopping"></i> Mua Hàng POS
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="DienThoai" asp-action="XsltView">
+                        <i class="fa-solid fa-code"></i> XSLT Catalog
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Actions & Role Switcher -->
+            <div class="user-actions">
+                <!-- Role Switcher Pill -->
+                <div class="role-switch-pill">
+                    <i class="fa-solid fa-user"></i> Chế độ: <b>Khách Hàng</b>
+                </div>
+
+                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="role-switch-btn" title="Chuyển sang Giao diện Quản trị Admin">
+                    <i class="fa-solid fa-shield-halved"></i> Sang Admin View
+                </a>
+
+                <!-- Theme Toggle -->
+                <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/></svg>
+                </button>
+
+                <!-- Auth State -->
+                @if (Context.Session.GetString("IsLoggedIn") == "true")
+                {
+                    <div class="profile-pill">
+                        <div class="avatar">@Context.Session.GetString("Username")?.Substring(0, 2).ToUpper()</div>
+                        <div class="who"><b>@Context.Session.GetString("Username")</b><small>@Context.Session.GetString("Role")</small></div>
+                    </div>
+                    <a asp-controller="Account" asp-action="Logout" class="btn btn-ghost btn-sm" title="Đăng xuất">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Đăng Nhập
+                    </a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-sm">
+                        Đăng Ký
+                    </a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= MAIN STOREFRONT VIEW ================= -->
+    <main role="main" class="view">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="validate-line v-ok mb-4" style="border-radius: 12px; margin-bottom: 20px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.3 2.3 4.7-5.6"/></svg>
+                <div><b>Thành công!</b><span>@TempData["SuccessMessage"]</span></div>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="validate-line v-err mb-4" style="border-radius: 12px; margin-bottom: 20px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/></svg>
+                <div><b>Thông báo:</b><span>@TempData["ErrorMessage"]</span></div>
+            </div>
+        }
+
+        @RenderBody()
+    </main>
+
+    <!-- ================= STOREFRONT FOOTER ================= -->
+    <footer class="user-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="user-brand" style="margin-bottom: 14px;">
+                    <div class="brand-mark">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
+                    </div>
+                    <div class="brand-text" style="font-size: 18px;">PhoneStore 3D</div>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                    Hệ thống bán lẻ điện thoại di động công nghệ cao với trải nghiệm mô phỏng 3D hiện đại. Quản lý toàn bộ dữ liệu danh mục & hóa đơn trên nền tảng XML.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Sản Phẩm Hot</h4>
+                <ul>
+                    <li><a href="#">iPhone 16 Pro Max</a></li>
+                    <li><a href="#">Samsung Galaxy S24 Ultra</a></li>
+                    <li><a href="#">Xiaomi 14 Ultra</a></li>
+                    <li><a href="#">Nothing Phone (2a)</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Hỗ Trợ Khách Hàng</h4>
+                <ul>
+                    <li><a href="#">Tra cứu bảo hành XML</a></li>
+                    <li><a href="#">Chính sách đổi trả 30 ngày</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng POS</a></li>
+                    <li><a href="#">Trung tâm hỗ trợ 24/7</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Chế Độ Hệ Thống</h4>
+                <ul>
+                    <li><a asp-controller="Account" asp-action="SwitchRole" asp-route-role="User">Khách Hàng View</a></li>
+                    <li><a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin">Admin View (Bảng Quản Trị)</a></li>
+                    <li><a asp-controller="DienThoai" asp-action="Manage">Quản Lý Kho XML (CRUD)</a></li>
+                    <li><a asp-controller="ThongKe" asp-action="Index">Báo Cáo Doanh Thu</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 PhoneStore 3D. Tất cả quyền được bảo lưu. Công nghệ XML / XSD / XSLT.</div>
+            <div>Hệ thống Quản lý Bán Điện thoại Di động</div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
