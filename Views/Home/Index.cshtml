@@ -1,26 +1,17 @@
 @{
-    ViewData["Title"] = "Trang Chủ — PhoneStore 3D XML";
+    ViewData["Title"] = "Trang Chủ — PhoneStore 3D";
     Layout = "_LayoutUser";
 }
 
-<!-- Fixed Background Canvas & Vignette (Kage Architecture) -->
+<!-- Fixed Background Canvas & Vignette (Tech Background) -->
 <canvas id="gl-tech"></canvas>
 <div id="vignette-tech"></div>
 
-<!-- Progress Rail (Side Scroll Navigation) -->
-<nav class="rail">
-    <button type="button" class="on" data-target="chapter-hero" title="Banner Flagship 3D"><i></i></button>
-    <button type="button" data-target="chapter-exploded" title="Phân Rã Linh Kiện 3D"><i></i></button>
-    <button type="button" data-target="chapter-ecosystem" title="Hệ Sinh Thái Thiết Bị"><i></i></button>
-    <button type="button" data-target="chapter-catalog" title="Sản Phẩm Bán Chạy"><i></i></button>
-    <button type="button" data-target="chapter-stats" title="Báo Cáo & Thống Kê"><i></i></button>
-</nav>
-
-<!-- ================= PHẦN I: HERO FLAGSHIP SHOWCASE ================= -->
-<section id="chapter-hero" class="sec-chapter hero-3d-banner" data-rv="fade" style="position: relative;">
+<!-- ================= HERO FLAGSHIP SHOWCASE ================= -->
+<section id="sec-hero" class="sec-chapter hero-3d-banner" data-rv="fade" style="position: relative; margin-top: 10px;">
     
-    <!-- Floating Peek Detail Window (Kage Peek Component) -->
-    <a href="#chapter-exploded" class="peek-tech">
+    <!-- Floating Peek Detail Window -->
+    <a href="#sec-exploded" class="peek-tech">
         <span class="peek-tech-fr">
             <img src="~/images/phone_exploded_chipset.png" alt="Xem Chi Tiết 3D" style="width: 100%; height: 100%; object-fit: cover;" />
             <span class="peek-tech-play">
@@ -32,13 +23,13 @@
         </span>
         <span class="peek-tech-cap">
             <b>BÓC TÁCH 3D</b>
-            <i>Kế tiếp →</i>
+            <i>Khám phá linh kiện →</i>
         </span>
     </a>
 
     <div class="hero-content">
         <div class="hero-tag" data-rv="up">
-            <i class="fa-solid fa-sparkles"></i> ĐỘT PHÁ CÔNG NGHỆ 2026
+            <i class="fa-solid fa-sparkles"></i> ĐỘT PHÁ CÔNG NGHỆ FLAGSHIP 2026
         </div>
         
         <!-- Clip-Mask Word Reveal Heading -->
@@ -47,7 +38,7 @@
         </h1>
         
         <p class="hero-desc" data-rv="up">
-            Khám phá dòng điện thoại Flagship thế hệ mới với chất liệu Titan siêu nhẹ, camera cảm biến 200MP và hiệu năng vượt trội. Nền tảng quản lý bán hàng chuẩn dữ liệu XML hiện đại.
+            Trải nghiệm dòng điện thoại Flagship thế hệ mới nhất với chất liệu Titan siêu bền nhẹ, cụm camera cảm biến 200MP và hiệu năng vi xử lý vượt trội. Hệ thống quản lý bán hàng & POS tích hợp dữ liệu XML hiện đại.
         </p>
 
         <!-- Interactive Color Swatches -->
@@ -62,11 +53,11 @@
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap;" data-rv="up">
             <a asp-controller="DienThoai" asp-action="Index" class="btn btn-primary">
-                <span>Khám Phá Danh Mục</span>
+                <span>Xem Tất Cả Sản Phẩm</span>
                 <svg viewBox="0 0 16 16" aria-hidden="true" style="fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;"><path d="M3.2 8h9.1M8.6 4.3 12.4 8l-3.8 3.7" /></svg>
             </a>
             <a asp-controller="HoaDon" asp-action="Create" class="btn btn-ghost">
-                <span><i class="fa-solid fa-cart-shopping"></i> Bán Hàng POS XML</span>
+                <span><i class="fa-solid fa-cart-shopping"></i> Mua Hàng & POS</span>
             </a>
         </div>
     </div>
@@ -99,16 +90,10 @@
     </div>
 </section>
 
-<!-- Section Divider -->
-<div class="chapter-divider">
-    <span class="chapter-num">THIẾT KẾ & LINH KIỆN 3D</span>
-    <div class="chapter-rule"></div>
-</div>
-
-<!-- ================= PHẦN II: EXPLODED TECH & LIGHT GLOWS ================= -->
-<section id="chapter-exploded" class="sec-chapter feature-chapter" data-rv="fade">
+<!-- ================= EXPLODED TECH & LIGHT GLOWS ================= -->
+<section id="sec-exploded" class="sec-chapter feature-chapter" data-rv="fade" style="margin-top: 50px;">
     <div class="chapter-media" style="position: relative;">
-        <!-- Pulsing Light Spot Hotspots (Kage Glow Lights) -->
+        <!-- Pulsing Light Spot Hotspots -->
         <div class="glow-spot" style="top: 35%; left: 45%;"></div>
         <div class="glow-spot" style="top: 65%; left: 70%; animation-delay: -1.5s;"></div>
 
@@ -117,7 +102,7 @@
 
     <div class="chapter-info">
         <div class="hero-tag" style="background: rgba(0, 194, 168, 0.12); color: #00C2A8; border-color: rgba(0, 194, 168, 0.3);">
-            <i class="fa-solid fa-layer-group"></i> KIẾN TRÚC VI XỬ LÝ & CẢM BIẾN 3D
+            <i class="fa-solid fa-layer-group"></i> KIẾN TRÚC VI XỬ LÝ & CẢM BIẾN
         </div>
         
         <h2 class="word-reveal" style="font-family: var(--font-head); font-size: 28px; font-weight: 800; margin: 0 0 14px;">
@@ -125,7 +110,7 @@
         </h2>
         
         <p style="color: var(--text-muted); font-size: 15px; line-height: 1.7; margin: 0 0 20px;">
-            Hệ thống camera ống kính 5 lớp kết hợp thấu kính zoom quang học 5x, bộ vi xử lý sản xuất trên tiến trình 3nm tối ưu điện năng tiêu thụ và cụm tản nhiệt buồng hơi lớn.
+            Hệ thống camera thấu kính 5 lớp kết hợp ống kính zoom quang học 5x, vi xử lý tiến trình 3nm tối ưu dung lượng pin và cụm tản nhiệt buồng hơi hiệu suất cao.
         </p>
 
         <div class="tech-grid-specs">
@@ -145,14 +130,8 @@
     </div>
 </section>
 
-<!-- Section Divider -->
-<div class="chapter-divider">
-    <span class="chapter-num">LINH KIỆN & HỆ SINH THÁI</span>
-    <div class="chapter-rule"></div>
-</div>
-
-<!-- ================= PHẦN III: HỆ SINH THÁI THIẾT BỊ ================= -->
-<section id="chapter-ecosystem" class="sec-chapter" data-rv="fade" style="margin-bottom: 36px;">
+<!-- ================= HỆ SINH THÁI THIẾT BỊ ================= -->
+<section id="sec-ecosystem" class="sec-chapter" data-rv="fade" style="margin-top: 50px; margin-bottom: 50px;">
     <div class="section-header-wrap">
         <div>
             <div class="hero-tag" style="background: rgba(240, 180, 41, 0.12); color: #F0B429; border-color: rgba(240, 180, 41, 0.3); margin-bottom: 10px;">
@@ -170,7 +149,7 @@
                 TƯƠNG THÍCH HOÀN HẢO MỌI THIẾT BỊ
             </h3>
             <p style="color: var(--text-muted); font-size: 14.5px; line-height: 1.65; margin-bottom: 22px;">
-                Quản lý mã linh kiện, phụ kiện kèm theo và bộ thiết bị thông minh thông qua bảng dữ liệu XML thống nhất. Dễ dàng tra cứu và bán hàng POS cho cả bộ phụ kiện.
+                Quản lý đồng bộ danh mục phụ kiện, tai nghe không dây, đồng hồ thông minh và bộ sạc nhanh. Dễ dàng tìm kiếm và bán hàng POS trọn bộ sản phẩm.
             </p>
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <span class="spec-tag" style="padding: 8px 14px; font-size: 12.5px;"><i class="fa-solid fa-headphones"></i> Tai nghe Noise-Canceling</span>
@@ -184,14 +163,8 @@
     </div>
 </section>
 
-<!-- Section Divider -->
-<div class="chapter-divider">
-    <span class="chapter-num">HỆ SINH THÁI & SẢN PHẨM</span>
-    <div class="chapter-rule"></div>
-</div>
-
-<!-- ================= PHẦN IV: SẢN PHẨM NỔI BẬT ================= -->
-<section id="chapter-catalog" class="sec-chapter" data-rv="fade">
+<!-- ================= SẢN PHẨM NỔI BẬT ================= -->
+<section id="sec-catalog" class="sec-chapter" data-rv="fade" style="margin-top: 50px;">
     <div class="section-header-wrap">
         <div>
             <div class="hero-tag" style="margin-bottom: 10px;">
@@ -297,21 +270,15 @@
     </div>
 </section>
 
-<!-- Section Divider -->
-<div class="chapter-divider">
-    <span class="chapter-num">SẢN PHẨM & BÁO CÁO THỐNG KÊ</span>
-    <div class="chapter-rule"></div>
-</div>
-
-<!-- ================= PHẦN V: THỐNG KÊ XML & KIẾN TRÚC HỆ THỐNG ================= -->
-<section id="chapter-stats" class="sec-chapter" data-rv="fade" style="margin-top: 20px;">
+<!-- ================= THỐNG KÊ TỔNG QUAN HỆ THỐNG ================= -->
+<section id="sec-stats" class="sec-chapter" data-rv="fade" style="margin-top: 50px;">
     <div class="section-header-wrap">
         <div>
             <div class="hero-tag" style="background: rgba(62, 207, 142, 0.12); color: #3ECF8E; border-color: rgba(62, 207, 142, 0.3); margin-bottom: 10px;">
-                <i class="fa-solid fa-chart-line"></i> BÁO CÁO & THỐNG KÊ HỆ THỐNG
+                <i class="fa-solid fa-chart-line"></i> BÁO CÁO & THỐNG KÊ CỬA HÀNG
             </div>
             <h2 class="section-title word-reveal" style="font-size: 26px; margin: 0;">
-                Chỉ Số Tổng Quan Hệ Thống XML
+                Chỉ Số Hoạt Động Cửa Hàng
             </h2>
         </div>
     </div>
@@ -358,8 +325,7 @@
                 <span class="stat-trend trend-up">+18.4%</span>
             </div>
             <div class="stat-value">1.48 tỷ ₫</div>
-            <div class="stat-label">Doanh thu tổng hợp từ XML</div>
+            <div class="stat-label">Doanh thu tổng hợp cửa hàng</div>
         </div>
     </div>
 </section>
-

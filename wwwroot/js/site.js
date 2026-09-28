@@ -162,45 +162,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 4. Chapter Observer & Progress Rail Observer ([data-rv] & .rail)
-    const chapterObserverOptions = {
+    // 4. Scroll Reveal Observer ([data-rv])
+    const revealObserverOptions = {
         root: null,
-        threshold: 0.2,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px'
     };
 
-    const chapterObserver = new IntersectionObserver((entries) => {
+    const revealObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('rv-in');
                 entry.target.classList.add('is-visible');
-
-                // Sync Rail Buttons
-                const chapterId = entry.target.getAttribute('id');
-                if (chapterId) {
-                    const railBtn = document.querySelector(`.rail button[data-target="${chapterId}"]`);
-                    if (railBtn) {
-                        document.querySelectorAll('.rail button').forEach(b => b.classList.remove('on'));
-                        railBtn.classList.add('on');
-                    }
-                }
             }
         });
-    }, chapterObserverOptions);
+    }, revealObserverOptions);
 
     document.querySelectorAll('[data-rv], section.sec-chapter, .reveal-on-scroll').forEach(el => {
-        chapterObserver.observe(el);
-    });
-
-    // Rail Button Click Scroll Navigation
-    document.querySelectorAll('.rail button').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const targetId = this.getAttribute('data-target');
-            const targetEl = document.getElementById(targetId);
-            if (targetEl) {
-                targetEl.scrollIntoView({ behavior: 'smooth' });
-            }
-        });
+        revealObserver.observe(el);
     });
 
     // 5. Color Swatch Interactivity for Flagship Phone
