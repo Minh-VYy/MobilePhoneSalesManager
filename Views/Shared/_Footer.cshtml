@@ -1,0 +1,75 @@
+@* ═══════════════════════════════════════════════════════════════
+   SHARED FOOTER — dùng chung cho _LayoutUser & _LayoutHome
+   ═══════════════════════════════════════════════════════════════ *@
+<footer class="site-footer">
+    <div class="sf-inner">
+
+        <!-- Cột 1: Thương hiệu -->
+        <div class="sf-brand-col">
+            <a asp-controller="Home" asp-action="Index" class="sf-brand-link">
+                <img src="~/images/logo.png" alt="PhoneStore Logo" class="site-logo-img" />
+            </a>
+            <p class="sf-brand-desc">
+                Cửa hàng điện thoại chính hãng — đa dạng mẫu mã, giá tốt nhất thị trường, giao hàng tận nơi toàn quốc.
+            </p>
+            <div class="sf-socials">
+                <a href="#" class="sf-social-btn" aria-label="Facebook" title="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="#" class="sf-social-btn" aria-label="YouTube" title="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+                <a href="#" class="sf-social-btn" aria-label="Zalo" title="Zalo">
+                    <i class="fa-solid fa-comment-dots"></i>
+                </a>
+                <a href="#" class="sf-social-btn" aria-label="Tiktok" title="Tiktok">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Cột 2: Sản Phẩm -->
+        <div class="sf-col">
+            <h4 class="sf-col-title">Sản Phẩm</h4>
+            <ul class="sf-links">
+                <li><a asp-controller="DienThoai" asp-action="Index"><i class="fa-brands fa-apple"></i> iPhone / iPad</a></li>
+                <li><a asp-controller="DienThoai" asp-action="Index"><i class="fa-brands fa-android"></i> Samsung &amp; Android</a></li>
+                <li><a asp-controller="DienThoai" asp-action="Index"><i class="fa-solid fa-headphones"></i> Phụ Kiện Chính Hãng</a></li>
+                <li><a asp-controller="DienThoai" asp-action="Index"><i class="fa-solid fa-tag"></i> Ưu Đãi Hôm Nay</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 3: Hỗ Trợ -->
+        <div class="sf-col">
+            <h4 class="sf-col-title">Hỗ Trợ</h4>
+            <ul class="sf-links">
+                <li><a asp-controller="HoaDon" asp-action="Create"><i class="fa-solid fa-cart-shopping"></i> Mua Hàng Ngay</a></li>
+                <li><a asp-controller="DienThoai" asp-action="XsltView"><i class="fa-solid fa-box-open"></i> Kiểm Tra Đơn Hàng</a></li>
+                <li><a href="tel:0901176222"><i class="fa-solid fa-phone-volume"></i> Hotline: 0901.176.222</a></li>
+                <li><a href="#"><i class="fa-solid fa-shield-halved"></i> Chính Sách Bảo Hành</a></li>
+            </ul>
+        </div>
+
+        <!-- Cột 4: Thông Tin -->
+        <div class="sf-col">
+            <h4 class="sf-col-title">Thông Tin</h4>
+            <ul class="sf-links">
+                <li><a href="#"><i class="fa-solid fa-location-dot"></i> 123 Đường ABC, Đà Nẵng</a></li>
+                <li><a href="#"><i class="fa-solid fa-clock"></i> Mở cửa: 8:00 – 21:00</a></li>
+                <li><a href="#"><i class="fa-solid fa-truck-fast"></i> Giao hàng toàn quốc</a></li>
+                <li><a href="#"><i class="fa-solid fa-rotate-left"></i> Đổi trả trong 30 ngày</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="sf-bottom">
+        <div class="sf-bottom-left">
+            <span>© 2026 <strong>PhoneStore</strong>. Tất cả quyền được bảo lưu.</span>
+        </div>
+        <div class="sf-bottom-right">
+            <span>Hệ thống quản lý bán hàng điện thoại di động</span>
+        </div>
+    </div>
+</footer>

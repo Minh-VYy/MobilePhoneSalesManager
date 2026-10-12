@@ -17,6 +17,7 @@ namespace QuanLyBanDienThoai.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             var phones = _dienThoaiService.GetAll();
             var invoices = _hoaDonService.GetAll();
 

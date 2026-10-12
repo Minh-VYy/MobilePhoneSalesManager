@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:complexType name="CurrencyAmountType"><xs:simpleContent><xs:extension base="xs:decimal"><xs:attribute name="currency" type="xs:string" use="optional" /></xs:extension></xs:simpleContent></xs:complexType>
 
   <!-- ROOT ELEMENT -->
   <xs:element name="MobileStoreDatabase">
@@ -92,8 +94,8 @@
             <xs:element name="PricingAndStock">
               <xs:complexType>
                 <xs:sequence>
-                  <xs:element name="OriginalPrice" type="xs:decimal" />
-                  <xs:element name="SellingPrice" type="xs:decimal" />
+                  <xs:element name="OriginalPrice" type="CurrencyAmountType" />
+                  <xs:element name="SellingPrice" type="CurrencyAmountType" />
                   <xs:element name="StockQuantity" type="xs:nonNegativeInteger" />
                   <xs:element name="SKU" type="xs:string" />
                   <xs:element name="IsFeatured" type="xs:boolean" />
@@ -111,3 +113,5 @@
   </xs:complexType>
 
 </xs:schema>
+
+

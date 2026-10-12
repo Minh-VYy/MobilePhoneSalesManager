@@ -1,0 +1,40 @@
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    Layout = "_LayoutUser";
+}
+
+<section class="phone-cart-page" data-cart-page>
+    <nav class="phone-detail-breadcrumb" aria-label="Điều hướng">
+        <a asp-controller="Home" asp-action="Index">Trang chủ</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span>Giỏ hàng</span>
+    </nav>
+    <header class="phone-cart-heading"><span class="phone-detail-aside__eyebrow">YOUR SELECTION</span><h1>Giỏ hàng</h1><p>Kiểm tra lựa chọn trước khi gửi yêu cầu mua hàng.</p></header>
+
+    @if (TempData["OrderSuccess"] != null)
+    {
+        <div class="phone-order-success" id="cart-order-success"><i class="fa-solid fa-circle-check"></i><div><b>Đã nhận yêu cầu</b><p>@TempData["OrderSuccess"]</p></div></div>
+    }
+    @if (TempData["OrderError"] != null) { <p class="phone-form-error">@TempData["OrderError"]</p> }
+
+    <div class="phone-cart-layout">
+        <section class="phone-cart-items glass">
+            <div class="phone-cart-section-head"><h2>Sản phẩm đã chọn</h2><span data-cart-count>0 sản phẩm</span></div>
+            <div class="phone-cart-list" data-cart-list></div>
+            <div class="phone-cart-empty" data-cart-empty hidden><i class="fa-solid fa-bag-shopping"></i><b>Giỏ hàng đang trống</b><p>Chọn một mẫu điện thoại để thêm vào giỏ.</p><a asp-action="Index" asp-route-category="IPHONE">Khám phá sản phẩm <i class="fa-solid fa-arrow-right"></i></a></div>
+        </section>
+
+        <aside class="phone-cart-summary glass" data-cart-summary hidden>
+            <h2>Thông tin nhận hàng</h2>
+            <form asp-action="SubmitOrder" method="post" id="customer-order-form">
+                @Html.AntiForgeryToken()
+                <div data-cart-hidden-items></div>
+                <label>Họ và tên<input name="CustomerName" maxlength="100" autocomplete="name" required placeholder="Tên người nhận" /></label>
+                <label>Số điện thoại<input name="Phone" inputmode="tel" pattern="0[35789][0-9]{8}" maxlength="10" autocomplete="tel" required placeholder="09xxxxxxxx" /></label>
+                <label>Địa chỉ nhận hàng<textarea name="Address" maxlength="250" autocomplete="street-address" required rows="3" placeholder="Số nhà, đường, phường/xã, tỉnh/thành"></textarea></label>
+                <div class="phone-cart-total"><span>Tạm tính</span><strong data-cart-total>0 ₫</strong></div>
+                <button type="submit" class="phone-buy-now">Gửi yêu cầu mua hàng <i class="fa-solid fa-arrow-right"></i></button>
+                <small class="phone-cart-note">Cửa hàng sẽ gọi xác nhận tình trạng hàng và đơn hàng trước khi giao.</small>
+            </form>
+        </aside>
+    </div>
+</section>
+

@@ -1,16 +1,15 @@
 @model QuanLyBanDienThoai.Models.CreateHoaDonInputModel
 @{
-    ViewData["Title"] = "Bán hàng (POS)";
+    ViewData["Title"] = "Lập Hóa Đơn Bán Hàng (POS XML)";
     var phoneList = (List<QuanLyBanDienThoai.Models.DienThoaiModel>)ViewBag.PhoneList;
 }
 
 @if (ViewBag.ErrorMessage != null)
 {
-    <div class="validate-line v-err mb-4">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/></svg>
+    <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mb-4 rounded-3" style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.35); color: var(--admin-danger);">
+        <i class="fa-solid fa-triangle-exclamation fs-4"></i>
         <div>
-            <b>Không thể lập hóa đơn XML</b>
-            <span>@ViewBag.ErrorMessage</span>
+            <strong>Không thể lập hóa đơn XML:</strong> @ViewBag.ErrorMessage
         </div>
     </div>
 }
@@ -18,116 +17,160 @@
 <form asp-action="Create" method="post" id="posForm">
     @Html.AntiForgeryToken()
 
-    <div class="pos-grid">
-        <!-- LEFT: PRODUCT PICK GRID -->
-        <div class="glass">
-            <div class="table-toolbar" style="padding-bottom:0;">
-                <div class="section-title" style="margin:0;">
-                    Chọn sản phẩm điện thoại XML
-                    <small>Nhấp chuột vào thẻ sản phẩm để thêm trực tiếp vào hóa đơn bán lẻ</small>
+    <div class="row g-4">
+        <!-- LEFT: PRODUCT PICK CATALOGUE -->
+        <div class="col-lg-7 col-xl-8">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <div>
+                        <h2 class="admin-card-title">
+                            <i class="fa-solid fa-cash-register" style="color: var(--admin-primary);"></i>
+                            <span>CHỌN SẢN PHẨM BÁN HÀNG</span>
+                        </h2>
+                        <div class="admin-card-desc">Nhấp chọn thiết bị để đưa trực tiếp vào danh sách chi tiết hóa đơn (ChiTietHoaDon node)</div>
+                    </div>
+                    <span class="admin-badge-brand brand-apple">
+                        <i class="fa-solid fa-boxes-stacked"></i> Kho: @(phoneList?.Count ?? 0) mẫu
+                    </span>
                 </div>
-            </div>
 
-            <div class="pos-pick-grid" id="pick-grid">
-                @if (phoneList != null)
-                {
-                    foreach (var phone in phoneList)
-                    {
-                        string pmGradient = phone.MaHang.ToUpper() switch
+                <div class="admin-card-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;" id="pick-grid">
+                        @if (phoneList != null)
                         {
-                            "APPLE" => "linear-gradient(140deg,#6C6BF5,#3B3A9E)",
-                            "SAMSUNG" => "linear-gradient(140deg,#3ECF8E,#1E8F5F)",
-                            "XIAOMI" => "linear-gradient(140deg,#F0B429,#B87A0C)",
-                            "OPPO" => "linear-gradient(140deg,#F0596B,#A02F41)",
-                            "GOOGLE" => "linear-gradient(140deg,#9C7BF0,#5B3FA0)",
-                            _ => "linear-gradient(140deg,#6C6BF5,#3B3A9E)"
-                        };
+                            foreach (var phone in phoneList)
+                            {
+                                string brandClass = phone.MaHang.ToUpper() switch
+                                {
+                                    "APPLE" => "brand-apple",
+                                    "SAMSUNG" => "brand-samsung",
+                                    "XIAOMI" => "brand-xiaomi",
+                                    "OPPO" => "brand-oppo",
+                                    "GOOGLE" => "brand-google",
+                                    _ => "brand-other"
+                                };
 
-                        <div class="pick-card glass" 
-                             onclick="addToCart('@phone.MaSP', '@phone.TenSP', @phone.GiaBan, '@pmGradient', @phone.SoLuongTon)">
-                            <div class="pick-media" style="--pm-bg: @pmGradient;">
-                                <img src="@phone.HinhAnh" alt="@phone.TenSP" style="max-height: 50px; max-width: 90%; object-fit: contain;" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'1.6\'><rect x=\'7\' y=\'2\' width=\'10\' height=\'20\' rx=\'2.4\'/></svg>'" />
-                            </div>
-                            <div class="pick-name">@phone.TenSP</div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;">
-                                <span class="pick-price">@phone.GiaBan.ToString("#,##0")đ</span>
-                                <span class="pick-add">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                                </span>
-                            </div>
-                        </div>
-                    }
-                }
+                                <div class="admin-card p-3 d-flex flex-column justify-content-between cursor-pointer"
+                                     style="margin-bottom: 0; background: rgba(255,255,255,0.03); border: 1px solid var(--admin-card-border); transition: all 0.2s ease; cursor: pointer;"
+                                     onmouseover="this.style.borderColor='var(--admin-primary)'; this.style.transform='translateY(-2px)';"
+                                     onmouseout="this.style.borderColor='var(--admin-card-border)'; this.style.transform='none';"
+                                     onclick="addToCart('@phone.MaSP', '@phone.TenSP', @phone.GiaBan, '@phone.HinhAnh', @phone.SoLuongTon)">
+                                    
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="admin-badge-brand @brandClass" style="font-size: 10px; padding: 2px 6px;">@phone.TenHang</span>
+                                        <span style="font-family: var(--font-mono); font-size: 11px; color: @(phone.SoLuongTon < 5 ? "var(--admin-danger)" : "var(--admin-accent)"); font-weight: 600;">
+                                            Tồn: @phone.SoLuongTon
+                                        </span>
+                                    </div>
+
+                                    <div style="height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                                        <img src="@phone.HinhAnh" alt="@phone.TenSP" style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                                             onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80'" />
+                                    </div>
+
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 13px; color: var(--admin-text-main); line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                            @phone.TenSP
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--admin-card-border);">
+                                            <span style="font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; color: var(--amber-500);">
+                                                @phone.GiaBan.ToString("#,##0")đ
+                                            </span>
+                                            <span class="admin-btn admin-btn-primary admin-btn-sm" style="width: 28px; height: 28px; padding: 0; border-radius: 50%;">
+                                                <i class="fa-solid fa-plus" style="font-size: 11px;"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- RIGHT: LIVE CART & CUSTOMER FORM -->
-        <div class="glass cart-panel">
-            <div class="section-title" style="margin-bottom:8px;">
-                Hóa đơn đang lập (XML)
-                <small id="cart-count">Chưa chọn sản phẩm</small>
+        <!-- RIGHT: LIVE CART & CUSTOMER ORDER FORM -->
+        <div class="col-lg-5 col-xl-4">
+            <div class="admin-card" style="position: sticky; top: 90px;">
+                <div class="admin-card-header">
+                    <div>
+                        <h2 class="admin-card-title">
+                            <i class="fa-solid fa-receipt" style="color: var(--admin-accent);"></i>
+                            <span>HÓA ĐƠN ĐANG LẬP</span>
+                        </h2>
+                        <div class="admin-card-desc" id="cart-count">Chưa có sản phẩm nào</div>
+                    </div>
+                </div>
+
+                <div class="admin-card-body">
+                    <!-- DYNAMIC CART ITEMS -->
+                    <div id="cart-items" style="max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 16px;">
+                        <div class="text-center py-4" style="color: var(--admin-text-faint);">
+                            <i class="fa-solid fa-cart-arrow-down fs-2 mb-2 d-block opacity-50"></i>
+                            <div style="font-size: 13px;">Nhấp chọn sản phẩm bên trái để thêm vào đơn hàng</div>
+                        </div>
+                    </div>
+
+                    <!-- HIDDEN INPUTS FOR ASP.NET BINDING -->
+                    <div id="hidden-inputs-container"></div>
+
+                    <!-- CUSTOMER INFORMATION -->
+                    <div class="pt-3" style="border-top: 1px solid var(--admin-card-border);">
+                        <div class="mb-2">
+                            <label class="admin-form-label">Tên khách hàng (*):</label>
+                            <input asp-for="TenKH" class="admin-form-control" placeholder="Nguyễn Văn A" required />
+                        </div>
+                        <div class="mb-2">
+                            <label class="admin-form-label">Số điện thoại (*):</label>
+                            <input asp-for="SoDienThoai" class="admin-form-control" placeholder="09xxxxxxxx" required />
+                            <small style="color: var(--admin-text-faint); font-size: 11px; font-family: var(--font-mono);">XSD: (0[3|5|7|8|9])+[0-9]{8}</small>
+                        </div>
+                        <div class="mb-2">
+                            <label class="admin-form-label">Địa chỉ giao hàng (*):</label>
+                            <input asp-for="DiaChi" class="admin-form-control" placeholder="123 Nguyễn Huệ, Q.1, TP.HCM" required />
+                        </div>
+                        <div class="mb-2">
+                            <label class="admin-form-label">Thu ngân lập đơn:</label>
+                            <input asp-for="NhanVien" class="admin-form-control" value="Phạm Minh Thu (Admin)" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="admin-form-label">Ghi chú:</label>
+                            <input asp-for="GhiChu" class="admin-form-control" placeholder="Giao giờ hành chính..." />
+                        </div>
+                    </div>
+
+                    <!-- TOTAL AND CHECKOUT -->
+                    <div class="p-3 mb-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid var(--admin-card-border); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 13px; color: var(--admin-text-muted); font-weight: 500;">Tổng tiền hóa đơn:</span>
+                        <b style="font-family: var(--font-mono); font-size: 18px; color: var(--amber-500);" id="cart-total">0 VNĐ</b>
+                    </div>
+
+                    <button type="submit" class="admin-btn admin-btn-primary w-100" id="btn-checkout" style="height: 44px; font-size: 14.5px;" disabled>
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        <span>Lập &amp; Lưu Hóa Đơn XML</span>
+                    </button>
+                </div>
             </div>
-
-            <!-- DYNAMIC CART ITEMS -->
-            <div id="cart-items">
-                <div class="cart-empty" id="cart-empty-msg">
-                    <i class="fa-solid fa-cart-arrow-down fs-3 d-block mb-2 text-faint"></i>
-                    Nhấp chọn sản phẩm bên trái để thêm vào hóa đơn
-                </div>
-            </div>
-
-            <!-- HIDDEN INPUTS FOR ASP.NET BINDING -->
-            <div id="hidden-inputs-container"></div>
-
-            <div style="margin-top:6px; border-top: 1px solid var(--border); padding-top: 12px;">
-                <div class="field">
-                    <label>Tên khách hàng (*)</label>
-                    <input asp-for="TenKH" id="kh-name" placeholder="Nguyễn Văn A" required />
-                </div>
-                <div class="field">
-                    <label>Số điện thoại (*)</label>
-                    <input asp-for="SoDienThoai" id="kh-phone" placeholder="09xxxxxxxx" required />
-                    <span class="hint">Regex Schema XSD: (0[3|5|7|8|9])+([0-9]{8})</span>
-                </div>
-                <div class="field">
-                    <label>Địa chỉ giao hàng (*)</label>
-                    <input asp-for="DiaChi" placeholder="123 Nguyễn Huệ, Q.1, TP.HCM" required />
-                </div>
-                <div class="field">
-                    <label>Thu ngân xử lý</label>
-                    <input asp-for="NhanVien" value="Phạm Minh Thu (Admin)" />
-                </div>
-                <div class="field">
-                    <label>Ghi chú đơn hàng</label>
-                    <input asp-for="GhiChu" placeholder="Giao giờ hành chính / quà tặng kèm..." />
-                </div>
-            </div>
-
-            <div class="cart-total-row">
-                <span>Tổng tiền hóa đơn:</span>
-                <b id="cart-total">0đ</b>
-            </div>
-
-            <button type="submit" class="btn btn-primary" id="btn-checkout" style="justify-content:center;margin-top:4px;" disabled>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/></svg>
-                Lập &amp; Ghi Hóa Đơn XML
-            </button>
         </div>
     </div>
 </form>
 
 @section Scripts {
     <script>
-        const cartState = {}; // maSp -> { maSp, tenSp, giaBan, qty, gradient, maxStock }
+        const cartState = {}; // maSp -> { maSp, tenSp, giaBan, qty, img, maxStock }
 
-        function addToCart(maSp, tenSp, giaBan, gradient, maxStock) {
+        function addToCart(maSp, tenSp, giaBan, img, maxStock) {
             if (!cartState[maSp]) {
-                cartState[maSp] = { maSp, tenSp, giaBan, qty: 1, gradient, maxStock };
+                cartState[maSp] = { maSp, tenSp, giaBan, qty: 1, img, maxStock };
             } else {
                 if (cartState[maSp].qty < maxStock) {
                     cartState[maSp].qty++;
                 } else {
-                    showToast(`Sản phẩm ${tenSp} chỉ còn tồn ${maxStock} máy trong kho!`);
+                    if (typeof showToast === 'function') {
+                        showToast(`Sản phẩm ${tenSp} chỉ còn tồn ${maxStock} máy trong kho!`);
+                    } else {
+                        alert(`Sản phẩm ${tenSp} chỉ còn tồn ${maxStock} máy trong kho!`);
+                    }
                 }
             }
             renderCart();
@@ -146,7 +189,6 @@
         function renderCart() {
             const container = document.getElementById('cart-items');
             const hiddenContainer = document.getElementById('hidden-inputs-container');
-            const emptyMsg = document.getElementById('cart-empty-msg');
             const checkoutBtn = document.getElementById('btn-checkout');
             const cartCountEl = document.getElementById('cart-count');
             const cartTotalEl = document.getElementById('cart-total');
@@ -156,14 +198,14 @@
 
             if (keys.length === 0) {
                 container.innerHTML = `
-                    <div class="cart-empty">
-                        <i class="fa-solid fa-cart-arrow-down fs-3 d-block mb-2 text-faint"></i>
-                        Nhấp chọn sản phẩm bên trái để thêm vào hóa đơn
+                    <div class="text-center py-4" style="color: var(--admin-text-faint);">
+                        <i class="fa-solid fa-cart-arrow-down fs-2 mb-2 d-block opacity-50"></i>
+                        <div style="font-size: 13px;">Nhấp chọn sản phẩm bên trái để thêm vào đơn hàng</div>
                     </div>
                 `;
                 checkoutBtn.disabled = true;
-                cartCountEl.innerText = 'Chưa chọn sản phẩm';
-                cartTotalEl.innerText = '0đ';
+                cartCountEl.innerText = 'Chưa có sản phẩm nào';
+                cartTotalEl.innerText = '0 VNĐ';
                 return;
             }
 
@@ -179,23 +221,22 @@
                 totalQty += item.qty;
 
                 html += `
-                    <div class="cart-item mb-2 p-2 glass" style="border-radius: 10px;">
-                        <div class="stock-thumb" style="background: ${item.gradient};">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/></svg>
+                    <div class="d-flex align-items-center justify-content-between p-2 mb-2 rounded-2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--admin-card-border);">
+                        <div style="width: 36px; height: 36px; border-radius: 6px; overflow: hidden; background: rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 10px;">
+                            <img src="${item.img}" style="max-height: 100%; max-width: 100%; object-fit: contain;" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'" />
                         </div>
-                        <div class="cart-info">
-                            <b>${item.tenSp}</b>
-                            <small>${item.giaBan.toLocaleString('vi-VN')}đ</small>
+                        <div style="flex: 1; min-width: 0; margin-right: 8px;">
+                            <div style="font-size: 12.5px; font-weight: 600; color: var(--admin-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.tenSp}</div>
+                            <div style="font-size: 11.5px; font-family: var(--font-mono); color: var(--amber-500);">${item.giaBan.toLocaleString('vi-VN')}đ</div>
                         </div>
-                        <div class="qty-stepper">
-                            <button type="button" onclick="changeQty('${item.maSp}', -1)">-</button>
-                            <span>${item.qty}</span>
-                            <button type="button" onclick="changeQty('${item.maSp}', 1)">+</button>
+                        <div class="d-flex align-items-center gap-1">
+                            <button type="button" class="admin-btn admin-btn-secondary" style="width: 24px; height: 24px; padding: 0; font-size: 12px; border-radius: 4px;" onclick="changeQty('${item.maSp}', -1)">-</button>
+                            <span style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; min-width: 20px; text-align: center;">${item.qty}</span>
+                            <button type="button" class="admin-btn admin-btn-secondary" style="width: 24px; height: 24px; padding: 0; font-size: 12px; border-radius: 4px;" onclick="changeQty('${item.maSp}', 1)">+</button>
                         </div>
                     </div>
                 `;
 
-                // Append hidden inputs for ASP.NET MVC model binding (Items[i].MaSP & Items[i].SoLuong)
                 hiddenContainer.innerHTML += `
                     <input type="hidden" name="Items[${index}].MaSP" value="${item.maSp}" />
                     <input type="hidden" name="Items[${index}].SoLuong" value="${item.qty}" />
@@ -204,7 +245,8 @@
 
             container.innerHTML = html;
             cartCountEl.innerText = `${keys.length} mẫu sản phẩm (${totalQty} máy)`;
-            cartTotalEl.innerText = total.toLocaleString('vi-VN') + 'đ';
+            cartTotalEl.innerText = total.toLocaleString('vi-VN') + ' VNĐ';
         }
     </script>
 }
+

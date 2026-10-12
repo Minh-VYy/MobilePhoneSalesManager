@@ -1,3 +1,4 @@
+@model List<QuanLyBanDienThoai.Models.QuangCaoModel>
 @{
     ViewData["Title"] = "PhoneStore — Flagship Điện Thoại Cao Cấp";
     Layout = "_LayoutHome";
@@ -6,74 +7,59 @@
 @* ── PROGRESS RAIL ── *@
 <nav class="rail" aria-label="Điều hướng trang">
     <button type="button" class="on" data-target="sec-hero"     title="Trang Chủ"><i></i></button>
-    <button type="button"           data-target="sec-exploded"  title="Công Nghệ"><i></i></button>
-    <button type="button"           data-target="sec-catalog"   title="Sản Phẩm"><i></i></button>
-    <button type="button"           data-target="sec-stats"     title="Thống Kê"><i></i></button>
+    <button type="button"           data-target="sec-flash"    title="Flash Sale"><i></i></button>
+    <button type="button"           data-target="sec-iphone"   title="iPhone / iPad"><i></i></button>
+    <button type="button"           data-target="sec-android"  title="Android"><i></i></button>
+    <button type="button"           data-target="sec-phukien"  title="Phụ Kiện"><i></i></button>
+    <button type="button"           data-target="sec-news"     title="Tin Tức"><i></i></button>
 </nav>
 
 @* ── SEC 1 · HERO ── *@
 <section id="sec-hero" class="ps-hero">
 
-    @* Floating peek (desktop only) *@
-    <a href="#sec-exploded" class="ps-peek" aria-label="Xem bóc tách 3D">
-        <span class="ps-peek__fr">
-            <img src="~/images/phone_exploded_chipset.png" alt="Chipset 3D" loading="eager" />
-            <span class="ps-peek__play">
-                <svg viewBox="0 0 44 44" fill="none" aria-hidden="true">
-                    <circle cx="22" cy="22" r="20" fill="rgba(108,107,245,.76)" stroke="rgba(255,255,255,.45)" stroke-width="1"/>
-                    <polygon points="18,14 30,22 18,30" fill="#fff"/>
-                </svg>
-            </span>
-        </span>
-        <span class="ps-peek__cap">
-            <b>BÓC TÁCH 3D</b>
-            <i>Khám phá linh kiện →</i>
-        </span>
-    </a>
-
     @* Left copy *@
-    <div class="ps-hero__copy">
-        <div class="ps-eyebrow" data-rv="up">
-            <span class="ps-eyebrow__dot"></span>
-            Đột Phá Công Nghệ Flagship 2026
-        </div>
-
-        <h1 class="ps-hero__h1 word-reveal" data-rv="up">
-            Đỉnh Cao Thiết Kế &amp; Vi Xử Lý 3nm
-        </h1>
-
-
-        <p class="ps-hero__sub" data-rv="up">
-            Trải nghiệm dòng điện thoại Flagship thế hệ mới với Titan siêu bền,
-            camera 200 MP cảm biến 1″ và chip 3 nm vượt trội.
-            Hệ thống POS &amp; XML tích hợp hoàn chỉnh.
-        </p>
-
-        <div class="ps-swatches" data-rv="up">
-            <span class="ps-swatches__label">Màu sắc:</span>
-            <div class="ps-swatches__list">
-                <button class="ps-swatch active" data-color-name="Titan Tự Nhiên" data-img="/images/phone_hero_3d.png"       style="background:#A0A5AD" title="Titan Tự Nhiên"></button>
-                <button class="ps-swatch"         data-color-name="Titan Sa Mạc"  data-img="/images/phone_color_variants.png" style="background:#C4A482" title="Titan Sa Mạc"></button>
-                <button class="ps-swatch"         data-color-name="Đen Midnight"  data-img="/images/phone_hero_3d.png"       style="background:#1C1E24" title="Đen Midnight"></button>
-            </div>
-        </div>
-
-        <div class="ps-hero__actions" data-rv="up">
-            <a asp-controller="DienThoai" asp-action="Index" class="ps-cta">
-                <i class="ps-cta__fill"></i>
-                <span>Xem Tất Cả Sản Phẩm</span>
-                <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-            </a>
-            <a asp-controller="HoaDon" asp-action="Create" class="ps-ghost">
-                <i class="fa-solid fa-cart-shopping"></i> Mua Hàng POS
-            </a>
-        </div>
+    <div class="ps-hero__copy" data-ad-copy-stack>
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            var ad = Model[i];
+            <article class="ps-ad-copy @(i == 0 ? "is-active" : "")" data-ad-copy data-duration="@ad.ThoiGianChuyenGiay">
+                <div class="ps-eyebrow">
+                    <span class="ps-eyebrow__dot"></span>
+                    Tin công nghệ &amp; sản phẩm nổi bật
+                </div>
+                <h1 class="ps-hero__h1">@ad.TieuDe</h1>
+                <p class="ps-hero__sub">@ad.MoTa</p>
+                <div class="ps-hero__actions">
+                    <a href="#sec-news" class="ps-cta">
+                        <i class="ps-cta__fill"></i>
+                        <span>Điểm nổi bật</span>
+                        <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+                    </a>
+                </div>
+            </article>
+        }
     </div>
-
-    @* Right phone stage — clean, no floating badges *@
     <div class="ps-hero__stage">
         <div class="ps-phone-wrap">
-            <img src="~/images/phone_hero_3d.png" id="hero-main-phone" alt="Flagship 3D" class="ps-phone-img" loading="eager" />
+            @if (Model.Count > 0)
+            {
+                <div class="ps-phone-carousel" data-carousel aria-label="Banner quảng cáo và tin công nghệ">
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        var ad = Model[i];
+                        <img src="@ad.HinhAnh" alt="@ad.TieuDe" class="ps-phone-img @(i == 0 ? "is-active" : "")" data-duration="@ad.ThoiGianChuyenGiay" loading="@(i == 0 ? "eager" : "lazy")" />
+                    }
+                    <div class="ps-carousel-controls" aria-label="Điều khiển banner">
+                        <button type="button" class="ps-carousel-toggle" data-carousel-toggle aria-label="Tạm dừng trình chiếu" aria-pressed="false"><span aria-hidden="true">Ⅱ</span></button>
+                        <div class="ps-carousel-dots" role="group" aria-label="Chọn banner">
+                            @for (var i = 0; i < Model.Count; i++)
+                            {
+                                <button type="button" class="@(i == 0 ? "is-active" : "")" data-slide-to="@i" aria-label="Banner @(i + 1)" aria-pressed="@(i == 0 ? "true" : "false")"></button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
             <div class="ps-phone-glow"></div>
         </div>
     </div>
@@ -85,265 +71,749 @@
     </div>
 </section>
 
-@* ── SEC 2 · EXPLODED TECH ── *@
-<section id="sec-exploded" class="ps-sec ps-feature" data-rv="fade">
-    <div class="ps-sec__rule">
-        <span class="ps-sec__k">Kiến Trúc &amp; Công Nghệ</span>
-        <span class="ps-rule"></span>
-    </div>
-
-    <div class="ps-feature__grid">
-        <div class="ps-feature__media">
-            <div class="ps-glow-spot" style="top:35%;left:45%"></div>
-            <div class="ps-glow-spot" style="top:65%;left:70%;animation-delay:-1.5s"></div>
-            <img src="~/images/phone_exploded_chipset.png" alt="Bóc tách linh kiện 3D" loading="lazy" />
+@* ── SEC 2 · PERKS & CAM KẾT CHÍNH HÃNG ── *@
+<div class="ps-sec" style="padding-top: 10px; padding-bottom: 20px;">
+    <div class="ps-perks-bar" data-rv="fade">
+        <div class="ps-perk-item">
+            <div class="ps-perk-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="ps-perk-text">
+                <h4>Miễn Phí Vận Chuyển</h4>
+                <p>Giao hàng tận nơi toàn quốc</p>
+            </div>
         </div>
-
-        <div class="ps-feature__copy">
-            <div class="ps-tag ps-tag--teal" data-rv="up">
-                <i class="fa-solid fa-layer-group"></i> Kiến Trúc Vi Xử Lý &amp; CẢM BIẾN
+        <div class="ps-perk-item">
+            <div class="ps-perk-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="ps-perk-text">
+                <h4>Bảo Hành 12 Tháng</h4>
+                <p>1 đổi 1 trong 30 ngày đầu</p>
             </div>
-            <h2 class="ps-h2 word-reveal" data-rv="up">Bóc Tách Chi Tiết Linh Kiện 3D</h2>
-            <p class="ps-body" data-rv="up">
-                Hệ thống camera thấu kính 5 lớp, ống kính zoom quang học 5×, vi xử lý 3 nm tối ưu pin và tản nhiệt buồng hơi hiệu suất cao.
-            </p>
-            <div class="ps-specs" data-rv="up">
-                <div class="ps-spec"><div class="ps-spec__val">3 nm</div><div class="ps-spec__lbl">Tiến trình Chipset</div></div>
-                <div class="ps-spec"><div class="ps-spec__val">200 MP</div><div class="ps-spec__lbl">Ống kính chính</div></div>
-                <div class="ps-spec"><div class="ps-spec__val">5 000 mAh</div><div class="ps-spec__lbl">Dung lượng Pin</div></div>
+        </div>
+        <div class="ps-perk-item">
+            <div class="ps-perk-icon"><i class="fa-solid fa-credit-card"></i></div>
+            <div class="ps-perk-text">
+                <h4>Trả Góp 0% Lãi Suất</h4>
+                <p>Duyệt hồ sơ nhanh 5 phút</p>
             </div>
-            <a asp-controller="DienThoai" asp-action="Index" class="ps-arrowlink" data-rv="up">
-                Xem thông số đầy đủ
-                <span class="ps-arrowlink__ar">
-                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
-                </span>
-            </a>
+        </div>
+        <div class="ps-perk-item">
+            <div class="ps-perk-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
+            <div class="ps-perk-text">
+                <h4>Thu Cũ Đổi Mới</h4>
+                <p>Trợ giá lên đến 3.000.000đ</p>
+            </div>
         </div>
     </div>
-</section>
+</div>
 
-@* ── SEC 3 · CATALOG CARDS ── *@
-<section id="sec-catalog" class="ps-sec ps-catalog" data-rv="fade">
-    <div class="ps-sec__rule">
-        <span class="ps-sec__k">Sản Phẩm Nổi Bật</span>
-        <span class="ps-rule"></span>
-        <a asp-controller="DienThoai" asp-action="Index" class="ps-sec__more">
-            Xem tất cả
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+@* ── SEC 3 · FLASH SALE TRONG NGÀY ── *@
+<section id="sec-flash" class="ps-sec" data-rv="fade">
+    <div class="flash-sale-head">
+        <div class="flash-sale-title">
+            <i class="fa-solid fa-bolt text-warning fs-4"></i>
+            <span>FLASH SALE TRONG NGÀY</span>
+            <span class="flash-sale-badge">GIẢM ĐẾN 35%</span>
+        </div>
+        <div class="flash-sale-timer">
+            <span>Kết thúc trong:</span>
+            <span class="timer-box" id="flashHours">05</span> :
+            <span class="timer-box" id="flashMins">42</span> :
+            <span class="timer-box" id="flashSecs">19</span>
+        </div>
+    </div>
+
+    <div class="cat-products-grid" style="border-radius: 0 0 16px 16px; background: rgba(15, 23, 42, 0.4); padding: 16px; border: 1px solid rgba(255,255,255,0.1); border-top: none;">
+        <!-- Sale Item 1 -->
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-15PM-100-256-NAT" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 25%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium" alt="iPhone 15 Pro Max" />
+            </div>
+            <div class="cat-title">iPhone 15 Pro Max 256GB - Chính Hãng VN/A</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">25.990.000 đ</span>
+                <span class="cat-price-old">34.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
         </a>
-    </div>
 
-    <div class="ps-cards">
-        @* CARD 1 — iPhone 15 Pro Max *@
-        <div class="ps-card" data-rv="up">
-            <span class="ps-card__chip">A17 Pro · 3nm</span>
-            <div class="ps-card__fr">
-                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium" alt="iPhone 15 Pro Max" loading="lazy" />
-                <div class="ps-card__overlay"></div>
-                <div class="ps-card__ar">
-                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12L12 2M12 2H6M12 2v6"/></svg>
-                </div>
+        <!-- Sale Item 2 -->
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="SS-S24U-100-256-GRY" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 20%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991" alt="Galaxy S24 Ultra" />
             </div>
-            <div class="ps-card__body">
-                <div class="ps-card__brand">APPLE</div>
-                <div class="ps-card__name">iPhone 15 Pro Max 256GB — Titan Tự Nhiên</div>
-                <div class="ps-card__meta">
-                    <span>Titan Tự Nhiên</span><span>Mới 100% VN/A</span>
-                </div>
-                <div class="ps-card__foot">
-                    <div class="ps-card__price">29.490.000 ₫</div>
-                    <span class="ps-stock-badge ps-stock-badge--in">Còn 25</span>
-                </div>
-                <button class="ps-card__cta" onclick="showToast('Đã thêm iPhone 15 Pro Max vào giỏ hàng!')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-                    Thêm Vào Giỏ
-                </button>
+            <div class="cat-title">Samsung Galaxy S24 Ultra 5G 256GB - Galaxy AI</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">26.990.000 đ</span>
+                <span class="cat-price-old">33.990.000 đ</span>
             </div>
-        </div>
-
-        @* CARD 2 — Galaxy S24 Ultra *@
-        <div class="ps-card" data-rv="up" style="--card-delay:120ms">
-            <span class="ps-card__chip" style="--chip-c:rgba(0,194,168,.18);--chip-t:#00C2A8;--chip-b:rgba(0,194,168,.3)">Snapdragon 8 Gen 3</span>
-            <div class="ps-card__fr">
-                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991" alt="Galaxy S24 Ultra" loading="lazy" />
-                <div class="ps-card__overlay"></div>
-                <div class="ps-card__ar">
-                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12L12 2M12 2H6M12 2v6"/></svg>
-                </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
             </div>
-            <div class="ps-card__body">
-                <div class="ps-card__brand">SAMSUNG</div>
-                <div class="ps-card__name">Samsung Galaxy S24 Ultra 5G — Galaxy AI</div>
-                <div class="ps-card__meta">
-                    <span>Titan Xám</span><span>Galaxy AI</span>
-                </div>
-                <div class="ps-card__foot">
-                    <div class="ps-card__price">26.990.000 ₫</div>
-                    <span class="ps-stock-badge ps-stock-badge--in">Còn 18</span>
-                </div>
-                <button class="ps-card__cta" onclick="showToast('Đã thêm Samsung Galaxy S24 Ultra vào giỏ!')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-                    Thêm Vào Giỏ
-                </button>
-            </div>
-        </div>
-
-        @* CARD 3 — Xiaomi 14 Ultra *@
-        <div class="ps-card" data-rv="up" style="--card-delay:240ms">
-            <span class="ps-card__chip" style="--chip-c:rgba(240,180,41,.18);--chip-t:#F0B429;--chip-b:rgba(240,180,41,.3)">Leica 1-Inch</span>
-            <div class="ps-card__fr">
-                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80" alt="Xiaomi 14 Ultra" loading="lazy" />
-                <div class="ps-card__overlay"></div>
-                <div class="ps-card__ar">
-                    <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 12L12 2M12 2H6M12 2v6"/></svg>
-                </div>
-            </div>
-            <div class="ps-card__body">
-                <div class="ps-card__brand">XIAOMI</div>
-                <div class="ps-card__name">Xiaomi 14 Ultra 512GB — Camera Leica</div>
-                <div class="ps-card__meta">
-                    <span>Đen Giả Da</span><span>Sạc 90W</span>
-                </div>
-                <div class="ps-card__foot">
-                    <div class="ps-card__price">27.990.000 ₫</div>
-                    <span class="ps-stock-badge ps-stock-badge--low">Còn 8</span>
-                </div>
-                <button class="ps-card__cta" onclick="showToast('Đã thêm Xiaomi 14 Ultra vào giỏ!')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-                    Thêm Vào Giỏ
-                </button>
-            </div>
-        </div>
-    </div>
-</section>
-
-@* ── SEC 4 · STATS ── *@
-<section id="sec-stats" class="ps-sec ps-stats" data-rv="fade">
-    <div class="ps-sec__rule">
-        <span class="ps-sec__k"><b>04</b> — Thống Kê Hoạt Động</span>
-        <span class="ps-rule"></span>
-    </div>
-
-    <div class="ps-stats__head" data-rv="up">
-        <h2 class="ps-h2 word-reveal">Hoạt Động Cửa Hàng Theo Thời Gian Thực</h2>
-        <p class="ps-body">Hệ thống POS &amp; XML tự động cập nhật tồn kho, doanh thu và đơn hàng.</p>
-    </div>
-
-    <div class="ps-stats__grid">
-        <div class="ps-stat-card" style="--accent:#6C6BF5" data-rv="up">
-            <div class="ps-stat-card__top">
-                <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
-                </div>
-                <span class="ps-stat-card__trend">+29 Dòng</span>
-            </div>
-            <div class="ps-stat-card__val" data-count="29">0</div>
-            <div class="ps-stat-card__lbl">Dòng Máy Trong DB XML</div>
-            <div class="ps-stat-card__bar"><span style="width:72%"></span></div>
-        </div>
-
-        <div class="ps-stat-card" style="--accent:#00C2A8" data-rv="up">
-            <div class="ps-stat-card__top">
-                <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/></svg>
-                </div>
-                <span class="ps-stat-card__trend">Hôm nay</span>
-            </div>
-            <div class="ps-stat-card__val" data-count="158">0</div>
-            <div class="ps-stat-card__lbl">Giao Dịch POS Xử Lý</div>
-            <div class="ps-stat-card__bar"><span style="width:60%"></span></div>
-        </div>
-
-        <div class="ps-stat-card" style="--accent:#F0B429" data-rv="up">
-            <div class="ps-stat-card__top">
-                <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-                </div>
-                <span class="ps-stat-card__trend">Kiểm kê 100%</span>
-            </div>
-            <div class="ps-stat-card__val" data-count="842">0</div>
-            <div class="ps-stat-card__lbl">Tổng Tồn Kho Điện Thoại</div>
-            <div class="ps-stat-card__bar"><span style="width:88%"></span></div>
-        </div>
-
-        <div class="ps-stat-card" style="--accent:#3ECF8E" data-rv="up">
-            <div class="ps-stat-card__top">
-                <div class="ps-stat-card__icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                </div>
-                <span class="ps-stat-card__trend">+18.4%</span>
-            </div>
-            <div class="ps-stat-card__val" data-count="1480" data-suffix=" tr">0</div>
-            <div class="ps-stat-card__lbl">Doanh Thu Tổng (triệu ₫)</div>
-            <div class="ps-stat-card__bar"><span style="width:95%"></span></div>
-        </div>
-    </div>
-</section>
-
-@* ── CLOSING CTA ── *@
-<section class="ps-closing" data-rv="fade">
-    <div class="ps-closing__eyebrow">
-        <span class="ps-eyebrow__dot"></span>
-        Hệ Thống Quản Lý Bán Hàng
-    </div>
-    <h2 class="ps-closing__h2 word-reveal">
-        Trải Nghiệm Mua Sắm Không Giới Hạn
-    </h2>
-    <p class="ps-closing__sub">
-        POS · XML Database · Báo cáo thời gian thực · Quản lý kho thông minh
-    </p>
-    <div class="ps-closing__actions">
-        <a asp-controller="DienThoai" asp-action="Index" class="ps-cta">
-            <i class="ps-cta__fill"></i>
-            <span>Khám Phá Sản Phẩm</span>
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
-        <a asp-controller="HoaDon" asp-action="Create" class="ps-ghost">
-            <i class="fa-solid fa-receipt"></i> Tạo Hóa Đơn Ngay
+
+        <!-- Sale Item 3 -->
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="MI-14U-100-512-BLK" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 30%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80" alt="Xiaomi 14 Ultra" />
+            </div>
+            <div class="cat-title">Xiaomi 14 Ultra 512GB - Leica Camera</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">23.990.000 đ</span>
+                <span class="cat-price-old">32.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Sale Item 4 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 18%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80" alt="iPhone 14 Pro" />
+            </div>
+            <div class="cat-title">iPhone 14 Pro Max 128GB - Vàng Ánh Kim</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">22.490.000 đ</span>
+                <span class="cat-price-old">27.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Sale Item 5 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 35%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80" alt="AirPods Pro 2" />
+            </div>
+            <div class="cat-title">Tai Nghe Apple AirPods Pro 2 USB-C</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">4.890.000 đ</span>
+                <span class="cat-price-old">6.690.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-15P-99-128-BLU" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 12%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-bluetitanium" alt="iPhone 15 Pro Titan Xanh" loading="lazy" />
+            </div>
+            <div class="cat-title">iPhone 15 Pro 128GB - Titan Xanh</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">21.990.000 đ</span>
+                <span class="cat-price-old">24.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="SS-S23U-99-256-GRN" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 18%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2302/gallery/vn-galaxy-s23-ultra-s918-sm-s918bzgcxxv-thumb-534863401" alt="Samsung Galaxy S23 Ultra" loading="lazy" />
+            </div>
+            <div class="cat-title">Samsung Galaxy S23 Ultra 256GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">16.890.000 đ</span>
+                <span class="cat-price-old">20.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="MI-RN13PP-100-256-WHT" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 10%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Redmi Note 13 Pro Plus" loading="lazy" />
+            </div>
+            <div class="cat-title">Redmi Note 13 Pro+ 5G 256GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">8.090.000 đ</span>
+                <span class="cat-price-old">8.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="OP-FX7U-100-256-BRN" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 14%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="OPPO Find X7 Ultra" loading="lazy" />
+            </div>
+            <div class="cat-title">OPPO Find X7 Ultra 256GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">19.690.000 đ</span>
+                <span class="cat-price-old">22.890.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="GG-PX8P-100-128-BLU" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 15%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Google Pixel 8 Pro" loading="lazy" />
+            </div>
+            <div class="cat-title">Google Pixel 8 Pro 128GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">15.690.000 đ</span>
+                <span class="cat-price-old">18.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
         </a>
     </div>
 </section>
 
-@* ── FOOTER ── *@
-<footer class="ps-foot">
-    <div class="ps-foot__grid">
-        <div class="ps-foot__brand">
-            <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-                <defs><linearGradient id="ps-fg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6C6BF5"/><stop offset="100%" stop-color="#9C7BF0"/></linearGradient></defs>
-                <rect width="32" height="32" rx="8" fill="url(#ps-fg)"/>
-                <rect x="11" y="6" width="10" height="20" rx="2" fill="none" stroke="#fff" stroke-width="1.6"/>
-                <line x1="14" y1="22" x2="18" y2="22" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-            <span><b>Phone</b>Store</span>
-            <p>Hệ thống quản lý bán hàng điện thoại tích hợp XML — hiện đại, nhanh chóng, chính xác.</p>
-        </div>
-        <div class="ps-foot__col">
-            <h4>Sản Phẩm</h4>
-            <ul>
-                <li><a asp-controller="DienThoai" asp-action="Index">iPhone Series</a></li>
-                <li><a asp-controller="DienThoai" asp-action="Index">Samsung Galaxy</a></li>
-                <li><a asp-controller="DienThoai" asp-action="Index">Xiaomi &amp; Khác</a></li>
-            </ul>
-        </div>
-        <div class="ps-foot__col">
-            <h4>Quản Lý</h4>
-            <ul>
-                <li><a asp-controller="HoaDon" asp-action="Create">Bán Hàng POS</a></li>
-                <li><a asp-controller="HoaDon" asp-action="Index">Tra Cứu Hóa Đơn</a></li>
-                <li><a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin">Bảng Quản Trị</a></li>
-            </ul>
-        </div>
-        <div class="ps-foot__col">
-            <h4>Công Nghệ XML</h4>
-            <ul>
-                <li><a asp-controller="DienThoai" asp-action="RssFeed" target="_blank">RSS 2.0 Feed</a></li>
-                <li><a asp-controller="DienThoai" asp-action="XsltView">XSLT Catalogue</a></li>
-                <li><a asp-controller="DienThoai" asp-action="ValidateXsd">Validate XSD</a></li>
-            </ul>
-        </div>
+@* ── SEC 4 · CATEGORY: IPHONE / IPAD (EXACT MATCH TO SCREENSHOT) ── *@
+<section id="sec-iphone" class="ps-sec" data-rv="fade">
+    <div class="cat-ribbon-bar">
+        <div class="cat-ribbon-badge">IPHONE / IPAD</div><a class="cat-ribbon-link" asp-controller="DienThoai" asp-action="Index" asp-route-category="IPHONE">Xem tất cả iPhone <i class="fa-solid fa-arrow-right"></i></a>
     </div>
-    <div class="ps-foot__base">
-        <span>© 2026 PhoneStore — Hệ thống XML</span>
-        <span>ASP.NET Core · Razor · XML · XSD · XSLT</span>
+
+    <div class="cat-products-grid">
+        <!-- Item 1 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 9%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80" alt="iPhone 17" />
+            </div>
+            <div class="cat-title">iPhone 17 256GB - Chính Hãng</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">26.290.000 đ</span>
+                <span class="cat-price-old">28.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 2 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 5%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=600&q=80" alt="iPhone 17 512GB" />
+            </div>
+            <div class="cat-title">iPhone 17 512GB - Chính Hãng</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">32.290.000 đ</span>
+                <span class="cat-price-old">33.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 3 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 29%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium" alt="iPhone Air 256GB" />
+            </div>
+            <div class="cat-title">iPhone Air 256GB - Chính Hãng</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">22.590.000 đ</span>
+                <span class="cat-price-old">31.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 4 (Pre-order / Out of stock) -->
+        <div class="cat-product-card">
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=600&q=80" alt="iPhone Air 512GB" />
+            </div>
+            <div class="cat-title">iPhone Air 512GB - Chính Hãng</div>
+            <div style="margin-top: auto; margin-bottom: 10px;">
+                <button class="cat-contact-btn" onclick="showToast('Đã gửi yêu cầu tư vấn iPhone Air 512GB!')">Liên Hệ</button>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </div>
+
+        <!-- Item 5 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 5%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=600&q=80" alt="iPhone 17 Pro 512GB" />
+            </div>
+            <div class="cat-title">iPhone 17 Pro 512GB - Chính Hãng</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">37.990.000 đ</span>
+                <span class="cat-price-old">39.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-15PM-100-256-NAT" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 5%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium" alt="iPhone 15 Pro Max Titan Tự Nhiên" loading="lazy" />
+            </div>
+            <div class="cat-title">iPhone 15 Pro Max 256GB - Titan Tự Nhiên</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">29.490.000 đ</span>
+                <span class="cat-price-old">30.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-15P-99-128-BLU" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 6%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-bluetitanium" alt="iPhone 15 Pro Titan Xanh" loading="lazy" />
+            </div>
+            <div class="cat-title">iPhone 15 Pro 128GB - Titan Xanh</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">21.990.000 đ</span>
+                <span class="cat-price-old">23.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-14PM-99-256-PUR" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 8%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-deep-purple-select" alt="iPhone 14 Pro Max màu tím" loading="lazy" />
+            </div>
+            <div class="cat-title">iPhone 14 Pro Max 256GB - Tím</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">19.890.000 đ</span>
+                <span class="cat-price-old">21.690.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-13PM-99-128-SBL" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 7%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pro-max-blue-select" alt="iPhone 13 Pro Max xanh Sierra" loading="lazy" />
+            </div>
+            <div class="cat-title">iPhone 13 Pro Max 128GB - Xanh Sierra</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">14.890.000 đ</span>
+                <span class="cat-price-old">15.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="IPH-13-99-128-WHT" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 8%</span>
+            <div class="cat-img-wrap">
+                <img src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-starlight-select" alt="iPhone 13 trắng ánh sao" loading="lazy" />
+            </div>
+            <div class="cat-title">iPhone 13 128GB - Trắng Ánh Sao</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">11.490.000 đ</span>
+                <span class="cat-price-old">12.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
     </div>
-</footer>
+</section>
+
+@* ── SEC 5 · CATEGORY: ANDROID (SAMSUNG / XIAOMI / OPPO / GOOGLE) ── *@
+<section id="sec-android" class="ps-sec" data-rv="fade">
+    <div class="cat-ribbon-bar">
+        <div class="cat-ribbon-badge">ANDROID FLAGSHIPS</div><a class="cat-ribbon-link" asp-controller="DienThoai" asp-action="Index" asp-route-category="ANDROID">Android đề xuất <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+
+    <div class="cat-products-grid">
+        <!-- Item 1 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 18%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991" alt="Galaxy S24 Ultra" />
+            </div>
+            <div class="cat-title">Samsung Galaxy S24 Ultra 5G 512GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">28.990.000 đ</span>
+                <span class="cat-price-old">35.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 2 -->
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="MI-14U-100-512-BLK" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 20%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80" alt="Xiaomi 14 Ultra" />
+            </div>
+            <div class="cat-title">Xiaomi 14 Ultra 512GB Leica Camera</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">27.990.000 đ</span>
+                <span class="cat-price-old">34.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 3 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 12%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80" alt="OPPO Find X7" />
+            </div>
+            <div class="cat-title">OPPO Find X7 Ultra Hasselblad 512GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">23.490.000 đ</span>
+                <span class="cat-price-old">26.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 4 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 15%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80" alt="Google Pixel 9 Pro" />
+            </div>
+            <div class="cat-title">Google Pixel 9 Pro XL 256GB Titan AI</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">24.990.000 đ</span>
+                <span class="cat-price-old">29.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Item 5 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 14%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991" alt="Galaxy Z Fold6" />
+            </div>
+            <div class="cat-title">Samsung Galaxy Z Fold6 5G 512GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">40.990.000 đ</span>
+                <span class="cat-price-old">47.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="SS-S23U-99-256-GRN" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 10%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2302/gallery/vn-galaxy-s23-ultra-s918-sm-s918bzgcxxv-thumb-534863401" alt="Samsung Galaxy S23 Ultra" loading="lazy" />
+            </div>
+            <div class="cat-title">Samsung Galaxy S23 Ultra 256GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">16.890.000 đ</span>
+                <span class="cat-price-old">18.790.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="SS-ZFOLD5-99-512-BLU" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 8%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-fold5-f946-sm-f946blbcxxv-thumb-537231498" alt="Samsung Galaxy Z Fold5" loading="lazy" />
+            </div>
+            <div class="cat-title">Samsung Galaxy Z Fold5 512GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">24.490.000 đ</span>
+                <span class="cat-price-old">26.690.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="SS-A55-100-128-BLU" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 6%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556elbdxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556elbdxxv-thumb-540298150" alt="Samsung Galaxy A55 5G" loading="lazy" />
+            </div>
+            <div class="cat-title">Samsung Galaxy A55 5G 128GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">8.690.000 đ</span>
+                <span class="cat-price-old">9.290.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="MI-RN13PP-100-256-WHT" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 7%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="Redmi Note 13 Pro Plus" loading="lazy" />
+            </div>
+            <div class="cat-title">Redmi Note 13 Pro+ 5G 256GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">8.990.000 đ</span>
+                <span class="cat-price-old">9.690.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Details" asp-route-id="OP-FN3-99-512-GLD" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 9%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1575695342320-d2d2d2f9b73f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="OPPO Find N3" loading="lazy" />
+            </div>
+            <div class="cat-title">OPPO Find N3 512GB</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">26.990.000 đ</span>
+                <span class="cat-price-old">29.690.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+    </div>
+</section>
+
+@* ── SEC 6 · CATEGORY: PHỤ KIỆN CHÍNH HÃNG ── *@
+<section id="sec-phukien" class="ps-sec" data-rv="fade">
+    <div class="cat-ribbon-bar">
+        <div class="cat-ribbon-badge">PHỤ KIỆN CHÍNH HÃNG</div>
+    </div>
+
+    <div class="cat-products-grid">
+        <!-- Accessory 1 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 25%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/gadgets_ecosystem.png" alt="Sạc Nhanh Apple 20W" />
+            </div>
+            <div class="cat-title">Củ Sạc Nhanh Apple 20W USB-C Type-C</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">490.000 đ</span>
+                <span class="cat-price-old">650.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Accessory 2 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 18%</span>
+            <div class="cat-img-wrap">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80" alt="AirPods Pro 2" />
+            </div>
+            <div class="cat-title">Tai Nghe AirPods Pro 2 MagSafe USB-C</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">5.490.000 đ</span>
+                <span class="cat-price-old">6.690.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Accessory 3 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 22%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/gadgets_ecosystem.png" alt="Galaxy Buds3 Pro" />
+            </div>
+            <div class="cat-title">Tai Nghe Samsung Galaxy Buds3 Pro Hi-Res</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">4.290.000 đ</span>
+                <span class="cat-price-old">5.490.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Accessory 4 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 30%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/phone_color_variants.png" alt="Ốp lưng MagSafe" />
+            </div>
+            <div class="cat-title">Ốp Lưng MagSafe Silicon Trong Suốt Cao Cấp</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">350.000 đ</span>
+                <span class="cat-price-old">500.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+
+        <!-- Accessory 5 -->
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 40%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/phone_exploded_chipset.png" alt="Kính Cường Lực 9D" />
+            </div>
+            <div class="cat-title">Kính Cường Lực 9D Chống Nhìn Trộm Chống Khóa</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">120.000 đ</span>
+                <span class="cat-price-old">200.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 12%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/gadgets_ecosystem.png" alt="Tai nghe không dây AirPods 4" loading="lazy" />
+            </div>
+            <div class="cat-title">Tai nghe Apple AirPods 4 USB-C</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">3.490.000 đ</span>
+                <span class="cat-price-old">3.990.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 18%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/gadgets_ecosystem.png" alt="Củ sạc nhanh Samsung 45W" loading="lazy" />
+            </div>
+            <div class="cat-title">Củ sạc Samsung 45W USB-C</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">790.000 đ</span>
+                <span class="cat-price-old">960.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 15%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/phone_color_variants.png" alt="Pin dự phòng MagSafe" loading="lazy" />
+            </div>
+            <div class="cat-title">Pin dự phòng MagSafe 10.000mAh</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">890.000 đ</span>
+                <span class="cat-price-old">1.050.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 10%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/gadgets_ecosystem.png" alt="Pin dự phòng Anker" loading="lazy" />
+            </div>
+            <div class="cat-title">Pin dự phòng Anker 20.000mAh</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">1.290.000 đ</span>
+                <span class="cat-price-old">1.440.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+        <a asp-controller="DienThoai" asp-action="Index" class="cat-product-card">
+            <span class="cat-sale-badge">Sale 20%</span>
+            <div class="cat-img-wrap">
+                <img src="~/images/phone_exploded_chipset.png" alt="Kính cường lực chống nhìn trộm" loading="lazy" />
+            </div>
+            <div class="cat-title">Kính cường lực iPhone chống nhìn trộm</div>
+            <div class="cat-price-wrap">
+                <span class="cat-price-sale">160.000 đ</span>
+                <span class="cat-price-old">200.000 đ</span>
+            </div>
+            <div class="cat-card-foot">
+                <span><i class="fa-solid fa-truck-fast me-1"></i> Miễn phí giao hàng</span>
+            </div>
+        </a>
+    </div>
+</section>
+
+@* ── SEC 7 · TIN TỨC & BÀI VIẾT CÔNG NGHỆ NỔI BẬT ── *@
+<section id="sec-news" class="ps-sec sec-tech-news" data-rv="fade">
+    <div class="ps-sec__rule mb-4">
+        <span class="ps-sec__k"><i class="fa-solid fa-newspaper text-primary me-2"></i> TIN TỨC &amp; ĐÁNH GIÁ CÔNG NGHỆ</span>
+        <span class="ps-rule"></span>
+    </div>
+
+    <div class="news-grid">
+        <!-- Article 1 -->
+        <a href="#" class="news-card" onclick="showToast('Đang mở bài viết đánh giá iPhone 17 Pro...'); return false;">
+            <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=600&q=80" alt="Đánh giá iPhone 17" class="news-img" />
+            <div class="news-body">
+                <div class="news-meta">
+                    <span><i class="fa-regular fa-clock me-1"></i> 08/10/2026</span>
+                    <span><i class="fa-solid fa-fire text-danger me-1"></i> Tin Hot</span>
+                </div>
+                <h3 class="news-title">Đánh Giá Chi Tiết iPhone 17 Pro: Vi Xử Lý 3nm &amp; Hệ Thống Camera Đột Phá</h3>
+                <p class="news-desc">Phân tích chuyên sâu về hiệu năng chip 3nm thế hệ mới, ống kính zoom 5x cùng thời lượng pin cải tiến vượt trội...</p>
+                <div class="news-link">Đọc tiếp <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Article 2 -->
+        <a href="#" class="news-card" onclick="showToast('Đang mở bài viết Top Android...'); return false;">
+            <img src="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991" alt="Top Android 2026" class="news-img" />
+            <div class="news-body">
+                <div class="news-meta">
+                    <span><i class="fa-regular fa-clock me-1"></i> 07/10/2026</span>
+                    <span>Tư Vấn</span>
+                </div>
+                <h3 class="news-title">Top 5 Mẫu Điện Thoại Android Flagship Đáng Mua Nhất Trong Năm 2026</h3>
+                <p class="news-desc">Tổng hợp những mẫu smartphone Android cấu hình khủng, tích hợp AI thông minh và camera Leica, Hasselblad hàng đầu...</p>
+                <div class="news-link">Đọc tiếp <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Article 3 -->
+        <a href="#" class="news-card" onclick="showToast('Đang mở bài viết so sánh flagship...'); return false;">
+            <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80" alt="So sánh S24 vs iPhone 15" class="news-img" />
+            <div class="news-body">
+                <div class="news-meta">
+                    <span><i class="fa-regular fa-clock me-1"></i> 05/10/2026</span>
+                    <span>So Sánh</span>
+                </div>
+                <h3 class="news-title">So Sánh Samsung Galaxy S24 Ultra vs iPhone 15 Pro Max: Đâu Là Vua Flagship?</h3>
+                <p class="news-desc">Trận chiến giữa Galaxy AI và Apple Intelligence. Đánh giá toàn diện về màn hình, khả năng chụp đêm và độ bền khung Titan...</p>
+                <div class="news-link">Đọc tiếp <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+
+        <!-- Article 4 -->
+        <a href="#" class="news-card" onclick="showToast('Đang mở hướng dẫn củ sạc nhanh...'); return false;">
+            <img src="~/images/gadgets_ecosystem.png" alt="Củ sạc nhanh" class="news-img" />
+            <div class="news-body">
+                <div class="news-meta">
+                    <span><i class="fa-regular fa-clock me-1"></i> 03/10/2026</span>
+                    <span>Mẹo Hay</span>
+                </div>
+                <h3 class="news-title">Hướng Dẫn Chọn Củ Sạc Nhanh Chuẩn Power Delivery Cho Điện Thoại</h3>
+                <p class="news-desc">Những lưu ý quan trọng để chọn củ sạc an toàn, bảo vệ tuổi thọ pin và tối ưu công suất sạc cho iPhone, Samsung...</p>
+                <div class="news-link">Đọc tiếp <i class="fa-solid fa-arrow-right"></i></div>
+            </div>
+        </a>
+    </div>
+</section>
+
+@* ── FOOTER (dùng chung) ── *@
+@await Html.PartialAsync("_Footer")

@@ -11,6 +11,9 @@ namespace QuanLyBanDienThoai.Models
         public ThongSoKyThuatModel ThongSo { get; set; } = new ThongSoKyThuatModel();
         public string HinhAnh { get; set; } = string.Empty;
         public string MoTa { get; set; } = string.Empty;
+        public string ModelSeries { get; set; } = string.Empty;
+        public int VariantCount { get; set; } = 1;
+        public string VariantSummary { get; set; } = string.Empty;
     }
 
     public class ThongSoKyThuatModel
@@ -26,6 +29,7 @@ namespace QuanLyBanDienThoai.Models
     {
         public string Keyword { get; set; } = string.Empty;
         public string MaHang { get; set; } = string.Empty;
+        public string Category { get; set; } = "ALL";
         public decimal? MinGia { get; set; }
         public decimal? MaxGia { get; set; }
         public List<DienThoaiModel> Items { get; set; } = new List<DienThoaiModel>();

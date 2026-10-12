@@ -1,67 +1,87 @@
 @model QuanLyBanDienThoai.Models.ValidationResultModel
 @{
-    ViewData["Title"] = "XSD Validation - Hóa Đơn";
+    ViewData["Title"] = "XSD Validation — Hóa Đơn";
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-shield-halved text-success"></i>
-            <span>BÁO CÁO KIỂM TRA XSD SCHEMA HÓA ĐƠN</span>
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h2 class="admin-card-title">
+                <i class="fa-solid fa-shield-halved" style="color: var(--status-success);"></i>
+                <span>Báo cáo kiểm tra XSD Schema Hóa Đơn</span>
+            </h2>
+            <div class="admin-card-desc">Validate cấu trúc tệp HoaDon.xml theo quy tắc XSD Schema</div>
         </div>
-        <a asp-action="Index" class="btn-custom btn-secondary-custom">
-            <i class="fa-solid fa-arrow-left"></i> Trở về Danh sách
+        <a asp-action="Index" class="admin-btn admin-btn-secondary admin-btn-sm">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Trở về Danh sách</span>
         </a>
     </div>
 
-    <div class="mb-4">
-        <p><strong>Tệp dữ liệu XML:</strong> <code>@Model.FileName</code></p>
-        <p><strong>Tệp Lược đồ Schema:</strong> <code>@Model.SchemaName</code></p>
-    </div>
+    <div class="admin-card-body">
+        <div class="d-flex flex-wrap gap-4 mb-4" style="font-size: 13.5px; color: var(--text-body);">
+            <div><strong style="color: var(--text-muted);">Tệp dữ liệu XML:</strong>&nbsp;
+                <code style="background: var(--bg-surface-subtle); padding: 2px 8px; border-radius: var(--radius-sm); font-family: var(--font-family-mono); font-size: 12.5px;">@Model.FileName</code>
+            </div>
+            <div><strong style="color: var(--text-muted);">Lược đồ Schema:</strong>&nbsp;
+                <code style="background: var(--bg-surface-subtle); padding: 2px 8px; border-radius: var(--radius-sm); font-family: var(--font-family-mono); font-size: 12.5px;">@Model.SchemaName</code>
+            </div>
+        </div>
 
-    @if (Model.IsValid)
-    {
-        <div class="alert-custom alert-success" style="padding: 2rem;">
-            <i class="fa-solid fa-circle-check" style="font-size: 2.5rem;"></i>
-            <div>
-                <h4 style="margin-bottom: 6px;">TỆP HÓA ĐƠN XML HOÀN TOÀN HỢP LỆ (VALID)!</h4>
-                <p class="mb-0">Tệp <code>@Model.FileName</code> đạt chuẩn 100% quy tắc cấu trúc của <code>@Model.SchemaName</code>.</p>
+        @if (Model.IsValid)
+        {
+            <div class="d-flex align-items-center gap-3 p-4 rounded-3" style="background: var(--status-success-bg); border: 1px solid var(--status-success-border);">
+                <i class="fa-solid fa-circle-check" style="font-size: 2.2rem; color: var(--status-success);"></i>
+                <div>
+                    <h4 style="margin: 0 0 4px; font-weight: 700; color: var(--status-success); font-size: 16px;">TỆP HÓA ĐƠN XML HOÀN TOÀN HỢP LỆ (VALID)!</h4>
+                    <p style="margin: 0; font-size: 13.5px; color: var(--text-body);">
+                        Tệp <code>@Model.FileName</code> đạt chuẩn 100% quy tắc cấu trúc của <code>@Model.SchemaName</code>.
+                    </p>
+                </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="alert-custom alert-danger" style="padding: 1.5rem; flex-direction: column; align-items: flex-start;">
-            <div class="d-flex align-items-center gap-2 mb-2">
-                <i class="fa-solid fa-circle-xmark" style="font-size: 1.8rem;"></i>
-                <h4 class="mb-0">TỆP HÓA ĐƠN KHÔNG HỢP LỆ (INVALID)!</h4>
+        }
+        else
+        {
+            <div class="p-4 rounded-3 mb-3" style="background: var(--status-danger-bg); border: 1px solid var(--status-danger-border);">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <i class="fa-solid fa-circle-xmark" style="font-size: 1.6rem; color: var(--status-danger);"></i>
+                    <h4 style="margin: 0; font-weight: 700; color: var(--status-danger); font-size: 15px;">TỆP HÓA ĐƠN KHÔNG HỢP LỆ (INVALID)!</h4>
+                </div>
+                <p style="font-size: 13.5px; color: var(--text-body); margin-bottom: 16px;">
+                    Có <strong style="color: var(--status-danger);">@Model.Errors.Count</strong> lỗi vi phạm ràng buộc XSD Schema:
+                </p>
+
+                <div class="admin-table-container" style="border-radius: var(--radius-md); overflow: hidden;">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th>Dòng</th>
+                                <th>Cột</th>
+                                <th>Mức độ</th>
+                                <th>Nội dung thông báo lỗi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Errors.Count; i++)
+                            {
+                                var err = Model.Errors[i];
+                                <tr>
+                                    <td style="font-family: var(--font-family-mono); font-size: 12px; color: var(--text-faint);">@(i + 1)</td>
+                                    <td><strong style="color: var(--status-warning); font-family: var(--font-family-mono);">@err.LineNumber</strong></td>
+                                    <td><strong style="color: var(--status-warning); font-family: var(--font-family-mono);">@err.LinePosition</strong></td>
+                                    <td>
+                                        <span style="display: inline-flex; padding: 2px 8px; border-radius: var(--radius-full); background: var(--status-danger-bg); color: var(--status-danger); font-size: 11.5px; font-weight: 600; border: 1px solid var(--status-danger-border);">
+                                            @err.Severity
+                                        </span>
+                                    </td>
+                                    <td style="color: var(--status-danger); font-size: 13px;">@err.Message</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <p>Có @Model.Errors.Count lỗi vi phạm ràng buộc XSD Schema:</p>
-            
-            <table class="custom-table mt-2">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Dòng</th>
-                        <th>Cột</th>
-                        <th>Mức độ</th>
-                        <th>Nội dung thông báo lỗi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.Errors.Count; i++)
-                    {
-                        var err = Model.Errors[i];
-                        <tr>
-                            <td>@(i + 1)</td>
-                            <td><strong class="text-warning">@err.LineNumber</strong></td>
-                            <td><strong class="text-warning">@err.LinePosition</strong></td>
-                            <td><span class="badge-xml" style="background: var(--accent-rose);">@err.Severity</span></td>
-                            <td class="text-danger">@err.Message</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+        }
+    </div>
 </div>

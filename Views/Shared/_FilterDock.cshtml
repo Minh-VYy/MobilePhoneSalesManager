@@ -1,0 +1,100 @@
+@using QuanLyBanDienThoai.Models
+@inject QuanLyBanDienThoai.Services.DienThoaiXmlService CatalogueService
+@model SearchFilterViewModel
+@{
+    // Shared glass filter dock: brand rail + flyout (Dòng máy / Mức giá / Xem nhiều nhất).
+    // Used inline on the catalogue page and inside the header mega menu on every page.
+    List<DienThoaiModel> allItems;
+    try { allItems = CatalogueService.GetAll(); }
+    catch { allItems = new List<DienThoaiModel>(); }
+    var brands = allItems
+        .GroupBy(p => p.MaHang.ToUpper())
+        .Select(g => new { Ma = g.Key, Ten = g.First().TenHang, Count = g.Count() })
+        .OrderBy(b => b.Ma).ToList();
+    string currentBrand = string.IsNullOrEmpty(Model.MaHang) ? "ALL" : Model.MaHang.ToUpper();
+
+    string BrandIcon(string ma) => ma switch
+    {
+        "APPLE" => "fa-brands fa-apple",
+        "GOOGLE" => "fa-brands fa-google",
+        "SAMSUNG" => "fa-solid fa-mobile-screen",
+        "XIAOMI" => "fa-solid fa-mobile-button",
+        "OPPO" => "fa-solid fa-mobile-retro",
+        _ => "fa-solid fa-mobile"
+    };
+
+    var priceRanges = new[]
+    {
+        new { Label = "Dưới 5 triệu",     Min = (decimal?)null,     Max = (decimal?)5000000 },
+        new { Label = "Từ 5 - 10 triệu",  Min = (decimal?)5000000,  Max = (decimal?)10000000 },
+        new { Label = "Từ 10 - 15 triệu", Min = (decimal?)10000000, Max = (decimal?)15000000 },
+        new { Label = "Từ 15 - 20 triệu", Min = (decimal?)15000000, Max = (decimal?)20000000 },
+        new { Label = "Từ 20 - 30 triệu", Min = (decimal?)20000000, Max = (decimal?)30000000 },
+        new { Label = "Trên 30 triệu",    Min = (decimal?)30000000, Max = (decimal?)null }
+    };
+
+    var paneKeys = brands.Select(b => b.Ma).ToList();
+}
+<div class="fd" data-active="@currentBrand">
+    <nav class="fd-rail" aria-label="Bộ lọc sản phẩm">
+        <div class="fd-head">
+            <span class="fd-head-mark"><i class="fa-solid fa-sliders"></i></span>
+            <span>Bộ lọc</span>
+        </div>
+
+        @foreach (var b in brands)
+        {
+            <a class="fd-item @(currentBrand == b.Ma ? "active" : "")" data-brand="@b.Ma"
+               asp-controller="DienThoai" asp-action="Index" asp-route-maHang="@b.Ma" asp-route-keyword="@Model.Keyword">
+                <i class="@BrandIcon(b.Ma)"></i> @b.Ten
+                <span class="fd-count">@b.Count</span>
+                <i class="fa-solid fa-chevron-right fd-chev"></i>
+            </a>
+        }
+    </nav>
+
+    <div class="fd-panel">
+        @foreach (var key in paneKeys)
+        {
+            var scope = allItems.Where(p => p.MaHang.ToUpper() == key).ToList();
+            var top = scope.OrderByDescending(p => p.GiaBan).Take(4).ToList();
+            <div class="fd-pane" data-brand="@key">
+                <div class="fd-col">
+                    <h4>Dòng máy</h4>
+                    @foreach (var p in scope.Take(10))
+                    {
+                        <a class="fd-link" asp-controller="DienThoai" asp-action="Index" asp-route-maHang="@key" asp-route-keyword="@p.TenSP">@p.TenSP</a>
+                    }
+                </div>
+
+                <div class="fd-col">
+                    <h4>Mức giá</h4>
+                    @foreach (var r in priceRanges)
+                    {
+                        bool on = Model.MinGia == r.Min && Model.MaxGia == r.Max && currentBrand == key;
+                        <a class="fd-link @(on ? "active" : "")" asp-controller="DienThoai" asp-action="Index"
+                           asp-route-maHang="@key" asp-route-minGia="@r.Min" asp-route-maxGia="@r.Max" asp-route-category="@Model.Category">@r.Label</a>
+                    }
+                </div>
+
+                <div class="fd-col">
+                    <h4>Xem nhiều nhất</h4>
+                    @if (top.Count == 0)
+                    {
+                        <div class="fd-empty">Chưa có sản phẩm.</div>
+                    }
+                    @foreach (var p in top)
+                    {
+                        <a class="fd-top" asp-controller="DienThoai" asp-action="Index" asp-route-maHang="@p.MaHang" asp-route-keyword="@p.TenSP">
+                            <span class="fd-top-img"><img src="@p.HinhAnh" alt="@p.TenSP" onerror="this.style.display='none'" /></span>
+                            <span>
+                                <div class="fd-top-name">@p.TenSP</div>
+                                <div class="fd-top-price">@p.GiaBan.ToString("#,##0") ₫</div>
+                            </span>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

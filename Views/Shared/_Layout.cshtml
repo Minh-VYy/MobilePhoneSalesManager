@@ -1,131 +1,174 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>@ViewData["Title"] - PhoneStore XML</title>
+    <title>@ViewData["Title"] — PhoneStore XML Enterprise</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-theme.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 </head>
 <body>
-    <div class="app">
-        <!-- ================= SIDEBAR ================= -->
-        <aside class="sidebar">
-            <div class="brand">
-                <div class="brand-mark">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="7" y="2" width="10" height="20" rx="2.4"/>
-                        <line x1="11" y1="18.3" x2="13" y2="18.3"/>
-                    </svg>
+    <div class="admin-shell">
+        <!-- ================= SIDEBAR (MATCHING SCREENSHOT 3) ================= -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <a asp-controller="ThongKe" asp-action="Index" class="admin-sidebar-header">
+                <div class="admin-brand-icon">
+                    <i class="fa-solid fa-bolt"></i>
                 </div>
-                <div>
-                    <div class="brand-text">PhoneStore</div>
-                    <div class="brand-sub">XML · XSD · XSLT · XPath</div>
+                <div class="admin-brand-title">PhoneStore Admin</div>
+            </a>
+
+            <nav class="admin-sidebar-nav">
+                <!-- Main Items -->
+                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "ThongKe" ? "active" : "")"
+                   asp-controller="ThongKe" asp-action="Index">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="admin-nav-category">QUẢN LÝ KHO DỮ LIỆU</div>
+
+                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")"
+                   asp-controller="DienThoai" asp-action="Manage">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <span>Kho XML (Kanban)</span>
+                </a>
+
+                <div class="admin-nav-sublist">
+                    <a class="admin-nav-sublink @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")"
+                       asp-controller="DienThoai" asp-action="Create">
+                        <span>+ Thêm sản phẩm</span>
+                    </a>
+                    <a class="admin-nav-sublink @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "ValidateXsd" ? "active" : "")"
+                       asp-controller="DienThoai" asp-action="ValidateXsd">
+                        <span>Kiểm tra XSD Schema</span>
+                    </a>
+                    <a class="admin-nav-sublink @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")"
+                       asp-controller="DienThoai" asp-action="XsltView">
+                        <span>XSLT Catalogue</span>
+                    </a>
                 </div>
-            </div>
 
-            <div class="nav-group-label">TỔNG QUAN</div>
-            <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "ThongKe" ? "active" : "")" 
-               asp-controller="ThongKe" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 13a9 9 0 0 1 18 0"/><path d="M12 13l4-4"/><circle cx="12" cy="13" r=".6" fill="currentColor"/>
-                </svg>
-                Bảng điều khiển
-            </a>
+                <div class="admin-nav-category">GIAO DỊCH & HÓA ĐƠN</div>
 
-            <div class="nav-group-label">BÁN HÀNG</div>
-            <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" 
-               asp-controller="DienThoai" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                </svg>
-                Danh mục sản phẩm
-            </a>
-            <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")" 
-               asp-controller="HoaDon" asp-action="Create">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6"/>
-                </svg>
-                Bán hàng (POS)
-            </a>
-            <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" 
-               asp-controller="HoaDon" asp-action="Index">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M9 8h6M9 12h6M9 16h3"/>
-                </svg>
-                Hóa đơn XML
-            </a>
+                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")"
+                   asp-controller="HoaDon" asp-action="Create">
+                    <i class="fa-solid fa-cash-register"></i>
+                    <span>Bán hàng (POS XML)</span>
+                </a>
 
-            <div class="nav-group-label">QUẢN TRỊ</div>
-            <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")" 
-               asp-controller="DienThoai" asp-action="Manage">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="7" width="18" height="14" rx="1.5"/><path d="M3 7l2-4h14l2 4"/><path d="M10 11h4"/>
-                </svg>
-                Quản lý kho XML
-                <span class="nav-badge">CRUD</span>
-            </a>
-            <a class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")" 
-               asp-controller="DienThoai" asp-action="XsltView">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                XSLT Transform View
-            </a>
+                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
+                   asp-controller="HoaDon" asp-action="Index">
+                    <i class="fa-solid fa-receipt"></i>
+                    <span>Danh sách hóa đơn</span>
+                </a>
 
-            <div class="sidebar-foot">
-                <div class="foot-hint">DienThoai.xsd ✓<br>HoaDon.xsd ✓<br>.NET 9 · MVC</div>
+                <div class="admin-nav-category">NỘI DUNG & DỊCH VỤ</div>
+
+                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "QuangCao" ? "active" : "")"
+                   asp-controller="QuangCao" asp-action="Index">
+                    <i class="fa-solid fa-images"></i>
+                    <span>Banner quảng cáo</span>
+                </a>
+
+                <a class="admin-nav-item" asp-controller="DienThoai" asp-action="RssFeed" target="_blank">
+                    <i class="fa-solid fa-rss"></i>
+                    <span>RSS 2.0 XML Feed</span>
+                </a>
+
+                <a class="admin-nav-item" asp-controller="DienThoai" asp-action="XmlApi" target="_blank">
+                    <i class="fa-solid fa-network-wired"></i>
+                    <span>Web Service API</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar User Profile (Matching Screenshot 3) -->
+            <div class="admin-sidebar-footer">
+                <div class="admin-user-cell">
+                    <div class="admin-avatar">
+                        AD
+                        <span class="admin-avatar-dot"></span>
+                    </div>
+                    <div class="admin-user-meta">
+                        <div class="admin-user-name">Quản Trị Viên</div>
+                        <div class="admin-user-role">Administrator</div>
+                    </div>
+                </div>
+                <a asp-controller="Account" asp-action="Logout" class="admin-icon-btn" title="Đăng xuất" style="width: 30px; height: 30px;">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </a>
             </div>
         </aside>
 
-        <!-- ================= MAIN ================= -->
-        <div class="main">
-            <div class="topbar">
-                <h1 class="page-heading">
-                    @ViewData["Title"]
-                    <span>Hệ thống Quản lý Bán Điện thoại Di động XML</span>
-                </h1>
-
-                <!-- Quick Role Switcher Button to Storefront -->
-                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="User" class="btn btn-sm" style="background: rgba(108,107,245,0.15); border-color: rgba(108,107,245,0.35); color: var(--primary-2); font-weight: 700;" title="Quay lại giao diện Khách hàng (User View)">
-                    <i class="fa-solid fa-store"></i> Sang User View (Storefront)
-                </a>
-
-                <div class="search-box">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
-                    </svg>
-                    <input type="text" id="global-search-input" placeholder="Tìm mã SP, tên máy..." />
+        <!-- ================= MAIN CONTENT ================= -->
+        <div class="admin-main">
+            <!-- Topbar (Matching Screenshot 3) -->
+            <header class="admin-topbar">
+                <div class="admin-topbar-left">
+                    <button type="button" class="admin-icon-btn d-lg-none" id="mobileSidebarToggle" aria-label="Menu">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <nav class="admin-breadcrumb">
+                        <a asp-controller="ThongKe" asp-action="Index">Admin</a>
+                        <i class="fa-solid fa-chevron-right" style="font-size: 10px; color: var(--text-faint);"></i>
+                        <span class="admin-breadcrumb-current">@ViewData["Title"]</span>
+                    </nav>
                 </div>
 
-                <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối" title="Đổi giao diện sáng/tối">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8L6 18M18 6l1.8-1.8"/>
-                    </svg>
-                </button>
+                <div class="admin-topbar-right">
+                    <!-- Search Input -->
+                    <div class="admin-top-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="globalAdminSearch" placeholder="Tìm kiếm nhanh... (Ctrl+K)" />
+                    </div>
 
-                <div class="profile-pill">
-                    <div class="avatar">AD</div>
-                    <div class="who"><b>Admin</b><small>Quản trị viên</small></div>
+                    <!-- Storefront Switch -->
+                    <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="User" class="admin-storefront-btn" title="Xem giao diện khách hàng">
+                        <i class="fa-solid fa-store"></i>
+                        <span>Storefront ↗</span>
+                    </a>
+
+                    <!-- Notification Bell -->
+                    <button type="button" class="admin-icon-btn" title="Thông báo hệ thống">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="admin-badge-dot"></span>
+                    </button>
+
+                    <!-- Theme Toggle -->
+                    <button type="button" class="admin-icon-btn" id="theme-toggle" title="Đổi giao diện sáng/tối">
+                        <i class="fa-regular fa-moon"></i>
+                    </button>
+
+                    <!-- Profile Avatar -->
+                    <div class="admin-avatar" style="width: 32px; height: 32px; font-size: 12px; cursor: pointer;" title="Tài khoản Admin">
+                        AD
+                    </div>
                 </div>
-            </div>
+            </header>
 
-            <main role="main" class="view">
+            <!-- Main Workspace -->
+            <main role="main" class="admin-content-view">
                 @if (TempData["SuccessMessage"] != null)
                 {
-                    <div class="validate-line v-ok mb-4" style="border-radius: 12px;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.3 2.3 4.7-5.6"/></svg>
-                        <div><b>Thành công!</b><span>@TempData["SuccessMessage"]</span></div>
+                    <div class="admin-card p-3 mb-4 d-flex align-items-center gap-3" style="background: var(--status-success-bg); border-color: var(--status-success-border); color: var(--status-success);">
+                        <i class="fa-solid fa-circle-check fs-5"></i>
+                        <div>
+                            <strong>Thành công:</strong> @TempData["SuccessMessage"]
+                        </div>
                     </div>
                 }
                 @if (TempData["ErrorMessage"] != null)
                 {
-                    <div class="validate-line v-err mb-4" style="border-radius: 12px;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/></svg>
-                        <div><b>Lỗi hệ thống:</b><span>@TempData["ErrorMessage"]</span></div>
+                    <div class="admin-card p-3 mb-4 d-flex align-items-center gap-3" style="background: var(--status-danger-bg); border-color: var(--status-danger-border); color: var(--status-danger);">
+                        <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+                        <div>
+                            <strong>Lưu ý:</strong> @TempData["ErrorMessage"]
+                        </div>
                     </div>
                 }
 
@@ -134,7 +177,33 @@
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Mobile Sidebar Toggle
+        const toggleBtn = document.getElementById('mobileSidebarToggle');
+        const sidebar = document.getElementById('adminSidebar');
+        if (toggleBtn && sidebar) {
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+
+        // Global search shortcut (Ctrl + K)
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                const s = document.getElementById('globalAdminSearch');
+                if (s) s.focus();
+            }
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

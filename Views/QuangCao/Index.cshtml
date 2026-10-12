@@ -1,0 +1,172 @@
+@model List<QuanLyBanDienThoai.Models.QuangCaoModel>
+@{
+    ViewData["Title"] = "Quản Lý Banner Quảng Cáo XML";
+}
+
+<!-- ================= ADD NEW BANNER SECTION ================= -->
+<div class="admin-card mb-4">
+    <div class="admin-card-header">
+        <div>
+            <h2 class="admin-card-title">
+                <i class="fa-solid fa-circle-plus" style="color: var(--admin-primary);"></i>
+                <span>THÊM BANNER QUẢNG CÁO MỚI</span>
+            </h2>
+            <div class="admin-card-desc">Tạo banner hiển thị trên trình chiếu Hero Carousel trang chủ (lưu trong QuangCao.xml)</div>
+        </div>
+        <span class="admin-badge-brand brand-apple">
+            <i class="fa-solid fa-images"></i> Hiện có: @Model.Count banner
+        </span>
+    </div>
+
+    <div class="admin-card-body">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="admin-form-label">Tiêu đề Banner (*):</label>
+                    <input name="TieuDe" class="admin-form-control" maxlength="90" placeholder="Ví dụ: iPhone 16 Pro Max — Đỉnh Cao Công Nghệ Titan" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="admin-form-label">Đường dẫn ảnh (*):</label>
+                    <input name="HinhAnh" class="admin-form-control" maxlength="500" placeholder="/images/phone_hero_3d.png hoặc link URL ảnh..." required />
+                </div>
+
+                <div class="col-md-12">
+                    <label class="admin-form-label">Mô tả chi tiết (*):</label>
+                    <textarea name="MoTa" class="admin-form-control" maxlength="320" rows="2" style="height: auto;" placeholder="Nội dung khuyến mãi, thông điệp nổi bật..." required></textarea>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="admin-form-label">Thứ tự hiển thị:</label>
+                    <input name="ThuTu" type="number" min="1" value="@(Model.Count + 1)" class="admin-form-control" required />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="admin-form-label">Thời gian chuyển (giây):</label>
+                    <input name="ThoiGianChuyenGiay" type="number" min="3" max="30" value="6" class="admin-form-control" required />
+                </div>
+
+                <div class="col-md-4 d-flex align-items-center pt-3">
+                    <label class="d-flex align-items-center gap-2 cursor-pointer" style="color: var(--admin-text-main); font-size: 13.5px; font-weight: 500;">
+                        <input name="DangHienThi" type="checkbox" value="true" checked style="width: 18px; height: 18px; accent-color: var(--admin-primary);" />
+                        <input type="hidden" name="DangHienThi" value="false" />
+                        <span>Kích hoạt hiển thị trang chủ</span>
+                    </label>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end pt-2">
+                    <button type="submit" class="admin-btn admin-btn-primary">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Thêm Banner Vào XML</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ================= BANNER LIST SECTION ================= -->
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h2 class="admin-card-title">
+                <i class="fa-solid fa-film" style="color: var(--admin-accent);"></i>
+                <span>DANH SÁCH BANNER ĐANG QUẢN TRỊ</span>
+            </h2>
+            <div class="admin-card-desc">Cập nhật nội dung hoặc xóa bỏ các slide banner trong tệp dữ liệu XML</div>
+        </div>
+    </div>
+
+    <div class="admin-card-body" style="padding-top: 18px;">
+        <div class="d-flex flex-column gap-3">
+            @foreach (var ad in Model.OrderBy(x => x.ThuTu))
+            {
+                <div class="admin-card" style="margin-bottom: 0; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--admin-card-border);">
+                    <div class="p-3">
+                        <div class="row g-3 align-items-start">
+                            <!-- Preview Thumbnail -->
+                            <div class="col-lg-3 col-md-4">
+                                <div style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-sm); overflow: hidden; background: rgba(0,0,0,0.2); border: 1px solid var(--admin-card-border); position: relative;">
+                                    <img src="@ad.HinhAnh" alt="@ad.TieuDe" style="width: 100%; height: 100%; object-fit: cover;"
+                                         onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80'" />
+                                    <span style="position: absolute; top: 6px; left: 6px; font-family: var(--font-mono); font-size: 10.5px; background: rgba(0,0,0,0.65); color: #fff; padding: 2px 7px; border-radius: 4px;">
+                                        #@ad.ThuTu
+                                    </span>
+                                </div>
+                                <div class="mt-2 text-center">
+                                    @if (ad.DangHienThi)
+                                    {
+                                        <span class="admin-stat-pill pill-up"><span class="admin-pulse-dot"></span> Đang hiển thị</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="admin-stat-pill pill-down">Tạm ẩn</span>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Edit Form -->
+                            <div class="col-lg-9 col-md-8">
+                                <form asp-action="Save" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="MaQC" value="@ad.MaQC" />
+
+                                    <div class="row g-2">
+                                        <div class="col-md-7">
+                                            <label class="admin-form-label">Tiêu đề:</label>
+                                            <input name="TieuDe" maxlength="90" value="@ad.TieuDe" class="admin-form-control" required />
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <label class="admin-form-label">Đường dẫn ảnh:</label>
+                                            <input name="HinhAnh" maxlength="500" value="@ad.HinhAnh" class="admin-form-control" required />
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label class="admin-form-label">Mô tả:</label>
+                                            <textarea name="MoTa" maxlength="320" rows="2" class="admin-form-control" style="height: auto;" required>@ad.MoTa</textarea>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="admin-form-label">Thứ tự:</label>
+                                            <input name="ThuTu" type="number" min="1" value="@ad.ThuTu" class="admin-form-control" required />
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label class="admin-form-label">Thời gian (giây):</label>
+                                            <input name="ThoiGianChuyenGiay" type="number" min="3" max="30" value="@ad.ThoiGianChuyenGiay" class="admin-form-control" required />
+                                        </div>
+
+                                        <div class="col-md-6 d-flex align-items-center pt-3">
+                                            <label class="d-flex align-items-center gap-2 cursor-pointer" style="font-size: 13px; color: var(--admin-text-main);">
+                                                <input name="DangHienThi" type="checkbox" value="true" @(ad.DangHienThi ? "checked" : "") style="width: 17px; height: 17px; accent-color: var(--admin-primary);" />
+                                                <input type="hidden" name="DangHienThi" value="false" />
+                                                <span>Hiển thị trên trang chủ</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="col-12 d-flex justify-content-end gap-2 pt-2 border-top mt-2" style="border-color: var(--admin-card-border) !important;">
+                                            <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm">
+                                                <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                                            </button>
+                                            <button type="submit" form="delForm-@ad.MaQC" class="admin-btn admin-btn-danger admin-btn-sm">
+                                                <i class="fa-solid fa-trash-can"></i> Xóa
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <form id="delForm-@ad.MaQC" asp-action="Delete" method="post" style="display:none;" onsubmit="return confirm('Xác nhận xóa banner này khỏi XML?');">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@ad.MaQC" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

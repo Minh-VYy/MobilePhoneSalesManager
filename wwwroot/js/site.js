@@ -297,44 +297,160 @@ document.addEventListener('DOMContentLoaded', function () {
         updateHeaderGlassOnScroll();
     }
 
-    // 8. Mobile Navigation Drawer Toggle Handler
+    // 8. Mobile Navigation Drawer Toggle + Vertical Proximity Spring
+    // Translated from ThreeUI topDockController.ts — glass variant, axis=y
     const mobileToggleBtn = document.getElementById('mobile-menu-toggle');
-    const mobileDrawer = document.getElementById('mobile-drawer-menu');
+    const mobileDrawer    = document.getElementById('mobile-drawer-menu');
 
     if (mobileToggleBtn && mobileDrawer) {
-        const iconOpen = mobileToggleBtn.querySelector('.icon-open');
+        const iconOpen  = mobileToggleBtn.querySelector('.icon-open');
         const iconClose = mobileToggleBtn.querySelector('.icon-close');
+
+        // Spring state per item (mirrors ItemState in topDockController.ts)
+        let itemStates = [];
+
+        // Exact smoothstep from topDockController.ts
+        function smoothstepDrawer(x) {
+            const t = Math.max(0, Math.min(1, x));
+            return t * t * (3 - 2 * t);
+        }
+
+        function drawerIsDark() {
+            const a = document.documentElement.getAttribute('data-theme');
+            if (a === 'dark')  return true;
+            if (a === 'light') return false;
+            return !window.matchMedia('(prefers-color-scheme: light)').matches;
+        }
+
+        const drawerContent = mobileDrawer.querySelector('.atd-mobile-drawer__content');
+        const drawerItems   = drawerContent
+            ? Array.from(drawerContent.querySelectorAll('.atd-mobile-item'))
+            : [];
+
+        // Measure natural height of every item (run after drawer becomes visible)
+        function measureDrawerItems() {
+            drawerItems.forEach(el => { el.style.height = ''; });
+            // Force layout read
+            drawerItems.forEach(el => void el.getBoundingClientRect());
+            itemStates = drawerItems.map(el => ({
+                baseH:    el.getBoundingClientRect().height,
+                value:    0,
+                velocity: 0
+            }));
+        }
+
+        // ThreeUI glass variant params — tuned for snappy feel
+        const D_PROXIMITY     = 60;   // px — wider radius so items react earlier
+        const D_HEIGHT_GROWTH = 24;   // px — more dramatic height growth
+        const D_SPRING        = 0.32; // higher = faster approach (ThreeUI default 0.19 feels laggy)
+        const D_DAMPING       = 0.72; // slight overshoot then settle
+
+        let dPointerY   = -9999;
+        let dHovering   = false;
+        let dRaf        = null;
+
+        function drawerTick() {
+            let needsMore = false;
+            const coarse  = window.matchMedia('(pointer: coarse)').matches;
+            const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const dark    = drawerIsDark();
+
+            drawerItems.forEach((el, i) => {
+                const s = itemStates[i];
+                if (!s) return;
+
+                // Influence: smoothstep of clamp(1 - dist/proximity, 0, 1)
+                let target = 0;
+                if (dHovering && !coarse && !reduced) {
+                    const r    = el.getBoundingClientRect();
+                    const cy   = r.top + r.height / 2;
+                    const dist = Math.abs(dPointerY - cy);
+                    target = smoothstepDrawer(1 - dist / D_PROXIMITY);
+                }
+
+                // Exact spring arithmetic from topDockController.ts
+                s.velocity += (target - s.value) * D_SPRING;
+                s.velocity *= D_DAMPING;
+                s.value    += s.velocity;
+                const v = Math.max(0, s.value);
+
+                // Primary effect: write element height directly
+                el.style.height = (s.baseH + v * D_HEIGHT_GROWTH).toFixed(2) + 'px';
+
+                // Glass background, border, text — theme-adaptive (Aperture dock style)
+                if (!el.classList.contains('active')) {
+                    if (dark) {
+                        el.style.backgroundColor = 'rgba(255,255,255,' + (v * 0.18).toFixed(3) + ')';
+                        el.style.borderColor     = v > 0.04 ? 'rgba(255,255,255,' + (v * 0.25).toFixed(3) + ')' : '';
+                        el.style.color           = 'rgba(255,255,255,' + (0.80 + v * 0.20).toFixed(3) + ')';
+                    } else {
+                        el.style.backgroundColor = 'rgba(90,84,232,' + (v * 0.14).toFixed(3) + ')';
+                        el.style.borderColor     = v > 0.04 ? 'rgba(90,84,232,' + (v * 0.25).toFixed(3) + ')' : '';
+                        el.style.color           = 'rgba(20,26,46,' + (0.80 + v * 0.20).toFixed(3) + ')';
+                    }
+                }
+
+                const icon = el.querySelector('i');
+                if (icon && !el.classList.contains('active')) {
+                    icon.style.color = dark
+                        ? 'rgba(255,255,255,' + (0.65 + v * 0.35).toFixed(3) + ')'
+                        : 'rgba(90,84,232,' + (0.60 + v * 0.40).toFixed(3) + ')';
+                }
+
+                if (Math.abs(s.velocity) > 0.0008) needsMore = true;
+            });
+
+            dRaf = (dHovering || needsMore) ? requestAnimationFrame(drawerTick) : null;
+        }
+
+        function startDrawerSpring() {
+            if (!dRaf) dRaf = requestAnimationFrame(drawerTick);
+        }
+
+        if (drawerContent) {
+            drawerContent.addEventListener('pointermove', e => {
+                dPointerY = e.clientY;
+                dHovering = true;
+                startDrawerSpring();
+            }, { passive: true });
+
+            drawerContent.addEventListener('pointerleave', () => {
+                dHovering = false;
+                startDrawerSpring();
+            }, { passive: true });
+        }
 
         function toggleMobileMenu(show) {
             const isOpen = show !== undefined ? show : !mobileDrawer.classList.contains('is-open');
             if (isOpen) {
                 mobileDrawer.classList.add('is-open');
                 mobileToggleBtn.setAttribute('aria-expanded', 'true');
-                if (iconOpen) iconOpen.style.display = 'none';
+                if (iconOpen)  iconOpen.style.display  = 'none';
                 if (iconClose) iconClose.style.display = 'inline-block';
+                // Measure heights after drawer is visible, then start spring
+                requestAnimationFrame(() => {
+                    measureDrawerItems();
+                    startDrawerSpring();
+                });
             } else {
                 mobileDrawer.classList.remove('is-open');
                 mobileToggleBtn.setAttribute('aria-expanded', 'false');
-                if (iconOpen) iconOpen.style.display = 'inline-block';
+                if (iconOpen)  iconOpen.style.display  = 'inline-block';
                 if (iconClose) iconClose.style.display = 'none';
+                dHovering = false;
+                dPointerY = -9999;
+                startDrawerSpring();
             }
         }
 
-        mobileToggleBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMobileMenu();
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!mobileDrawer.contains(e.target) && !mobileToggleBtn.contains(e.target)) {
+        mobileToggleBtn.addEventListener('click', e => { e.stopPropagation(); toggleMobileMenu(); });
+        document.addEventListener('click', e => {
+            if (!mobileDrawer.contains(e.target) && !mobileToggleBtn.contains(e.target))
                 toggleMobileMenu(false);
-            }
         });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') toggleMobileMenu(false);
-        });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleMobileMenu(false); });
     }
+
 
     // 9. Animated Number Counters for Stat Cards
     function animateCounter(el) {
@@ -397,6 +513,92 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Reveal product cards in a short stagger as each product grid enters view.
+    const productGrids = document.querySelectorAll('.cat-products-grid, .product-grid');
+    if (productGrids.length && 'IntersectionObserver' in window) {
+        const productObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('product-card-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -32px 0px' });
+
+        productGrids.forEach(grid => {
+            grid.querySelectorAll('.cat-product-card, .product-card').forEach((card, index) => {
+                card.style.setProperty('--product-delay', `${Math.min(index, 4) * 75}ms`);
+                card.classList.add('product-card-reveal');
+                productObserver.observe(card);
+            });
+        });
+    }
+    // Database driven hero advertising carousel: copy and image advance together.
+    const heroCarousel = document.querySelector('[data-carousel]');
+    if (heroCarousel) {
+        const slides = Array.from(heroCarousel.querySelectorAll('.ps-phone-img'));
+        const dots = Array.from(heroCarousel.querySelectorAll('[data-slide-to]'));
+        const copies = Array.from(document.querySelectorAll('[data-ad-copy]'));
+        const toggle = heroCarousel.querySelector('[data-carousel-toggle]');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let activeSlide = 0;
+        let paused = reducedMotion.matches;
+        let timer;
+        let touchStartX = null;
+
+        const showSlide = (index) => {
+            if (!slides.length) return;
+            activeSlide = (index + slides.length) % slides.length;
+            slides.forEach((slide, i) => slide.classList.toggle('is-active', i === activeSlide));
+            copies.forEach((copy, i) => {
+                const active = i === activeSlide;
+                copy.classList.toggle('is-active', active);
+                copy.setAttribute('aria-hidden', String(!active));
+            });
+            dots.forEach((dot, i) => {
+                const active = i === activeSlide;
+                dot.classList.toggle('is-active', active);
+                dot.setAttribute('aria-pressed', String(active));
+            });
+        };
+        const stopTimer = () => window.clearTimeout(timer);
+        const startTimer = () => {
+            stopTimer();
+            if (!paused && !document.hidden && !reducedMotion.matches && slides.length > 1) {
+                const seconds = Number(slides[activeSlide]?.dataset.duration) || 6;
+                timer = window.setTimeout(() => { showSlide(activeSlide + 1); startTimer(); }, seconds * 1000);
+            }
+        };
+        const setPaused = (value) => {
+            paused = value;
+            if (toggle) {
+                toggle.setAttribute('aria-pressed', String(paused));
+                toggle.setAttribute('aria-label', paused ? 'Phát trình chiếu' : 'Tạm dừng trình chiếu');
+                const icon = toggle.querySelector('span');
+                if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
+            }
+            startTimer();
+        };
+
+        dots.forEach((dot, i) => dot.addEventListener('click', () => { showSlide(i); startTimer(); }));
+        toggle?.addEventListener('click', () => setPaused(!paused));
+        heroCarousel.addEventListener('mouseenter', stopTimer);
+        heroCarousel.addEventListener('mouseleave', startTimer);
+        heroCarousel.addEventListener('focusin', stopTimer);
+        heroCarousel.addEventListener('focusout', startTimer);
+        heroCarousel.addEventListener('touchstart', event => { touchStartX = event.changedTouches[0]?.clientX ?? null; }, { passive: true });
+        heroCarousel.addEventListener('touchend', event => {
+            if (touchStartX === null) return;
+            if (event.target.closest('.ps-carousel-controls')) { touchStartX = null; return; }
+            const delta = event.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(delta) > 45) { showSlide(activeSlide + (delta < 0 ? 1 : -1)); startTimer(); }
+            touchStartX = null;
+        }, { passive: true });
+        document.addEventListener('visibilitychange', startTimer);
+        reducedMotion.addEventListener?.('change', event => setPaused(event.matches));
+        showSlide(0);
+        startTimer();
+    }
     // 11. New Color Swatch (ps-swatch) interactivity
     const psSwatches = document.querySelectorAll('.ps-swatch');
     const psHeroPhone = document.getElementById('hero-main-phone');
@@ -411,18 +613,69 @@ document.addEventListener('DOMContentLoaded', function () {
                 const imageSrc = this.getAttribute('data-img');
 
                 if (imageSrc) {
-                    psHeroPhone.style.opacity = '0.2';
-                    psHeroPhone.style.transform = 'scale(0.94) translateY(6px)';
-                    setTimeout(() => {
-                        psHeroPhone.src = imageSrc;
-                        psHeroPhone.style.opacity = '1';
-                        psHeroPhone.style.transform = '';
-                    }, 220);
+                    const slides = Array.from(document.querySelectorAll('.ps-phone-carousel .ps-phone-img'));
+                    const slideIndex = slides.findIndex(slide => slide.getAttribute('src') === imageSrc);
+                    const targetDot = document.querySelector(`.ps-phone-carousel [data-slide-to="${slideIndex}"]`);
+                    if (slideIndex >= 0 && targetDot) targetDot.click();
                 }
 
                 showToast(`Đã chọn màu: ${colorName}`);
             });
         });
+    }
+
+    // 12. Interactive 3D Peek Stack Card Hover Elevate & Preview
+    const peekCards = document.querySelectorAll('.ps-peek-card');
+    if (peekCards.length) {
+        let currentMaxZ = 50;
+        peekCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                currentMaxZ++;
+                this.style.zIndex = currentMaxZ;
+                this.classList.add('is-top');
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.classList.remove('is-top');
+            });
+
+            // Smooth click preview to main phone hero stage if available
+            card.addEventListener('click', function (e) {
+                const imgUrl = this.getAttribute('data-img');
+                if (imgUrl && psHeroPhone && !e.target.closest('a[href^="#"]')) {
+                    psHeroPhone.style.opacity = '0.2';
+                    psHeroPhone.style.transform = 'scale(0.92) translateY(8px)';
+                    setTimeout(() => {
+                        psHeroPhone.src = imgUrl;
+                        psHeroPhone.style.opacity = '1';
+                        psHeroPhone.style.transform = '';
+                    }, 220);
+                }
+            });
+        });
+    }
+
+    // 13. Dynamic Flash Sale Countdown Timer
+    const hoursEl = document.getElementById('flashHours');
+    const minsEl  = document.getElementById('flashMins');
+    const secsEl  = document.getElementById('flashSecs');
+
+    if (hoursEl && minsEl && secsEl) {
+        let totalSeconds = 5 * 3600 + 42 * 60 + 19;
+        setInterval(() => {
+            if (totalSeconds <= 0) {
+                totalSeconds = 24 * 3600;
+            } else {
+                totalSeconds--;
+            }
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+
+            hoursEl.textContent = String(h).padStart(2, '0');
+            minsEl.textContent  = String(m).padStart(2, '0');
+            secsEl.textContent  = String(s).padStart(2, '0');
+        }, 1000);
     }
 });
 

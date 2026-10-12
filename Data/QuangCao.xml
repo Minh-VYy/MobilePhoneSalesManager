@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DanhSachQuangCao>
+  <QuangCao>
+    <MaQC>hero-phone-design</MaQC>
+    <TieuDe>Thiết kế flagship, trải nghiệm khác biệt</TieuDe>
+    <MoTa>Khám phá những mẫu điện thoại nổi bật với màn hình sống động, camera giàu chi tiết và thiết kế cao cấp.</MoTa>
+    <HinhAnh>/images/phone_hero_3d.png</HinhAnh>
+    <ThuTu>1</ThuTu>
+    <ThoiGianChuyenGiay>6</ThoiGianChuyenGiay>
+    <DangHienThi>true</DangHienThi>
+  </QuangCao>
+  <QuangCao>
+    <MaQC>hero-next-gen-chip</MaQC>
+    <TieuDe>Sức mạnh xử lý thế hệ mới</TieuDe>
+    <MoTa>Tìm hiểu công nghệ chip 3 nm, hiệu năng AI và khả năng tiết kiệm năng lượng trên smartphone hiện đại.</MoTa>
+    <HinhAnh>/images/phone_exploded_chipset.png</HinhAnh>
+    <ThuTu>2</ThuTu>
+    <ThoiGianChuyenGiay>6</ThoiGianChuyenGiay>
+    <DangHienThi>true</DangHienThi>
+  </QuangCao>
+  <QuangCao>
+    <MaQC>hero-color-stories</MaQC>
+    <TieuDe>Mỗi sắc màu, một cá tính</TieuDe>
+    <MoTa>Cùng xem những lựa chọn màu sắc và vật liệu đang tạo nên xu hướng thiết kế điện thoại mới.</MoTa>
+    <HinhAnh>/images/phone_color_variants.png</HinhAnh>
+    <ThuTu>3</ThuTu>
+    <ThoiGianChuyenGiay>7</ThoiGianChuyenGiay>
+    <DangHienThi>true</DangHienThi>
+  </QuangCao>
+</DanhSachQuangCao>

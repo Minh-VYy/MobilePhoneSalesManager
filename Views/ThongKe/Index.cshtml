@@ -3,143 +3,213 @@
     ViewData["Title"] = "Bảng điều khiển";
 }
 
-<!-- STAT CARDS ROW -->
-<div class="stat-row">
-    <div class="glass stat-card" style="--stat-accent:#6C6BF5">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 17l5-5 4 4 8-9"/>
-                </svg>
+<!-- EXECUTIVE KPI STATS ROW -->
+<div class="admin-stats-grid">
+    <!-- Stat 1: Doanh thu -->
+    <div class="admin-stat-card" style="--stat-glow: #6366F1;">
+        <div class="admin-stat-top">
+            <div class="admin-stat-icon">
+                <i class="fa-solid fa-chart-line"></i>
             </div>
-            <span class="stat-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i> Tăng trưởng</span>
+            <span class="admin-stat-pill pill-up">
+                <i class="fa-solid fa-arrow-trend-up"></i> Tăng trưởng
+            </span>
         </div>
-        <div class="stat-value">@Model.TongDoanhThu.ToString("#,##0") <small style="font-size: 0.8rem; font-weight: 500;">VNĐ</small></div>
-        <div class="stat-label">Tổng doanh thu bán hàng XML</div>
+        <div class="admin-stat-value">
+            @Model.TongDoanhThu.ToString("#,##0") <small style="font-size: 13px; font-weight: 500; color: var(--admin-text-muted);">VNĐ</small>
+        </div>
+        <div class="admin-stat-label">Tổng doanh thu bán hàng XML</div>
     </div>
 
-    <div class="glass stat-card" style="--stat-accent:#3ECF8E">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M9 12h6"/>
-                </svg>
+    <!-- Stat 2: Hóa đơn -->
+    <div class="admin-stat-card" style="--stat-glow: #10B981;">
+        <div class="admin-stat-top">
+            <div class="admin-stat-icon">
+                <i class="fa-solid fa-receipt"></i>
             </div>
-            <span class="stat-trend trend-up">+@Model.TongSoHoaDon hóa đơn</span>
+            <span class="admin-stat-pill pill-up">
+                +@Model.TongSoHoaDon đơn
+            </span>
         </div>
-        <div class="stat-value">@Model.TongSoHoaDon</div>
-        <div class="stat-label">Hóa đơn đã lập trong hệ thống</div>
+        <div class="admin-stat-value">@Model.TongSoHoaDon</div>
+        <div class="admin-stat-label">Hóa đơn XML đã lập</div>
     </div>
 
-    <div class="glass stat-card" style="--stat-accent:#F0B429">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                </svg>
+    <!-- Stat 3: Mẫu sản phẩm -->
+    <div class="admin-stat-card" style="--stat-glow: #F59E0B;">
+        <div class="admin-stat-top">
+            <div class="admin-stat-icon">
+                <i class="fa-solid fa-mobile-screen"></i>
             </div>
+            <span class="admin-stat-pill" style="color: var(--admin-warning); background: rgba(245, 158, 11, 0.15);">
+                DienThoai.xml
+            </span>
         </div>
-        <div class="stat-value">@Model.TongSoSanPham</div>
-        <div class="stat-label">Mẫu điện thoại kinh doanh</div>
+        <div class="admin-stat-value">@Model.TongSoSanPham</div>
+        <div class="admin-stat-label">Mẫu điện thoại kinh doanh</div>
     </div>
 
-    <div class="glass stat-card" style="--stat-accent:#F0596B">
-        <div class="stat-top">
-            <div class="stat-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 9v4M12 17h.01"/><path d="M10.3 3.8L2.8 17a1.6 1.6 0 0 0 1.4 2.4h15.6a1.6 1.6 0 0 0 1.4-2.4L13.7 3.8a1.6 1.6 0 0 0-2.8 0z"/>
-                </svg>
+    <!-- Stat 4: Sắp hết hàng -->
+    <div class="admin-stat-card" style="--stat-glow: #F43F5E;">
+        <div class="admin-stat-top">
+            <div class="admin-stat-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <span class="stat-trend trend-down">Tồn kho &lt; 5</span>
+            <span class="admin-stat-pill pill-down">
+                Tồn &lt; 5 máy
+            </span>
         </div>
-        <div class="stat-value text-danger">@Model.SoSanPhamSapHetHang</div>
-        <div class="stat-label">Sản phẩm sắp hết hàng</div>
+        <div class="admin-stat-value text-danger" style="color: var(--admin-danger) !important;">
+            @Model.SoSanPhamSapHetHang
+        </div>
+        <div class="admin-stat-label">Sản phẩm sắp hết hàng</div>
     </div>
 </div>
 
-<!-- GRID 2: CHART & LOW STOCK ALERT -->
-<div class="grid-2 mb-4">
+<!-- OPERATIONS GRID: CHART & LOW STOCK RADAR -->
+<div class="row g-4 mb-4">
     <!-- REVENUE CHART -->
-    <div class="glass pad">
-        <div class="section-title">
-            Doanh thu theo hãng
-            <small>Tổng hợp bằng LINQ to XML trên HoaDon.xml — Tự động cập nhật theo thời gian thực</small>
-        </div>
-        <div class="chart-wrap">
-            <canvas id="chartRevenue"></canvas>
+    <div class="col-lg-8">
+        <div class="admin-card h-100 mb-0">
+            <div class="admin-card-header">
+                <div>
+                    <h3 class="admin-card-title">
+                        <i class="fa-solid fa-chart-column"></i>
+                        <span>Doanh thu theo hãng sản xuất</span>
+                    </h3>
+                    <div class="admin-card-desc">Tổng hợp bằng LINQ to XML trên tập tin HoaDon.xml</div>
+                </div>
+                <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: var(--admin-primary); font-family: var(--font-mono); font-size: 11px; padding: 4px 8px; border-radius: 6px;">
+                    Real-time XML
+                </span>
+            </div>
+            <div class="admin-card-body">
+                <div style="height: 300px; position: relative;">
+                    <canvas id="chartRevenue"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- LOW STOCK LIST -->
-    <div class="glass pad">
-        <div class="section-title">
-            Cảnh báo tồn kho ít
-            <small>Ngưỡng cảnh báo: dưới 5 máy cần nhập hàng</small>
-        </div>
-
-        @if (Model.SanPhamSapHetHang != null && Model.SanPhamSapHetHang.Count > 0)
-        {
-            @foreach (var sp in Model.SanPhamSapHetHang)
-            {
-                <div class="stock-row">
-                    <div class="stock-thumb">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/></svg>
-                    </div>
-                    <div class="stock-info">
-                        <b>@sp.TenSP</b>
-                        <small>@sp.MaSP · @sp.TenHang</small>
-                    </div>
-                    <span class="qty-badge qty-critical">@sp.SoLuongTon máy</span>
+    <!-- LOW STOCK LIST RADAR -->
+    <div class="col-lg-4">
+        <div class="admin-card h-100 mb-0 d-flex flex-column">
+            <div class="admin-card-header">
+                <div>
+                    <h3 class="admin-card-title">
+                        <i class="fa-solid fa-bell text-danger"></i>
+                        <span>Cảnh báo tồn kho ít</span>
+                    </h3>
+                    <div class="admin-card-desc">Ngưỡng: dưới 5 máy cần nhập kho</div>
                 </div>
-            }
-        }
-        else
-        {
-            <div class="text-center text-muted py-4">
-                <i class="fa-solid fa-circle-check text-success fs-3 mb-2 d-block"></i>
-                Tất cả điện thoại trong kho đều có số lượng an toàn!
             </div>
-        }
+            <div class="admin-card-body flex-grow-1" style="overflow-y: auto; max-height: 300px;">
+                @if (Model.SanPhamSapHetHang != null && Model.SanPhamSapHetHang.Count > 0)
+                {
+                    <div class="d-flex flex-column gap-2">
+                        @foreach (var sp in Model.SanPhamSapHetHang)
+                        {
+                            <div class="d-flex align-items-center gap-3 p-2 rounded-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--admin-card-border);">
+                                <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(244, 63, 94, 0.12); color: var(--admin-danger); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <i class="fa-solid fa-mobile-screen"></i>
+                                </div>
+                                <div style="flex: 1; min-width: 0;">
+                                    <div class="text-truncate fw-semibold" style="font-size: 13px; color: var(--admin-text-main);">@sp.TenSP</div>
+                                    <small style="font-family: var(--font-mono); font-size: 11px; color: var(--admin-text-faint);">@sp.MaSP · @sp.TenHang</small>
+                                </div>
+                                <span class="badge" style="background: rgba(244, 63, 94, 0.15); color: var(--admin-danger); font-family: var(--font-mono); font-weight: 700; font-size: 11px; border-radius: 99px; padding: 4px 8px;">
+                                    @sp.SoLuongTon máy
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="fa-solid fa-circle-check fs-1 text-success mb-2 d-block"></i>
+                        <div>Tất cả sản phẩm đều có số lượng an toàn!</div>
+                    </div>
+                }
+            </div>
+            <div class="p-3 border-top" style="border-color: var(--admin-card-border) !important;">
+                <a asp-controller="DienThoai" asp-action="Manage" class="admin-btn admin-btn-secondary w-100" style="justify-content: center;">
+                    <span>Xem toàn bộ kho sản phẩm XML</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <div style="margin-top:14px;">
-            <a asp-controller="DienThoai" asp-action="Manage" class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;">
-                Xem toàn bộ kho sản phẩm XML &rarr;
+<!-- BRAND ANALYTICS DATA TABLE -->
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h3 class="admin-card-title">
+                <i class="fa-solid fa-table-list"></i>
+                <span>Phân tích dữ liệu kinh doanh theo hãng sản xuất</span>
+            </h3>
+            <div class="admin-card-desc">Báo cáo tổng hợp doanh thu và số lượng bán từ các tệp XML</div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="HoaDon" asp-action="Index" class="admin-btn admin-btn-secondary admin-btn-sm">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Xem hóa đơn</span>
+            </a>
+            <a asp-controller="DienThoai" asp-action="XsltView" class="admin-btn admin-btn-primary admin-btn-sm">
+                <i class="fa-solid fa-file-code"></i>
+                <span>Xem XSLT</span>
             </a>
         </div>
     </div>
-</div>
-
-<!-- BRAND ANALYTICS TABLE -->
-<div class="glass mb-4">
-    <div class="table-toolbar">
-        <div class="section-title" style="margin:0;">
-            Phân tích dữ liệu kinh doanh theo hãng
-            <small>Dữ liệu tính toán từ tập tin XML</small>
-        </div>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Mã Hãng</th>
-                <th>Tên Hãng</th>
-                <th class="num">Tổng Tồn Kho</th>
-                <th class="num">Số Lượng Đã Bán</th>
-                <th class="num">Doanh Thu Đạt Được (VNĐ)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var h in Model.DoanhThuTheoHang)
-            {
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
                 <tr>
-                    <td class="mono">@h.MaHang</td>
-                    <td><b>@h.TenHang</b></td>
-                    <td class="num">@h.SoLuongTon máy</td>
-                    <td class="num">@h.SoLuongDaBan máy</td>
-                    <td class="num" style="color:var(--gold); font-weight:700;">@h.TongTienBan.ToString("#,##0") đ</td>
+                    <th>Mã Hãng</th>
+                    <th>Tên Hãng Sản Xuất</th>
+                    <th class="text-end">Tổng Tồn Kho</th>
+                    <th class="text-end">Số Lượng Đã Bán</th>
+                    <th class="text-end">Doanh Thu Đạt Được (VNĐ)</th>
+                    <th>Trạng Thái</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var h in Model.DoanhThuTheoHang)
+                {
+                    string brandClass = h.MaHang.ToUpper() switch
+                    {
+                        "APPLE" => "brand-apple",
+                        "SAMSUNG" => "brand-samsung",
+                        "XIAOMI" => "brand-xiaomi",
+                        "OPPO" => "brand-oppo",
+                        "GOOGLE" => "brand-google",
+                        _ => ""
+                    };
+
+                    <tr>
+                        <td class="cell-code">@h.MaHang</td>
+                        <td>
+                            <span class="admin-badge-brand @brandClass">
+                                @h.TenHang
+                            </span>
+                        </td>
+                        <td class="cell-num">@h.SoLuongTon máy</td>
+                        <td class="cell-num" style="color: var(--admin-accent);">@h.SoLuongDaBan máy</td>
+                        <td class="cell-num" style="color: var(--amber-500); font-size: 14.5px;">
+                            @h.TongTienBan.ToString("#,##0") đ
+                        </td>
+                        <td>
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--admin-accent); font-family: var(--font-mono); font-size: 11px;">
+                                <i class="fa-solid fa-check me-1"></i> Đồng bộ
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @section Scripts {
@@ -155,6 +225,8 @@
                 @Html.Raw(string.Join(",", Model.DoanhThuTheoHang.Select(x => x.TongTienBan)))
             ];
 
+            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -163,38 +235,61 @@
                         label: 'Doanh thu (VNĐ)',
                         data: revenueData.length ? revenueData : [299900000, 279900000, 214900000, 150000000, 90000000],
                         backgroundColor: [
-                            'rgba(108, 107, 245, 0.75)',
-                            'rgba(62, 207, 142, 0.75)',
-                            'rgba(240, 180, 41, 0.75)',
-                            'rgba(240, 89, 107, 0.75)',
-                            'rgba(156, 123, 240, 0.75)'
+                            'rgba(99, 102, 241, 0.85)',
+                            'rgba(16, 185, 129, 0.85)',
+                            'rgba(245, 158, 11, 0.85)',
+                            'rgba(244, 63, 94, 0.85)',
+                            'rgba(6, 182, 212, 0.85)'
                         ],
                         borderColor: [
-                            '#6C6BF5',
-                            '#3ECF8E',
-                            '#F0B429',
-                            '#F0596B',
-                            '#9C7BF0'
+                            '#6366F1',
+                            '#10B981',
+                            '#F59E0B',
+                            '#F43F5E',
+                            '#06B6D4'
                         ],
                         borderWidth: 1.5,
-                        borderRadius: 8
+                        borderRadius: 10,
+                        maxBarThickness: 48
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                            titleColor: isDark ? '#fff' : '#0F172A',
+                            bodyColor: isDark ? '#E2E8F0' : '#334155',
+                            borderColor: 'rgba(99, 102, 241, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 6,
+                            usePointStyle: true,
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.parsed.y.toLocaleString('vi-VN') + ' VNĐ';
+                                }
+                            }
+                        }
                     },
                     scales: {
                         x: {
                             grid: { display: false },
-                            ticks: { color: '#8B95AC' }
+                            ticks: { 
+                                color: isDark ? '#94A3B8' : '#64748B',
+                                font: { family: 'Inter', weight: 500 }
+                            }
                         },
                         y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.06)' },
+                            grid: { 
+                                color: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.06)',
+                                drawBorder: false
+                            },
                             ticks: {
-                                color: '#8B95AC',
+                                color: isDark ? '#94A3B8' : '#64748B',
+                                font: { family: 'Fira Code', size: 11 },
                                 callback: function (value) {
                                     return (value / 1000000).toLocaleString() + ' Tr';
                                 }

@@ -1,67 +1,81 @@
 @model QuanLyBanDienThoai.Models.ValidationResultModel
 @{
-    ViewData["Title"] = "Kết Quả Kiểm Tra XSD Schema";
+    ViewData["Title"] = "Kiểm Tra Schema XSD";
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-shield-halved text-success"></i>
-            <span>BÁO CÁO KIỂM TRA TÍNH HỢP LỆ XSD SCHEMA</span>
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h3 class="admin-card-title">
+                <i class="fa-solid fa-shield-halved text-success"></i>
+                <span>Báo cáo kiểm tra tính hợp lệ XSD Schema</span>
+            </h3>
+            <div class="admin-card-desc">Kiểm tra tài liệu XML với lược đồ định nghĩa XSD bằng .NET XmlReaderSettings</div>
         </div>
-        <a asp-action="Manage" class="btn-custom btn-secondary-custom">
-            <i class="fa-solid fa-arrow-left"></i> Trở về Quản lý
+        <a asp-action="Manage" class="admin-btn admin-btn-secondary admin-btn-sm">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Trở về kho XML</span>
         </a>
     </div>
+    <div class="admin-card-body">
+        <div class="d-flex flex-wrap gap-4 p-3 rounded-3 mb-4" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--admin-card-border); font-family: var(--font-mono); font-size: 13px;">
+            <div><strong style="color: var(--admin-text-faint);">Tệp XML:</strong> <span style="color: var(--admin-primary);">@Model.FileName</span></div>
+            <div><strong style="color: var(--admin-text-faint);">Lược đồ XSD:</strong> <span style="color: var(--admin-primary);">@Model.SchemaName</span></div>
+            <div><strong style="color: var(--admin-text-faint);">Trạng thái:</strong> 
+                @if (Model.IsValid) {
+                    <span style="color: var(--admin-accent); font-weight: 700;">HỢP LỆ (100% VALID)</span>
+                } else {
+                    <span style="color: var(--admin-danger); font-weight: 700;">PHÁT HIỆN LỖI (INVALID)</span>
+                }
+            </div>
+        </div>
 
-    <div class="mb-4">
-        <p><strong>Tệp dữ liệu XML:</strong> <code>@Model.FileName</code></p>
-        <p><strong>Tệp Lược đồ Schema:</strong> <code>@Model.SchemaName</code></p>
+        @if (Model.IsValid)
+        {
+            <div class="p-4 rounded-3 d-flex align-items-center gap-3" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: var(--admin-accent);">
+                <i class="fa-solid fa-circle-check fs-1 flex-shrink-0"></i>
+                <div>
+                    <h4 class="fw-bold mb-1" style="font-size: 18px;">TỆP XML HOÀN TOÀN HỢP LỆ VỚI LƯỢC ĐỒ SCHEMA!</h4>
+                    <p class="mb-0" style="font-size: 13.5px; opacity: 0.9;">Tất cả các phần tử, kiểu dữ liệu, khóa chính và ràng buộc trong <code>@Model.FileName</code> đều tuân thủ chính xác 100% lược đồ <code>@Model.SchemaName</code>.</p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="p-4 rounded-3" style="background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); color: var(--admin-danger);">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="fa-solid fa-circle-xmark fs-2"></i>
+                    <h4 class="fw-bold mb-0">TỆP XML KHÔNG HỢP LỆ (INVALID)!</h4>
+                </div>
+                <p style="font-size: 13.5px;">Phát hiện @Model.Errors.Count lỗi vi phạm ràng buộc XSD Schema:</p>
+                
+                <div class="admin-table-container mt-3">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Dòng</th>
+                                <th>Cột</th>
+                                <th>Mức độ</th>
+                                <th>Chi tiết lỗi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Errors.Count; i++)
+                            {
+                                var err = Model.Errors[i];
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td class="cell-code" style="color: var(--amber-500);">@err.LineNumber</td>
+                                    <td class="cell-code" style="color: var(--amber-500);">@err.LinePosition</td>
+                                    <td><span class="badge" style="background: rgba(244, 63, 94, 0.2); color: var(--admin-danger); font-family: var(--font-mono);">@err.Severity</span></td>
+                                    <td style="color: var(--admin-danger); font-size: 13px;">@err.Message</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
     </div>
-
-    @if (Model.IsValid)
-    {
-        <div class="alert-custom alert-success" style="padding: 2rem;">
-            <i class="fa-solid fa-circle-check" style="font-size: 2.5rem;"></i>
-            <div>
-                <h4 style="margin-bottom: 6px;">TỆP XML HOÀN TOÀN HỢP LỆ (VALID)!</h4>
-                <p class="mb-0">Dữ liệu trong tệp <code>@Model.FileName</code> tuân thủ chính xác 100% tất cả các quy tắc, kiểu dữ liệu và ràng buộc của tệp <code>@Model.SchemaName</code>.</p>
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="alert-custom alert-danger" style="padding: 1.5rem; flex-direction: column; align-items: flex-start;">
-            <div class="d-flex align-items-center gap-2 mb-2">
-                <i class="fa-solid fa-circle-xmark" style="font-size: 1.8rem;"></i>
-                <h4 class="mb-0">TỆP XML KHÔNG HỢP LỆ (INVALID)!</h4>
-            </div>
-            <p>Hệ thống phát hiện @Model.Errors.Count lỗi vi phạm ràng buộc XSD Schema:</p>
-            
-            <table class="custom-table mt-2">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Dòng</th>
-                        <th>Cột</th>
-                        <th>Mức độ</th>
-                        <th>Nội dung thông báo lỗi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.Errors.Count; i++)
-                    {
-                        var err = Model.Errors[i];
-                        <tr>
-                            <td>@(i + 1)</td>
-                            <td><strong class="text-warning">@err.LineNumber</strong></td>
-                            <td><strong class="text-warning">@err.LinePosition</strong></td>
-                            <td><span class="badge-xml" style="background: var(--accent-rose);">@err.Severity</span></td>
-                            <td class="text-danger">@err.Message</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
 </div>

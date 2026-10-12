@@ -2,25 +2,30 @@
     ViewData["Title"] = "Xem Catalogue bằng XSLT Engine";
 }
 
-<div class="glass-card">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-wand-magic-sparkles text-warning"></i>
-            <span>KẾT QUẢ BIẾN ĐỔI XML + XSLT (XslCompiledTransform in C#)</span>
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h2 class="admin-card-title">
+                <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--amber-500);"></i>
+                <span>KẾT QUẢ BIẾN ĐỔI XML + XSLT (XslCompiledTransform in C#)</span>
+            </h2>
+            <div class="admin-card-desc">Thực thi trực tiếp file DienThoai.xml qua stylesheet DienThoaiCatalogue.xslt để sinh mã HTML</div>
         </div>
-        <a asp-action="Index" class="btn-custom btn-secondary-custom">
-            <i class="fa-solid fa-arrow-left"></i> Quay lại Catalogue
+        <a asp-action="Manage" class="admin-btn admin-btn-secondary admin-btn-sm">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Quay lại kho XML</span>
         </a>
     </div>
 
-    <div class="mb-3">
-        <p class="text-muted">
-            <i class="fa-solid fa-info-circle"></i>
-            Trang này sử dụng đối tượng <code>XslCompiledTransform</code> của C# để thực thi file <code>Data/DienThoai.xml</code> kết hợp với mẫu stylesheet <code>XSLT/DienThoaiCatalogue.xslt</code> và sinh trực tiếp mã HTML.
-        </p>
-    </div>
+    <div class="admin-card-body">
+        <div class="p-3 mb-4 rounded-3" style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.25); color: var(--admin-text-main); font-size: 13px;">
+            <i class="fa-solid fa-info-circle text-primary me-2"></i>
+            Trang này sử dụng đối tượng <code style="font-family: var(--font-mono); color: var(--admin-primary); background: rgba(99, 102, 241, 0.15); padding: 2px 6px; border-radius: 4px;">System.Xml.Xsl.XslCompiledTransform</code> của .NET C# để nạp tệp dữ liệu <code style="font-family: var(--font-mono); color: var(--admin-accent);">Data/DienThoai.xml</code> kết hợp với mẫu stylesheet <code style="font-family: var(--font-mono); color: var(--amber-500);">XSLT/DienThoaiCatalogue.xslt</code> và sinh trực tiếp tài liệu HTML trình duyệt.
+        </div>
 
-    <div class="xslt-rendered-box">
-        @Html.Raw(ViewBag.HtmlContent)
+        <div class="xslt-rendered-box p-3 rounded-3" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--admin-card-border); overflow-x: auto;">
+            @Html.Raw(ViewBag.HtmlContent)
+        </div>
     </div>
 </div>
+

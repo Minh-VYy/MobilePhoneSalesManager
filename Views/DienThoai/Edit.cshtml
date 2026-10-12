@@ -1,111 +1,123 @@
 @model QuanLyBanDienThoai.Models.DienThoaiModel
 @{
-    ViewData["Title"] = "Cập Nhật Điện Thoại (XML)";
+    ViewData["Title"] = $"Cập Nhật Điện Thoại {Model.MaSP}";
 }
 
-<div class="glass-card" style="max-width: 850px; margin: 0 auto;">
-    <div class="glass-card-header">
-        <div class="glass-card-title">
-            <i class="fa-solid fa-pen-to-square text-warning"></i>
-            <span>CẬP NHẬT ĐIỆN THOẠI (@Model.MaSP)</span>
+<div class="admin-card" style="max-width: 920px; margin: 0 auto;">
+    <div class="admin-card-header">
+        <div>
+            <h3 class="admin-card-title">
+                <i class="fa-solid fa-pen-to-square" style="color: var(--amber-500);"></i>
+                <span>Cập nhật thông tin node XML: <strong style="font-family: var(--font-mono); color: var(--admin-primary);">@Model.MaSP</strong></span>
+            </h3>
+            <div class="admin-card-desc">Chỉnh sửa trực tiếp dữ liệu thiết bị trong file DienThoai.xml và tự động kiểm tra lại với DienThoai.xsd</div>
         </div>
-        <a asp-action="Manage" class="btn-custom btn-secondary-custom">
-            <i class="fa-solid fa-arrow-left"></i> Trở về Quản lý
+        <a asp-action="Manage" class="admin-btn admin-btn-secondary admin-btn-sm">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Trở về kho XML</span>
         </a>
     </div>
 
-    @if (ViewBag.ErrorMessage != null)
-    {
-        <div class="alert-custom alert-danger">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <div>
-                <strong>LỖI XSD SCHEMA VALIDATION:</strong> @ViewBag.ErrorMessage
+    <div class="admin-card-body">
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mb-4 rounded-3" style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.35); color: var(--admin-danger);">
+                <i class="fa-solid fa-triangle-exclamation fs-4"></i>
+                <div>
+                    <strong>Lỗi XSD Schema Validation:</strong> @ViewBag.ErrorMessage
+                </div>
             </div>
-        </div>
-    }
+        }
 
-    <form asp-action="Edit" method="post">
-        @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="MaSP" />
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MaSP" />
 
-        <div class="row g-3">
-            <div class="col-md-6 mb-3">
-                <label class="form-label font-weight-bold">Mã Sản Phẩm:</label>
-                <input class="form-control-custom" value="@Model.MaSP" disabled />
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label class="admin-form-label">Mã Sản Phẩm (XML ID cố định):</label>
+                    <input class="admin-form-control" style="font-family: var(--font-mono); font-weight: 600; opacity: 0.8; background: rgba(255,255,255,0.03);" value="@Model.MaSP" disabled />
+                    <small style="color: var(--admin-text-faint); font-size: 11.5px;">Mã định danh duy nhất của node trong cấu trúc DienThoai.xml</small>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="admin-form-label">Tên Điện Thoại (*):</label>
+                    <input asp-for="TenSP" class="admin-form-control" required />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="admin-form-label">Hãng Sản Xuất (*):</label>
+                    <select asp-for="MaHang" class="admin-form-control">
+                        <option value="APPLE">Apple (iPhone)</option>
+                        <option value="SAMSUNG">Samsung</option>
+                        <option value="XIAOMI">Xiaomi</option>
+                        <option value="OPPO">OPPO</option>
+                        <option value="GOOGLE">Google Pixel</option>
+                        <option value="KHAC">Hãng khác</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="admin-form-label">Giá Bán (VNĐ) (*):</label>
+                    <input asp-for="GiaBan" type="number" step="100000" class="admin-form-control" required />
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="admin-form-label">Số Lượng Tồn Kho (*):</label>
+                    <input asp-for="SoLuongTon" type="number" class="admin-form-control" required />
+                </div>
+
+                <div class="col-12 mt-2 mb-2">
+                    <div class="d-flex align-items-center gap-2 pb-2 border-bottom" style="border-color: var(--admin-card-border) !important;">
+                        <i class="fa-solid fa-microchip" style="color: var(--admin-primary);"></i>
+                        <h4 class="mb-0 fw-bold" style="font-size: 14.5px; color: var(--admin-text-main);">Thông Số Kỹ Thuật (Node XML ThongSoKyThuat)</h4>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="admin-form-label">Màn hình:</label>
+                    <input asp-for="ThongSo.ManHinh" class="admin-form-control" />
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="admin-form-label">Dung lượng RAM:</label>
+                    <input asp-for="ThongSo.RAM" class="admin-form-control" />
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="admin-form-label">Bộ nhớ trong (ROM):</label>
+                    <input asp-for="ThongSo.BoNhoTrong" class="admin-form-control" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="admin-form-label">Dung lượng Pin / Sạc:</label>
+                    <input asp-for="ThongSo.Pin" class="admin-form-control" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="admin-form-label">Vi xử lý (Chip):</label>
+                    <input asp-for="ThongSo.Chip" class="admin-form-control" />
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label class="admin-form-label">Đường dẫn Hình ảnh (URL):</label>
+                    <input asp-for="HinhAnh" class="admin-form-control" />
+                </div>
+
+                <div class="col-md-12 mb-4">
+                    <label class="admin-form-label">Mô tả sản phẩm:</label>
+                    <textarea asp-for="MoTa" rows="3" class="admin-form-control" style="height: auto;"></textarea>
+                </div>
+
+                <div class="col-md-12 d-flex justify-content-end gap-2 pt-3 border-top" style="border-color: var(--admin-card-border) !important;">
+                    <a asp-action="Manage" class="admin-btn admin-btn-secondary">Hủy bỏ</a>
+                    <button type="submit" class="admin-btn admin-btn-warning">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>Lưu Cập Nhật XML</span>
+                    </button>
+                </div>
             </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label font-weight-bold">Tên Điện Thoại (*):</label>
-                <input asp-for="TenSP" class="form-control-custom" required />
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label class="form-label font-weight-bold">Hãng Sản Xuất (*):</label>
-                <select asp-for="MaHang" class="form-select-custom">
-                    <option value="APPLE">Apple (iPhone)</option>
-                    <option value="SAMSUNG">Samsung</option>
-                    <option value="XIAOMI">Xiaomi</option>
-                    <option value="OPPO">OPPO</option>
-                    <option value="GOOGLE">Google Pixel</option>
-                    <option value="KHAC">Hãng khác</option>
-                </select>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label class="form-label font-weight-bold">Giá Bán (VNĐ) (*):</label>
-                <input asp-for="GiaBan" type="number" step="100000" class="form-control-custom" required />
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label class="form-label font-weight-bold">Số Lượng Tồn Kho (*):</label>
-                <input asp-for="SoLuongTon" type="number" class="form-control-custom" required />
-            </div>
-
-            <h4 class="mt-4 mb-3 text-info" style="border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;">
-                <i class="fa-solid fa-microchip"></i> Thông Số Kỹ Thuật (Node XML ThongSoKyThuat)
-            </h4>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Màn hình:</label>
-                <input asp-for="ThongSo.ManHinh" class="form-control-custom" />
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label class="form-label">Dung lượng RAM:</label>
-                <input asp-for="ThongSo.RAM" class="form-control-custom" />
-            </div>
-
-            <div class="col-md-3 mb-3">
-                <label class="form-label">Bộ nhớ trong (ROM):</label>
-                <input asp-for="ThongSo.BoNhoTrong" class="form-control-custom" />
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Dung lượng Pin / Sạc:</label>
-                <input asp-for="ThongSo.Pin" class="form-control-custom" />
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Vi xử lý (Chip):</label>
-                <input asp-for="ThongSo.Chip" class="form-control-custom" />
-            </div>
-
-            <div class="col-md-12 mb-3">
-                <label class="form-label">Đường dẫn Hình ảnh (URL):</label>
-                <input asp-for="HinhAnh" class="form-control-custom" />
-            </div>
-
-            <div class="col-md-12 mb-4">
-                <label class="form-label">Mô tả sản phẩm:</label>
-                <textarea asp-for="MoTa" rows="3" class="form-control-custom"></textarea>
-            </div>
-
-            <div class="col-md-12 d-flex justify-content-end gap-2">
-                <a asp-action="Manage" class="btn-custom btn-secondary-custom">Hủy bỏ</a>
-                <button type="submit" class="btn-custom btn-warning-custom">
-                    <i class="fa-solid fa-floppy-disk"></i> Lưu Cập Nhật XML
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
+

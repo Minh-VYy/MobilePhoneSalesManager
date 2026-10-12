@@ -3,68 +3,82 @@
     ViewData["Title"] = "Danh sách hóa đơn XML";
 }
 
-<div class="glass">
-    <div class="table-toolbar">
-        <div class="section-title" style="margin:0;">
-            Danh sách hóa đơn bán hàng XML
-            <small>Đọc trực tiếp từ HoaDon.xml — Sắp xếp theo ngày lập mới nhất</small>
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div>
+            <h3 class="admin-card-title">
+                <i class="fa-solid fa-receipt"></i>
+                <span>Danh sách hóa đơn bán hàng XML</span>
+            </h3>
+            <div class="admin-card-desc">Đọc trực tiếp từ HoaDon.xml — Sắp xếp theo ngày lập mới nhất</div>
         </div>
-        <div class="d-flex gap-2">
-            <a asp-action="Create" class="btn btn-primary btn-sm">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-                Lập hóa đơn mới (POS)
+        <div class="d-flex gap-2 flex-wrap">
+            <a asp-action="Create" class="admin-btn admin-btn-primary admin-btn-sm">
+                <i class="fa-solid fa-cash-register"></i>
+                <span>Lập hóa đơn mới (POS)</span>
             </a>
-            <a asp-action="ValidateXsd" class="btn btn-ghost btn-sm">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                Validate HoaDon.xsd
+            <a asp-action="ValidateXsd" class="admin-btn admin-btn-secondary admin-btn-sm">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Validate HoaDon.xsd</span>
             </a>
         </div>
     </div>
 
     @if (Model == null || Model.Count == 0)
     {
-        <div class="p-4 text-center text-muted">
-            <i class="fa-solid fa-receipt fs-2 mb-2 text-faint d-block"></i>
-            Chưa có dữ liệu hóa đơn nào trong tệp HoaDon.xml
+        <div class="p-5 text-center text-muted">
+            <i class="fa-solid fa-receipt fs-1 mb-3 text-faint d-block" style="opacity: 0.4;"></i>
+            <div class="fw-semibold">Chưa có dữ liệu hóa đơn nào trong tệp HoaDon.xml</div>
+            <small class="text-faint">Hãy tạo đơn hàng đầu tiên từ màn hình Bán hàng (POS).</small>
         </div>
     }
     else
     {
-        <table>
-            <thead>
-                <tr>
-                    <th>Mã HĐ</th>
-                    <th>Ngày lập</th>
-                    <th>Khách hàng</th>
-                    <th>Số điện thoại</th>
-                    <th>Thu ngân</th>
-                    <th class="num">Tổng sản phẩm</th>
-                    <th class="num">Tổng tiền (VNĐ)</th>
-                    <th>Trạng thái XML</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var inv in Model)
-                {
+        <div class="admin-table-container">
+            <table class="admin-table">
+                <thead>
                     <tr>
-                        <td class="mono"><strong>@inv.MaHD</strong></td>
-                        <td>@inv.NgayLap.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td><b>@inv.KhachHang.TenKH</b></td>
-                        <td class="mono">@inv.KhachHang.SoDienThoai</td>
-                        <td>@inv.NhanVien</td>
-                        <td class="num">@inv.ChiTiet.Sum(x => x.SoLuong) máy</td>
-                        <td class="num" style="color:var(--gold); font-weight:700;">@inv.TongTien.ToString("#,##0") đ</td>
-                        <td><span class="status-dot st-ok">Hoàn tất (Valid)</span></td>
-                        <td class="row-actions">
-                            <a asp-action="Print" asp-route-id="@inv.MaHD" class="btn btn-ghost btn-sm">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-                                In XSLT
-                            </a>
-                        </td>
+                        <th>Mã HĐ</th>
+                        <th>Ngày lập</th>
+                        <th>Khách hàng</th>
+                        <th>Số điện thoại</th>
+                        <th>Thu ngân</th>
+                        <th class="text-end">Tổng sản phẩm</th>
+                        <th class="text-end">Tổng tiền (VNĐ)</th>
+                        <th>Trạng thái XML</th>
+                        <th class="text-end">Thao tác</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var inv in Model)
+                    {
+                        <tr>
+                            <td class="cell-code">@inv.MaHD</td>
+                            <td>@inv.NgayLap.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td><b>@inv.KhachHang.TenKH</b></td>
+                            <td style="font-family: var(--font-mono); font-size: 13px;">@inv.KhachHang.SoDienThoai</td>
+                            <td>
+                                <span class="badge" style="background: rgba(255, 255, 255, 0.08); color: var(--admin-text-main); font-size: 11.5px; border-radius: 6px;">
+                                    <i class="fa-solid fa-user-tie me-1"></i> @inv.NhanVien
+                                </span>
+                            </td>
+                            <td class="cell-num">@inv.ChiTiet.Sum(x => x.SoLuong) máy</td>
+                            <td class="cell-num" style="color: var(--amber-500); font-size: 14.5px;">@inv.TongTien.ToString("#,##0") đ</td>
+                            <td>
+                                <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--admin-accent); font-family: var(--font-mono); font-size: 11px;">
+                                    <i class="fa-solid fa-circle-check me-1"></i> Validated
+                                </span>
+                            </td>
+                            <td class="cell-actions">
+                                <a asp-action="Print" asp-route-id="@inv.MaHD" class="admin-btn admin-btn-secondary admin-btn-sm" title="In / Xuất hóa đơn XSLT">
+                                    <i class="fa-solid fa-print"></i>
+                                    <span>In XSLT</span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
 </div>

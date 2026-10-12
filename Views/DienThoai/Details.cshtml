@@ -1,0 +1,199 @@
+@model QuanLyBanDienThoai.Models.DienThoaiChiTietViewModel
+@{
+    var phone = Model.SanPham;
+    var meta = Model.Metadata;
+    var variants = Model.BienThe;
+    var currentId = phone.MaSP;
+    var currentCondition = meta.ConditionType == "New" ? "Máy mới" : "Máy đã qua sử dụng";
+    var conditionText = string.IsNullOrWhiteSpace(meta.ConditionGrade) ? currentCondition : $"{currentCondition} · {meta.ConditionGrade}";
+    var warrantyText = meta.WarrantyMonths > 0 ? $"{meta.WarrantyMonths} tháng" : "Liên hệ để xác nhận";
+    var galleryImage = string.IsNullOrWhiteSpace(meta.Image) ? phone.HinhAnh : meta.Image;
+    var smsBody = Uri.EscapeDataString($"Chào PhoneStore, tôi muốn được tư vấn {phone.TenSP}, tình trạng {conditionText}, màu {meta.ColorName}, dung lượng {meta.Storage}GB, bảo hành {warrantyText}.");
+    ViewData["Title"] = phone.TenSP;
+    Layout = ViewBag.IsAdmin == true ? "_Layout" : "_LayoutUser";
+}
+
+<section class="phone-detail-page" data-product-detail data-product-id="@currentId">
+    <nav class="phone-detail-breadcrumb" aria-label="Điều hướng">
+        <a asp-controller="Home" asp-action="Index">Trang chủ</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        <a asp-action="Index" asp-route-category="@Model.DanhMuc">@phone.TenHang</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        <span>@meta.ModelSeries</span>
+    </nav>
+
+    <div class="phone-detail-top">
+        <section class="phone-gallery glass" aria-label="Hình ảnh sản phẩm">
+            <div class="phone-gallery__edition"><span>PRODUCT FOLIO</span><span data-variant-sku>@meta.Sku</span></div>
+            <div class="phone-gallery__image">
+                <span class="phone-gallery__badge" data-variant-color>@meta.ColorName</span>
+                <img data-variant-image src="@galleryImage" alt="@phone.TenSP" onerror="this.style.display='none';this.nextElementSibling.hidden=false" />
+                <div class="phone-gallery__fallback" hidden><i class="fa-solid fa-mobile-screen-button"></i><span>Ảnh sản phẩm đang được cập nhật</span></div>
+            </div>
+            <div class="phone-gallery__caption"><span>@meta.ModelSeries</span><span>Mã sản phẩm · <span data-variant-caption-id>@phone.MaSP</span></span></div>
+        </section>
+
+        <section class="phone-buy-panel glass" id="product-options">
+            <div class="phone-detail-eyebrow"><span></span>@phone.TenHang <span class="phone-detail-code" data-variant-product-code>@phone.MaSP</span></div>
+            <h1 data-variant-name>@meta.ModelSeries</h1>
+            <p class="phone-detail-lede" data-variant-description>@phone.MoTa</p>
+            <div class="phone-detail-rating" aria-label="Đánh giá sản phẩm">
+                @if (Model.DanhGia.Count > 0)
+                {
+                    <span class="phone-rating-stars" aria-hidden="true">@Html.Raw(new string('★', (int)Math.Round(Model.DiemDanhGia)))</span>
+                    <b>@Model.DiemDanhGia.ToString("0.0")</b><a href="#reviews">@Model.DanhGia.Count đánh giá</a>
+                }
+                else
+                {
+                    <span class="phone-rating-stars is-empty" aria-hidden="true">☆☆☆☆☆</span><a href="#reviews">Chưa có đánh giá · Viết đánh giá đầu tiên</a>
+                }
+            </div>
+
+            <div class="phone-price-line">
+                <strong class="phone-detail-price" data-variant-price>@phone.GiaBan.ToString("#,##0") ₫</strong>
+                <del data-variant-original style="@(meta.OriginalPrice > phone.GiaBan ? "" : "display:none")">@meta.OriginalPrice.ToString("#,##0") ₫</del>
+                <span class="phone-price-save" data-variant-savings style="@(meta.OriginalPrice > phone.GiaBan ? "" : "display:none")">Tiết kiệm @((meta.OriginalPrice - phone.GiaBan).ToString("#,##0")) ₫</span>
+            </div>
+            <div class="phone-detail-stock @(phone.SoLuongTon > 0 ? "is-available" : "is-unavailable")" data-variant-stock>
+                <i class="fa-solid @(phone.SoLuongTon > 0 ? "fa-circle-check" : "fa-circle-xmark")"></i>
+                @(phone.SoLuongTon > 0 ? $"Còn {phone.SoLuongTon} máy trong kho" : "Tạm hết hàng")
+            </div>
+
+            <div class="phone-option-group">
+                <div class="phone-option-heading"><b>Tình trạng máy</b><span data-current-condition>@conditionText</span></div>
+                <div class="phone-option-list">
+                    @foreach (var option in variants.GroupBy(x => (x.ConditionType, x.ConditionGrade)).Select(x => x.First()))
+                    {
+                        var label = option.ConditionType == "New" ? $"Mới {option.ConditionGrade}" : $"Đã dùng {option.ConditionGrade}";
+                        <button type="button" class="phone-option-chip @(option.ConditionType == meta.ConditionType && option.ConditionGrade == meta.ConditionGrade ? "is-selected" : "")" data-select-variant data-variant-id="@option.ProductId" data-variant-kind="condition" data-variant-value="@($"{option.ConditionType}|{option.ConditionGrade}")" aria-pressed="@(option.ConditionType == meta.ConditionType && option.ConditionGrade == meta.ConditionGrade ? "true" : "false")">@label</button>
+                    }
+                </div>
+            </div>
+
+            <div class="phone-option-group">
+                <div class="phone-option-heading"><b>Dung lượng</b><span data-current-storage>@meta.Storage GB</span></div>
+                <div class="phone-option-list">
+                    @foreach (var option in variants.GroupBy(x => x.Storage).Select(x => x.First()))
+                    {
+                        <button type="button" class="phone-option-chip @(option.Storage == meta.Storage ? "is-selected" : "")" data-select-variant data-variant-id="@option.ProductId" data-variant-kind="storage" data-variant-value="@option.Storage" aria-pressed="@(option.Storage == meta.Storage ? "true" : "false")">@option.Storage GB</button>
+                    }
+                </div>
+            </div>
+
+            <div class="phone-option-group">
+                <div class="phone-option-heading"><b>Màu sắc</b><span data-current-color>@meta.ColorName</span></div>
+                <div class="phone-color-options">
+                    @foreach (var option in variants.GroupBy(x => x.ColorName).Select(x => x.First()))
+                    {
+                        <button type="button" class="phone-color-choice @(option.ColorName == meta.ColorName ? "is-selected" : "")" data-select-variant data-variant-id="@option.ProductId" data-variant-kind="color" data-variant-value="@option.ColorName" aria-label="@option.ColorName" title="@option.ColorName" aria-pressed="@(option.ColorName == meta.ColorName ? "true" : "false")">
+                            <span style="--phone-color:@(string.IsNullOrWhiteSpace(option.ColorCode) ? "#969696" : option.ColorCode)"></span><small>@option.ColorName</small>
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <div class="phone-option-group">
+                <div class="phone-option-heading"><b>Bảo hành</b><span>Chính sách theo phiên bản</span></div>
+                <div class="phone-option-list">
+                    @foreach (var option in variants.GroupBy(x => x.WarrantyMonths).Select(x => x.First()))
+                    {
+                        <button type="button" class="phone-option-chip @(option.WarrantyMonths == meta.WarrantyMonths ? "is-selected" : "")" data-select-variant data-variant-id="@option.ProductId" data-variant-kind="warranty" data-variant-value="@option.WarrantyMonths" aria-pressed="@(option.WarrantyMonths == meta.WarrantyMonths ? "true" : "false")">@(option.WarrantyMonths > 0 ? $"{option.WarrantyMonths} tháng" : "Liên hệ")</button>
+                    }
+                </div>
+            </div>
+
+            <div class="phone-detail-service">
+                <div><i class="fa-solid fa-shield-halved"></i><span><b>Bảo hành <span data-variant-warranty-label>@warrantyText</span></b><small data-variant-condition-description>@meta.ConditionDescription</small></span></div>
+                <div><i class="fa-solid fa-box-open"></i><span><b>Kiểm tra trước khi nhận</b><small>Liên hệ để xác nhận khu vực giao hàng</small></span></div>
+            </div>
+
+            <div class="phone-detail-actions">
+                <button type="button" class="phone-add-cart" data-add-cart
+                        data-product-id="@phone.MaSP" data-name="@phone.TenSP" data-price="@phone.GiaBan"
+                        data-image="@galleryImage" data-stock="@phone.SoLuongTon" data-color="@meta.ColorName"
+                        data-condition="@conditionText" data-storage="@phone.ThongSo.BoNhoTrong" data-warranty="@warrantyText">
+                    <i class="fa-solid fa-cart-plus" aria-hidden="true"></i> Thêm vào giỏ hàng
+                </button>
+                <button type="button" class="phone-buy-now" data-buy-now
+                        data-product-id="@phone.MaSP" data-name="@phone.TenSP" data-price="@phone.GiaBan"
+                        data-image="@galleryImage" data-stock="@phone.SoLuongTon" data-color="@meta.ColorName"
+                        data-condition="@conditionText" data-storage="@phone.ThongSo.BoNhoTrong" data-warranty="@warrantyText">
+                    Mua ngay <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+                <a class="phone-message-link" data-variant-message href="sms:0901176222?body=@smsBody"><i class="fa-regular fa-message"></i> Nhắn tin tư vấn</a>
+            </div>
+        </section>
+    </div>
+
+    <section class="phone-editorial-specs glass" aria-labelledby="product-description-heading">
+        <div class="phone-detail-section-heading"><div><h2 id="product-description-heading">Thông tin sản phẩm</h2><p>Thông số và tình trạng theo dữ liệu sản phẩm</p></div></div>
+        <div class="phone-editorial-grid">
+            <div class="phone-editorial-copy"><span class="phone-detail-aside__eyebrow">@meta.ModelSeries</span><h3 data-variant-full-name>@phone.TenSP</h3><p data-variant-long-description>@phone.MoTa</p><p data-variant-long-condition>@meta.ConditionDescription</p></div>
+            <dl class="phone-spec-table">
+                <div><dt>Màn hình</dt><dd data-variant-spec="screen">@phone.ThongSo.ManHinh @if (!string.IsNullOrWhiteSpace(meta.Resolution)) { <text>· @meta.Resolution</text> }</dd></div>
+                <div><dt>Vi xử lý</dt><dd data-variant-spec="chip">@phone.ThongSo.Chip</dd></div>
+                <div><dt>RAM</dt><dd data-variant-spec="ram">@phone.ThongSo.RAM</dd></div>
+                <div><dt>Bộ nhớ</dt><dd data-variant-spec="storage">@phone.ThongSo.BoNhoTrong</dd></div>
+                @if (!string.IsNullOrWhiteSpace(meta.Camera)) { <div><dt>Camera</dt><dd data-variant-spec="camera">@meta.Camera</dd></div> }
+                <div><dt>Pin & sạc</dt><dd data-variant-spec="battery">@phone.ThongSo.Pin @if (!string.IsNullOrWhiteSpace(meta.ChargingTechnology)) { <text>· @meta.ChargingTechnology</text> }</dd></div>
+                @if (!string.IsNullOrWhiteSpace(meta.Ports)) { <div><dt>Kết nối</dt><dd data-variant-spec="ports">@meta.Ports</dd></div> }
+                @if (!string.IsNullOrWhiteSpace(meta.Weight)) { <div><dt>Khối lượng</dt><dd data-variant-spec="weight">@meta.Weight g</dd></div> }
+                <div><dt>Bảo hành</dt><dd data-variant-spec="warranty">@warrantyText</dd></div>
+                <div><dt>Tình trạng</dt><dd data-variant-spec="condition">@conditionText</dd></div>
+            </dl>
+        </div>
+    </section>
+
+    <section class="phone-reviews glass" id="reviews">
+        <div class="phone-detail-section-heading"><div><h2>Đánh giá sản phẩm</h2><p>Chia sẻ trải nghiệm thực tế của bạn</p></div></div>
+        <div class="phone-review-layout">
+            <div class="phone-review-summary">
+                <strong>@(Model.DanhGia.Count == 0 ? "—" : Model.DiemDanhGia.ToString("0.0"))</strong>
+                <span class="phone-rating-stars">@(Model.DanhGia.Count == 0 ? "☆☆☆☆☆" : new string('★', (int)Math.Round(Model.DiemDanhGia)))</span>
+                <small>@Model.DanhGia.Count đánh giá</small>
+            </div>
+            <div class="phone-review-list">
+                @if (TempData["ReviewSuccess"] != null) { <p class="phone-form-success">@TempData["ReviewSuccess"]</p> }
+                @if (TempData["ReviewError"] != null) { <p class="phone-form-error">@TempData["ReviewError"]</p> }
+                @if (Model.DanhGia.Count == 0)
+                {
+                    <p class="phone-review-empty">Chưa có nhận xét cho sản phẩm này. Đánh giá của bạn sẽ giúp người mua sau có thêm thông tin.</p>
+                }
+                else
+                {
+                    @foreach (var review in Model.DanhGia)
+                    {
+                        <article class="phone-review-item"><div><b>@review.CustomerName</b><time datetime="@review.CreatedAt.ToString("O")">@review.CreatedAt.ToString("dd/MM/yyyy")</time></div><span class="phone-rating-stars">@(new string('★', review.Rating))</span><p>@review.Content</p></article>
+                    }
+                }
+            </div>
+        </div>
+        <form asp-action="SubmitReview" method="post" class="phone-review-form">
+            @Html.AntiForgeryToken()<input type="hidden" id="review-product-id" name="id" value="@phone.MaSP" />
+            <label>Tên của bạn<input name="customerName" maxlength="80" required placeholder="Nhập tên hiển thị" /></label>
+            <label>Đánh giá<select name="rating" required><option value="5">5 sao · Rất hài lòng</option><option value="4">4 sao · Hài lòng</option><option value="3">3 sao · Bình thường</option><option value="2">2 sao · Chưa hài lòng</option><option value="1">1 sao · Không hài lòng</option></select></label>
+            <label class="phone-review-form__content">Nhận xét<textarea name="content" maxlength="1200" required rows="3" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea></label>
+            <button type="submit" class="phone-review-submit">Gửi đánh giá <i class="fa-solid fa-arrow-right"></i></button>
+        </form>
+    </section>
+
+    @if (Model.SanPhamLienQuan.Count > 0)
+    {
+        <section class="phone-related">
+            <div class="phone-detail-section-heading"><div><h2>Sản phẩm gợi ý</h2><p>Tham khảo thêm các thiết bị trong danh mục</p></div></div>
+            <div class="phone-related-grid">
+                @foreach (var item in Model.SanPhamLienQuan)
+                {
+                    <a asp-action="Details" asp-route-id="@item.MaSP" class="glass phone-related-card">
+                        <div class="phone-related-card__image"><img src="@item.HinhAnh" alt="@item.TenSP" loading="lazy" onerror="this.style.display='none'" /></div>
+                        <span class="phone-related-card__brand">@item.TenHang</span><h3>@item.TenSP</h3><strong>@item.GiaBan.ToString("#,##0") ₫</strong>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+</section>
+
+<script type="application/json" id="product-variant-data">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.VariantOptions, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)))</script>
+
+@section Scripts {
+    <script src="~/js/product-detail.js" asp-append-version="true"></script>
+}

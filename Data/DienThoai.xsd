@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <!-- Định nghĩa kiểu mã sản phẩm SPxxx -->
   <xs:simpleType name="MaSPType">
     <xs:restriction base="xs:string">
-      <xs:pattern value="SP[0-9]{3}"/>
+      <xs:pattern value="[A-Z][A-Z0-9-]{2,63}"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -16,6 +16,8 @@
       <xs:enumeration value="XIAOMI"/>
       <xs:enumeration value="OPPO"/>
       <xs:enumeration value="GOOGLE"/>
+      <xs:enumeration value="OPPO"/>
+      <xs:enumeration value="GAMING"/>
       <xs:enumeration value="KHAC"/>
     </xs:restriction>
   </xs:simpleType>
@@ -66,3 +68,4 @@
   </xs:element>
 
 </xs:schema>
+

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CustomerOrderRequests>
+  <Request id="YCM-20261012213300-d5f527f4f" createdAt="2026-10-12T21:33:00.6342228+07:00">
+    <Customer>
+      <Name>NguyenMinhVy</Name>
+      <Phone>0794707440</Phone>
+      <Address>)2 Thanh Son</Address>
+    </Customer>
+    <Items>
+      <Item productId="OP-FX7U-100-256-BRN">
+        <Name>OPPO Find X7 Ultra 256GB - Nâu Da Cao Cấp (Mới 100%)</Name>
+        <Quantity>1</Quantity>
+        <UnitPrice>22890000</UnitPrice>
+        <Subtotal>22890000</Subtotal>
+      </Item>
+    </Items>
+    <Status>PendingContact</Status>
+  </Request>
+  <Request id="YCM-20261012223823-0258df858" createdAt="2026-10-12T22:38:23.2963841+07:00">
+    <Customer>
+      <Name>40_M.Vỹ</Name>
+      <Phone>0343671496</Phone>
+      <Address>)2 Thanh Son</Address>
+    </Customer>
+    <Items>
+      <Item productId="IPH-15PM-100-512-BLU">
+        <Name>iPhone 15 Pro Max 512GB - Titan Xanh (Mới 100%)</Name>
+        <Quantity>1</Quantity>
+        <UnitPrice>32990000</UnitPrice>
+        <Subtotal>32990000</Subtotal>
+      </Item>
+    </Items>
+    <Status>PendingContact</Status>
+  </Request>
+</CustomerOrderRequests>

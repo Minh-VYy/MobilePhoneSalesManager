@@ -16,6 +16,8 @@ builder.Services.AddTransient<DienThoaiXmlService>();
 builder.Services.AddTransient<HoaDonXmlService>();
 builder.Services.AddTransient<XsltTransformService>();
 builder.Services.AddTransient<XmlOrderService>();
+builder.Services.AddTransient<QuangCaoXmlService>();
+builder.Services.AddSingleton<PhoneDetailXmlService>();
 
 var app = builder.Build();
 

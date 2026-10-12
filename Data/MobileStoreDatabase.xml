@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MobileStoreDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                     xsi:noNamespaceSchemaLocation="MobileStoreDatabase.xsd">
+<MobileStoreDatabase xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MobileStoreDatabase.xsd">
   <Categories>
     <Category id="CAT-IPHONE" name="Apple iPhone" slug="apple-iphone" />
     <Category id="CAT-SAMSUNG" name="Samsung Galaxy" slug="samsung-galaxy" />
@@ -9,7 +8,6 @@
     <Category id="CAT-GOOGLE" name="Google Pixel" slug="google-pixel" />
     <Category id="CAT-GAMING" name="Gaming Phone" slug="gaming-phone" />
   </Categories>
-
   <Products>
     <!-- ================= APPLE IPHONE SERIES ================= -->
     <Product id="IPH-15PM-100-256-NAT" categoryId="CAT-IPHONE">
@@ -24,6 +22,9 @@
         <ColorName>Natural Titanium</ColorName>
         <ColorCode>#9c978f</ColorCode>
         <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">34990000</OriginalPrice>
@@ -33,14 +34,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.7">6.7" LTPO 120Hz</ScreenSize><Resolution>2796 x 1290</Resolution></Display>
-        <Performance><Chipset>Apple A17 Pro (3nm)</Chipset><RAM unit="GB">8</RAM><Storage unit="GB">256</Storage></Performance>
-        <Camera><MainSensor>48 MP OIS + 12 MP Periscope 5x + 12 MP UltraWide</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>4422</CapacityMah><HealthPercentage min="100" max="100">100%</HealthPercentage></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB-C 3.0 (10Gbps)</Ports><WeightGrams>221</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.7">6.7" LTPO 120Hz</ScreenSize>
+          <Resolution>2796 x 1290</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A17 Pro (3nm)</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48 MP OIS + 12 MP Periscope 5x + 12 MP UltraWide</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4422</CapacityMah>
+          <HealthPercentage min="100" max="100">100%</HealthPercentage>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.0 (10Gbps)</Ports>
+          <WeightGrams>221</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <Product id="IPH-15P-99-128-BLU" categoryId="CAT-IPHONE">
       <BasicInfo>
         <Name>iPhone 15 Pro 128GB - Titan Xanh (Likenew 99%)</Name>
@@ -53,6 +68,9 @@
         <ColorName>Blue Titanium</ColorName>
         <ColorCode>#3f4651</ColorCode>
         <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-bluetitanium</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-bluetitanium&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">28990000</OriginalPrice>
@@ -62,14 +80,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.1">6.1" OLED 120Hz</ScreenSize><Resolution>2556 x 1179</Resolution></Display>
-        <Performance><Chipset>Apple A17 Pro</Chipset><RAM unit="GB">8</RAM><Storage unit="GB">128</Storage></Performance>
-        <Camera><MainSensor>48 MP + 12 MP 3x Zoom + 12 MP UltraWide</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>3274</CapacityMah><HealthPercentage min="94" max="97">96%</HealthPercentage></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB-C 3.0</Ports><WeightGrams>187</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.1">6.1" OLED 120Hz</ScreenSize>
+          <Resolution>2556 x 1179</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A17 Pro</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48 MP + 12 MP 3x Zoom + 12 MP UltraWide</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>3274</CapacityMah>
+          <HealthPercentage min="94" max="97">96%</HealthPercentage>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.0</Ports>
+          <WeightGrams>187</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <Product id="IPH-14PM-99-256-PUR" categoryId="CAT-IPHONE">
       <BasicInfo>
         <Name>iPhone 14 Pro Max 256GB - Bản Quốc tế (Cũ 99%)</Name>
@@ -82,6 +114,9 @@
         <ColorName>Deep Purple</ColorName>
         <ColorCode>#594f63</ColorCode>
         <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-deep-purple-select</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-deep-purple-select&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">29990000</OriginalPrice>
@@ -91,14 +126,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.7">6.7" LTPO 120Hz</ScreenSize><Resolution>2796 x 1290</Resolution></Display>
-        <Performance><Chipset>Apple A16 Bionic (4nm)</Chipset><RAM unit="GB">6</RAM><Storage unit="GB">256</Storage></Performance>
-        <Camera><MainSensor>48 MP + 12 MP 3x + 12 MP UltraWide + LiDAR</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>4323</CapacityMah><HealthPercentage min="92" max="96">94%</HealthPercentage></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>Lightning</Ports><WeightGrams>240</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.7">6.7" LTPO 120Hz</ScreenSize>
+          <Resolution>2796 x 1290</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A16 Bionic (4nm)</Chipset>
+          <RAM unit="GB">6</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48 MP + 12 MP 3x + 12 MP UltraWide + LiDAR</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4323</CapacityMah>
+          <HealthPercentage min="92" max="96">94%</HealthPercentage>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>Lightning</Ports>
+          <WeightGrams>240</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <!-- ================= SAMSUNG GALAXY SERIES ================= -->
     <Product id="SS-S24U-100-256-GRY" categoryId="CAT-SAMSUNG">
       <BasicInfo>
@@ -112,6 +161,9 @@
         <ColorName>Titanium Gray</ColorName>
         <ColorCode>#706e6b</ColorCode>
         <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">33990000</OriginalPrice>
@@ -121,14 +173,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.8">6.8" Flat Dynamic AMOLED 2X 120Hz 2600 nits</ScreenSize><Resolution>3120 x 1440</Resolution></Display>
-        <Performance><Chipset>Snapdragon 8 Gen 3 for Galaxy</Chipset><RAM unit="GB">12</RAM><Storage unit="GB">256</Storage></Performance>
-        <Camera><MainSensor>200 MP + 50 MP (5x) + 10 MP (3x) + 12 MP UltraWide</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>5000</CapacityMah><ChargingTechnology>Sạc siêu nhanh 45W</ChargingTechnology></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB Type-C 3.2</Ports><WeightGrams>232</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.8">6.8" Flat Dynamic AMOLED 2X 120Hz 2600 nits</ScreenSize>
+          <Resolution>3120 x 1440</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 3 for Galaxy</Chipset>
+          <RAM unit="GB">12</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>200 MP + 50 MP (5x) + 10 MP (3x) + 12 MP UltraWide</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>Sạc siêu nhanh 45W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB Type-C 3.2</Ports>
+          <WeightGrams>232</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <Product id="SS-S23U-99-256-GRN" categoryId="CAT-SAMSUNG">
       <BasicInfo>
         <Name>Samsung Galaxy S23 Ultra 5G 256GB - Xanh Lục (Cũ 99%)</Name>
@@ -141,6 +207,9 @@
         <ColorName>Botanic Green (Xanh lục)</ColorName>
         <ColorCode>#3b493f</ColorCode>
         <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2302/gallery/vn-galaxy-s23-ultra-s918-sm-s918bzgcxxv-thumb-534863401</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://images.samsung.com/is/image/samsung/p6pim/vn/2302/gallery/vn-galaxy-s23-ultra-s918-sm-s918bzgcxxv-thumb-534863401&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">26990000</OriginalPrice>
@@ -150,14 +219,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.8">6.8" Dynamic AMOLED 2X 120Hz</ScreenSize><Resolution>3088 x 1440</Resolution></Display>
-        <Performance><Chipset>Snapdragon 8 Gen 2 for Galaxy</Chipset><RAM unit="GB">8</RAM><Storage unit="GB">256</Storage></Performance>
-        <Camera><MainSensor>200 MP + 10 MP (3x) + 10 MP (10x) + 12 MP</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>5000</CapacityMah><ChargingTechnology>Sạc 45W</ChargingTechnology></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB-C</Ports><WeightGrams>234</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.8">6.8" Dynamic AMOLED 2X 120Hz</ScreenSize>
+          <Resolution>3088 x 1440</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 2 for Galaxy</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>200 MP + 10 MP (3x) + 10 MP (10x) + 12 MP</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>Sạc 45W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>234</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <!-- ================= XIAOMI SERIES ================= -->
     <Product id="MI-14U-100-512-BLK" categoryId="CAT-XIAOMI">
       <BasicInfo>
@@ -171,6 +254,9 @@
         <ColorName>Black Leather</ColorName>
         <ColorCode>#1e1e1e</ColorCode>
         <PrimaryImage>https://i02.appmifile.com/830_operator_sg/25/02/2024/76c4fae852923f0fe7876a443eec3bf4.png</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://i02.appmifile.com/830_operator_sg/25/02/2024/76c4fae852923f0fe7876a443eec3bf4.png&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">32990000</OriginalPrice>
@@ -180,14 +266,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.73">6.73" LTPO AMOLED 120Hz 3000 nits WQHD+</ScreenSize><Resolution>3200 x 1440</Resolution></Display>
-        <Performance><Chipset>Snapdragon 8 Gen 3</Chipset><RAM unit="GB">16</RAM><Storage unit="GB">512</Storage></Performance>
-        <Camera><MainSensor>Bộ 4 camera 50MP Leica 1-inch LYT-900</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>5000</CapacityMah><ChargingTechnology>Sạc 90W</ChargingTechnology></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB-C 3.2</Ports><WeightGrams>219.8</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.73">6.73" LTPO AMOLED 120Hz 3000 nits WQHD+</ScreenSize>
+          <Resolution>3200 x 1440</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 3</Chipset>
+          <RAM unit="GB">16</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>Bộ 4 camera 50MP Leica 1-inch LYT-900</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>Sạc 90W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.2</Ports>
+          <WeightGrams>219.8</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <!-- ================= OPPO SERIES ================= -->
     <Product id="OP-FX7U-100-256-BRN" categoryId="CAT-OPPO">
       <BasicInfo>
@@ -201,6 +301,9 @@
         <ColorName>Sepia Brown</ColorName>
         <ColorCode>#684b39</ColorCode>
         <PrimaryImage>https://image.oppo.com/content/dam/oppo/common/mkt/v2-2/find-x7-ultra-en/navigation/Find-X7-Ultra-brown.png</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://image.oppo.com/content/dam/oppo/common/mkt/v2-2/find-x7-ultra-en/navigation/Find-X7-Ultra-brown.png&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">26990000</OriginalPrice>
@@ -210,14 +313,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.82">6.82" LTPO AMOLED 120Hz 4500 nits peak</ScreenSize><Resolution>3168 x 1440</Resolution></Display>
-        <Performance><Chipset>Snapdragon 8 Gen 3</Chipset><RAM unit="GB">16</RAM><Storage unit="GB">256</Storage></Performance>
-        <Camera><MainSensor>Hệ thống 4 camera 50MP Hasselblad kép kính tiềm vọng</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>5000</CapacityMah><ChargingTechnology>100W SuperVOOC</ChargingTechnology></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB-C 3.2</Ports><WeightGrams>221</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.82">6.82" LTPO AMOLED 120Hz 4500 nits peak</ScreenSize>
+          <Resolution>3168 x 1440</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 3</Chipset>
+          <RAM unit="GB">16</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>Hệ thống 4 camera 50MP Hasselblad kép kính tiềm vọng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>100W SuperVOOC</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.2</Ports>
+          <WeightGrams>221</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <!-- ================= GOOGLE PIXEL SERIES ================= -->
     <Product id="GG-PX8P-100-128-BLU" categoryId="CAT-GOOGLE">
       <BasicInfo>
@@ -231,6 +348,9 @@
         <ColorName>Bay Blue</ColorName>
         <ColorCode>#a2c5ea</ColorCode>
         <PrimaryImage>https://lh3.googleusercontent.com/w9Uu1fCg3b2w3A2V-R2_e4fE2R5z6C1W6s4c0y6Q5f6g7h8j9k0l1m2n3o4p=w800</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://lh3.googleusercontent.com/w9Uu1fCg3b2w3A2V-R2_e4fE2R5z6C1W6s4c0y6Q5f6g7h8j9k0l1m2n3o4p=w800&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">23990000</OriginalPrice>
@@ -240,14 +360,28 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.7">6.7" Super Actua OLED 1-120Hz 2400 nits</ScreenSize><Resolution>2992 x 1344</Resolution></Display>
-        <Performance><Chipset>Google Tensor G3 (Titan M2 security)</Chipset><RAM unit="GB">12</RAM><Storage unit="GB">128</Storage></Performance>
-        <Camera><MainSensor>50 MP f/1.68 + 48 MP 5x Tele + 48 MP UltraWide + Cảm biến nhiệt</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>5050</CapacityMah><ChargingTechnology>Sạc 30W</ChargingTechnology></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>USB-C 3.2</Ports><WeightGrams>213</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.7">6.7" Super Actua OLED 1-120Hz 2400 nits</ScreenSize>
+          <Resolution>2992 x 1344</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Google Tensor G3 (Titan M2 security)</Chipset>
+          <RAM unit="GB">12</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50 MP f/1.68 + 48 MP 5x Tele + 48 MP UltraWide + Cảm biến nhiệt</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5050</CapacityMah>
+          <ChargingTechnology>Sạc 30W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.2</Ports>
+          <WeightGrams>213</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
-
     <!-- ================= GAMING PHONE ================= -->
     <Product id="AS-ROG8P-100-512-BLK" categoryId="CAT-GAMING">
       <BasicInfo>
@@ -261,6 +395,9 @@
         <ColorName>Phantom Black</ColorName>
         <ColorCode>#191919</ColorCode>
         <PrimaryImage>https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&amp;fit=crop&amp;w=600&amp;q=80</PrimaryImage>
+        <Gallery>
+          <Image url="&lt;PrimaryImage&gt;https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&amp;amp;fit=crop&amp;amp;w=600&amp;amp;q=80&lt;/PrimaryImage&gt;" caption="Ảnh sản phẩm" />
+        </Gallery>
       </ColorVariant>
       <PricingAndStock>
         <OriginalPrice currency="VND">35990000</OriginalPrice>
@@ -270,12 +407,810 @@
         <IsFeatured>true</IsFeatured>
       </PricingAndStock>
       <Specifications>
-        <Display><ScreenSize inches="6.78">6.78" Samsung E6 AMOLED 165Hz</ScreenSize><Resolution>2400 x 1080</Resolution></Display>
-        <Performance><Chipset>Snapdragon 8 Gen 3</Chipset><RAM unit="GB">16</RAM><Storage unit="GB">512</Storage></Performance>
-        <Camera><MainSensor>50 MP Sony IMX890 Gimbal OIS 6 trục</MainSensor></Camera>
-        <BatteryAndCharging><CapacityMah>5500</CapacityMah><ChargingTechnology>Sạc siêu tốc 65W HyperCharge</ChargingTechnology></BatteryAndCharging>
-        <DesignAndConnectivity><Ports>2x USB Type-C</Ports><WeightGrams>225</WeightGrams></DesignAndConnectivity>
+        <Display>
+          <ScreenSize inches="6.78">6.78" Samsung E6 AMOLED 165Hz</ScreenSize>
+          <Resolution>2400 x 1080</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 3</Chipset>
+          <RAM unit="GB">16</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50 MP Sony IMX890 Gimbal OIS 6 trục</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5500</CapacityMah>
+          <ChargingTechnology>Sạc siêu tốc 65W HyperCharge</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>2x USB Type-C</Ports>
+          <WeightGrams>225</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-15-100-128-BLK" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 15 128GB - Đen (Mới 100%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 15</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Black</ColorName>
+        <ColorCode>#30343a</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-black?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-black?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90" caption="Ảnh sản phẩm - Đen" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">24990000</OriginalPrice>
+        <SellingPrice currency="VND">18990000</SellingPrice>
+        <StockQuantity>8</StockQuantity>
+        <SKU>IP15-128-BLK-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.1">6.1 inch Super Retina XDR OLED</ScreenSize>
+          <Resolution>2556 x 1179</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A16 Bionic</Chipset>
+          <RAM unit="GB">6</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48MP chính OIS + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>N/A</CapacityMah>
+          <ChargingTechnology>MagSafe 15W, Qi 7.5W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C (USB 2)</Ports>
+          <WeightGrams>171</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-15-100-256-PNK" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 15 256GB - Hồng (Mới 100%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 15</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Pink</ColorName>
+        <ColorCode>#e9b8c1</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-pink?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-pink?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90" caption="Ảnh sản phẩm - Hồng" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">27990000</OriginalPrice>
+        <SellingPrice currency="VND">20990000</SellingPrice>
+        <StockQuantity>6</StockQuantity>
+        <SKU>IP15-256-PNK-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.1">6.1 inch Super Retina XDR OLED</ScreenSize>
+          <Resolution>2556 x 1179</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A16 Bionic</Chipset>
+          <RAM unit="GB">6</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48MP chính OIS + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>N/A</CapacityMah>
+          <ChargingTechnology>MagSafe 15W, Qi 7.5W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C (USB 2)</Ports>
+          <WeightGrams>171</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-15PM-100-512-BLU" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 15 Pro Max 512GB - Titan Xanh (Mới 100%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 15 Pro Max</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Blue Titanium</ColorName>
+        <ColorCode>#465366</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-bluetitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-bluetitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90" caption="Ảnh sản phẩm - Titan xanh" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">40990000</OriginalPrice>
+        <SellingPrice currency="VND">32990000</SellingPrice>
+        <StockQuantity>4</StockQuantity>
+        <SKU>IP15PM-512-BLU-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.7">6.7 inch LTPO Super Retina XDR OLED, ProMotion 120Hz</ScreenSize>
+          <Resolution>2796 x 1290</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A17 Pro (3nm)</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48MP chính + 12MP tele 5x + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>N/A</CapacityMah>
+          <ChargingTechnology>MagSafe, Qi2</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3 (USB 3 lên đến 10Gb/s)</Ports>
+          <WeightGrams>221</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-S24U-100-512-BLK" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy S24 Ultra 512GB - Đen Titan (Mới 100%)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy S24 Series</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Titanium Black</ColorName>
+        <ColorCode>#383838</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bzkaxxv-thumb-539304991</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bzkaxxv-thumb-539304991" caption="Ảnh sản phẩm - Đen Titan" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">37490000</OriginalPrice>
+        <SellingPrice currency="VND">30990000</SellingPrice>
+        <StockQuantity>5</StockQuantity>
+        <SKU>S24U-512-BLK-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.8">6.8 inch Dynamic AMOLED 2X, QHD+, 1-120Hz</ScreenSize>
+          <Resolution>3120 x 1440</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 3 for Galaxy</Chipset>
+          <RAM unit="GB">12</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>200MP + 50MP tele 5x + 10MP tele 3x + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>Sạc có dây tối đa 45W, sạc không dây</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.2</Ports>
+          <WeightGrams>232</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-S24P-100-256-BLK" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy S24+ 256GB - Đen Onyx (Mới 100%)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy S24+</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Onyx Black</ColorName>
+        <ColorCode>#252525</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s926-sm-s926bzkbxxv-thumb-539304991</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s926-sm-s926bzkbxxv-thumb-539304991" caption="Ảnh sản phẩm - Đen Onyx" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">30490000</OriginalPrice>
+        <SellingPrice currency="VND">24990000</SellingPrice>
+        <StockQuantity>7</StockQuantity>
+        <SKU>S24P-256-BLK-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.7">6.7 inch Dynamic AMOLED 2X, QHD+, 1-120Hz</ScreenSize>
+          <Resolution>3120 x 1440</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Exynos 2400</Chipset>
+          <RAM unit="GB">12</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50MP chính OIS + 10MP tele + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4900</CapacityMah>
+          <ChargingTechnology>Sạc có dây tối đa 45W, sạc không dây</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>196</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-S24-100-256-VIO" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy S24 256GB - Tím Cobalt (Mới 100%)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy S24</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Cobalt Violet</ColorName>
+        <ColorCode>#76627f</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s921-sm-s921blvaxxv-thumb-539304991</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s921-sm-s921blvaxxv-thumb-539304991" caption="Ảnh sản phẩm - Tím Cobalt" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">26490000</OriginalPrice>
+        <SellingPrice currency="VND">21990000</SellingPrice>
+        <StockQuantity>9</StockQuantity>
+        <SKU>S24-256-VIO-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.2">6.2 inch Dynamic AMOLED 2X, FHD+, 1-120Hz</ScreenSize>
+          <Resolution>2340 x 1080</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Exynos 2400</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50MP chính OIS + 10MP tele + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4000</CapacityMah>
+          <ChargingTechnology>Sạc có dây tối đa 25W, sạc không dây</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>167</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-A55-100-256-NVY" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy A55 5G 256GB - Xanh Navy (Mới 100%)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy A55 5G</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Awesome Navy</ColorName>
+        <ColorCode>#253449</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556ezkcxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556ezkcxxv-thumb-540298150</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556ezkcxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556ezkcxxv-thumb-540298150" caption="Ảnh sản phẩm - Xanh Navy" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">11990000</OriginalPrice>
+        <SellingPrice currency="VND">8990000</SellingPrice>
+        <StockQuantity>12</StockQuantity>
+        <SKU>A55-256-NVY-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.6">6.6 inch Super AMOLED FHD+, 120Hz</ScreenSize>
+          <Resolution>2340 x 1080</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Exynos 1480</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50MP OIS + 12MP góc siêu rộng + 5MP macro</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>Sạc nhanh 25W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 2.0</Ports>
+          <WeightGrams>213</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="MI-14-100-512-WHT" categoryId="CAT-XIAOMI">
+      <BasicInfo>
+        <Name>Xiaomi 14 512GB - Trắng (Mới 100%)</Name>
+        <Brand>Xiaomi</Brand>
+        <ModelSeries>Xiaomi 14</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Classic White</ColorName>
+        <ColorCode>#eeeeeb</ColorCode>
+        <PrimaryImage>https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=900&amp;q=85</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=900&amp;q=85" caption="Ảnh sản phẩm - Trắng" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">29990000</OriginalPrice>
+        <SellingPrice currency="VND">24990000</SellingPrice>
+        <StockQuantity>5</StockQuantity>
+        <SKU>MI14-512-WHT-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.36">6.36 inch LTPO AMOLED 1.5K, 1-120Hz</ScreenSize>
+          <Resolution>2670 x 1200</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 3 (4nm)</Chipset>
+          <RAM unit="GB">12</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>Leica 50MP chính OIS + 50MP tele + 50MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4610</CapacityMah>
+          <ChargingTechnology>Sạc dây 90W, không dây 50W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3.2 Gen 1</Ports>
+          <WeightGrams>193</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-ZFLIP5-100-256-MNT" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy Z Flip5 256GB - Xanh Mint (Mới 100%)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy Z Flip5</ModelSeries>
+        <Condition type="New" grade="100%">Máy mới 100%, dữ liệu mẫu demo</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Mint</ColorName>
+        <ColorCode>#b9d8ce</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-flip5-f731-sm-f731blgaxxv-thumb-537231498</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-flip5-f731-sm-f731blgaxxv-thumb-537231498" caption="Ảnh sản phẩm - Xanh Mint" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">25990000</OriginalPrice>
+        <SellingPrice currency="VND">18990000</SellingPrice>
+        <StockQuantity>3</StockQuantity>
+        <SKU>ZFLIP5-256-MNT-NEW</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.7">6.7 inch Dynamic AMOLED 2X 120Hz; màn hình ngoài 3.4 inch</ScreenSize>
+          <Resolution>2640 x 1080</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 2 for Galaxy</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>12MP chính OIS + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>3700</CapacityMah>
+          <ChargingTechnology>Sạc nhanh có dây 25W, sạc không dây</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>187</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-13PM-99-128-SBL" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 13 Pro Max 128GB - Xanh Sierra (Cũ 99%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 13 Pro Max</ModelSeries>
+        <Condition type="Used" grade="99%">Thông tin tình trạng lấy từ mô tả SKU trong dữ liệu hiện có.</Condition>
+        <WarrantyMonths>6</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Sierra Blue</ColorName>
+        <ColorCode>#7898a5</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pro-max-blue-select</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pro-max-blue-select" caption="Ảnh sản phẩm - Xanh Sierra" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">14890000</OriginalPrice>
+        <SellingPrice currency="VND">14890000</SellingPrice>
+        <StockQuantity>11</StockQuantity>
+        <SKU>IPH-13PM-99-128-SBL</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.7">6.7 inch OLED 120Hz ProMotion</ScreenSize>
+          <Resolution>2778 x 1284</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A15 Bionic</Chipset>
+          <RAM unit="GB">6</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>12MP chính OIS + 12MP tele + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4352</CapacityMah>
+          <ChargingTechnology>Sạc nhanh 20W, MagSafe</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>Lightning</Ports>
+          <WeightGrams>238</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-13-99-128-WHT" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 13 128GB - Trắng Ánh Sao (Likenew 99%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 13</ModelSeries>
+        <Condition type="Used" grade="99%">Thông tin tình trạng lấy từ mô tả SKU trong dữ liệu hiện có.</Condition>
+        <WarrantyMonths>6</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Starlight</ColorName>
+        <ColorCode>#e8e4dc</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-starlight-select</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-starlight-select" caption="Ảnh sản phẩm - Trắng ánh sao" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">11490000</OriginalPrice>
+        <SellingPrice currency="VND">11490000</SellingPrice>
+        <StockQuantity>15</StockQuantity>
+        <SKU>IPH-13-99-128-WHT</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.1">6.1 inch OLED 60Hz</ScreenSize>
+          <Resolution>2532 x 1170</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A15 Bionic</Chipset>
+          <RAM unit="GB">4</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>12MP chính sensor-shift OIS + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>3240</CapacityMah>
+          <ChargingTechnology>Sạc nhanh 20W, MagSafe</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>Lightning</Ports>
+          <WeightGrams>174</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-ZFOLD5-99-512-BLU" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy Z Fold5 512GB - Xanh Icy (Likenew 99%)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy Z Fold5</ModelSeries>
+        <Condition type="Used" grade="99%">Thông tin tình trạng lấy từ mô tả SKU trong dữ liệu hiện có.</Condition>
+        <WarrantyMonths>6</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Icy Blue</ColorName>
+        <ColorCode>#a8c9dc</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-fold5-f946-sm-f946blbcxxv-thumb-537231498</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-fold5-f946-sm-f946blbcxxv-thumb-537231498" caption="Ảnh sản phẩm - Xanh Icy" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">24490000</OriginalPrice>
+        <SellingPrice currency="VND">24490000</SellingPrice>
+        <StockQuantity>5</StockQuantity>
+        <SKU>SS-ZFOLD5-99-512-BLU</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="7.6">7.6 inch Dynamic AMOLED 2X gập (Màn ngoài 6.2")</ScreenSize>
+          <Resolution>2176 x 1812 (màn hình chính); 2316 x 904 (màn hình ngoài)</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 2 for Galaxy</Chipset>
+          <RAM unit="GB">12</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50MP chính OIS + 10MP tele 3x + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4400</CapacityMah>
+          <ChargingTechnology>Sạc nhanh có dây 25W, sạc không dây</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>253</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="SS-A55-100-128-BLU" categoryId="CAT-SAMSUNG">
+      <BasicInfo>
+        <Name>Samsung Galaxy A55 5G 128GB - Xanh Băng (Mới 100% VN/A)</Name>
+        <Brand>Samsung</Brand>
+        <ModelSeries>Galaxy A55 5G</ModelSeries>
+        <Condition type="New" grade="100%">Thông tin tình trạng lấy từ mô tả SKU trong dữ liệu hiện có.</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Awesome Iceblue</ColorName>
+        <ColorCode>#a6cad6</ColorCode>
+        <PrimaryImage>https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556elbdxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556elbdxxv-thumb-540298150</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556elbdxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556elbdxxv-thumb-540298150" caption="Ảnh sản phẩm - Xanh băng" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">8690000</OriginalPrice>
+        <SellingPrice currency="VND">8690000</SellingPrice>
+        <StockQuantity>30</StockQuantity>
+        <SKU>SS-A55-100-128-BLU</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.6">6.6 inch Super AMOLED 120Hz</ScreenSize>
+          <Resolution>2340 x 1080</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Exynos 1480 (4nm, GPU AMD Xclipse 530)</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>50MP OIS + 12MP góc siêu rộng + 5MP macro</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>Sạc nhanh 25W</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 2.0</Ports>
+          <WeightGrams>213</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="MI-RN13PP-100-256-WHT" categoryId="CAT-XIAOMI">
+      <BasicInfo>
+        <Name>Redmi Note 13 Pro+ 5G 256GB - Trắng Ánh Trăng (Mới 100%)</Name>
+        <Brand>Xiaomi</Brand>
+        <ModelSeries>Redmi Note 13 Pro+ 5G</ModelSeries>
+        <Condition type="New" grade="100%">Thông tin tình trạng lấy từ mô tả SKU trong dữ liệu hiện có.</Condition>
+        <WarrantyMonths>12</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Moonlight White</ColorName>
+        <ColorCode>#eeeae4</ColorCode>
+        <PrimaryImage>https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80" caption="Ảnh sản phẩm - Trắng ánh trăng" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">8990000</OriginalPrice>
+        <SellingPrice currency="VND">8990000</SellingPrice>
+        <StockQuantity>20</StockQuantity>
+        <SKU>MI-RN13PP-100-256-WHT</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.67">6.67 inch Màn hình cong 1.5K AMOLED 120Hz</ScreenSize>
+          <Resolution>2712 x 1220</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>MediaTek Dimensity 7200-Ultra (4nm)</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>200MP chính OIS + 8MP góc siêu rộng + 2MP macro</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>5000</CapacityMah>
+          <ChargingTechnology>120W HyperCharge</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>204.5</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="OP-FN3-99-512-GLD" categoryId="CAT-OPPO">
+      <BasicInfo>
+        <Name>OPPO Find N3 512GB - Vàng Champagne (Likenew 99%)</Name>
+        <Brand>OPPO</Brand>
+        <ModelSeries>OPPO Find N3</ModelSeries>
+        <Condition type="Used" grade="99%">Thông tin tình trạng lấy từ mô tả SKU trong dữ liệu hiện có.</Condition>
+        <WarrantyMonths>6</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Champagne Gold</ColorName>
+        <ColorCode>#c5a574</ColorCode>
+        <PrimaryImage>https://images.unsplash.com/photo-1575695342320-d2d2d2f9b73f?auto=format&amp;fit=crop&amp;w=600&amp;q=80</PrimaryImage>
+        <Gallery>
+          <Image url="https://images.unsplash.com/photo-1575695342320-d2d2d2f9b73f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" caption="Ảnh sản phẩm - Vàng Champagne" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">26990000</OriginalPrice>
+        <SellingPrice currency="VND">26990000</SellingPrice>
+        <StockQuantity>4</StockQuantity>
+        <SKU>OP-FN3-99-512-GLD</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="7.82">7.82 inch Màn chính gập OLED 120Hz</ScreenSize>
+          <Resolution>2440 x 2268 (màn hình chính); 2484 x 1116 (màn hình ngoài)</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Snapdragon 8 Gen 2</Chipset>
+          <RAM unit="GB">16</RAM>
+          <Storage unit="GB">512</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48MP chính OIS + 64MP tele OIS + 48MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4805</CapacityMah>
+          <ChargingTechnology>67W SUPERVOOC</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C</Ports>
+          <WeightGrams>239</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-15PM-99-128-NAT" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 15 Pro Max 128GB - Titan tự nhiên (Đã dùng 99%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 15 Pro Max</ModelSeries>
+        <Condition type="Used" grade="99%">Máy đã qua sử dụng, phân hạng 99%; xác nhận tình trạng pin thực tế theo từng máy.</Condition>
+        <WarrantyMonths>6</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Natural Titanium</ColorName>
+        <ColorCode>#9c978f</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90" caption="Ảnh sản phẩm - Titan tự nhiên" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">26490000</OriginalPrice>
+        <SellingPrice currency="VND">26490000</SellingPrice>
+        <StockQuantity>4</StockQuantity>
+        <SKU>IP15PM-128-NAT-99</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.7">6.7 inch LTPO Super Retina XDR OLED, ProMotion 120Hz</ScreenSize>
+          <Resolution>2796 x 1290</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A17 Pro (3nm)</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">128</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48MP chính + 12MP tele 5x + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4422</CapacityMah>
+          <ChargingTechnology>MagSafe, Qi2</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3 (USB 3 lên đến 10Gb/s)</Ports>
+          <WeightGrams>221</WeightGrams>
+        </DesignAndConnectivity>
+      </Specifications>
+    </Product>
+    <Product id="IPH-15PM-99-256-BLU" categoryId="CAT-IPHONE">
+      <BasicInfo>
+        <Name>iPhone 15 Pro Max 256GB - Titan xanh (Đã dùng 99%)</Name>
+        <Brand>Apple</Brand>
+        <ModelSeries>iPhone 15 Pro Max</ModelSeries>
+        <Condition type="Used" grade="99%">Máy đã qua sử dụng, phân hạng 99%; xác nhận tình trạng pin thực tế theo từng máy.</Condition>
+        <WarrantyMonths>6</WarrantyMonths>
+      </BasicInfo>
+      <ColorVariant>
+        <ColorName>Blue Titanium</ColorName>
+        <ColorCode>#465366</ColorCode>
+        <PrimaryImage>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-bluetitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</PrimaryImage>
+        <Gallery>
+          <Image url="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-bluetitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90" caption="Ảnh sản phẩm - Titan xanh" />
+        </Gallery>
+      </ColorVariant>
+      <PricingAndStock>
+        <OriginalPrice currency="VND">27990000</OriginalPrice>
+        <SellingPrice currency="VND">27990000</SellingPrice>
+        <StockQuantity>3</StockQuantity>
+        <SKU>IP15PM-256-BLU-99</SKU>
+        <IsFeatured>false</IsFeatured>
+      </PricingAndStock>
+      <Specifications>
+        <Display>
+          <ScreenSize inches="6.7">6.7 inch LTPO Super Retina XDR OLED, ProMotion 120Hz</ScreenSize>
+          <Resolution>2796 x 1290</Resolution>
+        </Display>
+        <Performance>
+          <Chipset>Apple A17 Pro (3nm)</Chipset>
+          <RAM unit="GB">8</RAM>
+          <Storage unit="GB">256</Storage>
+        </Performance>
+        <Camera>
+          <MainSensor>48MP chính + 12MP tele 5x + 12MP góc siêu rộng</MainSensor>
+        </Camera>
+        <BatteryAndCharging>
+          <CapacityMah>4422</CapacityMah>
+          <ChargingTechnology>MagSafe, Qi2</ChargingTechnology>
+        </BatteryAndCharging>
+        <DesignAndConnectivity>
+          <Ports>USB-C 3 (USB 3 lên đến 10Gb/s)</Ports>
+          <WeightGrams>221</WeightGrams>
+        </DesignAndConnectivity>
       </Specifications>
     </Product>
   </Products>
+  <!-- 9 SKU vừa thêm: giá gốc, giá bán và tồn kho là số demo, cần thay bằng số liệu cửa hàng trước khi vận hành. -->
 </MobileStoreDatabase>

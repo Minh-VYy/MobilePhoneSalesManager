@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/filter-dock.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         /* Public Storefront Navbar Specific Styles */
@@ -90,58 +91,6 @@
         .role-switch-btn:hover {
             transform: scale(1.05);
         }
-
-        .user-footer {
-            background: var(--bg-1);
-            border-top: 1px solid var(--border);
-            padding: 48px 32px 24px;
-            margin-top: 60px;
-        }
-
-        .footer-grid {
-            max-width: 1360px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.5fr repeat(3, 1fr);
-            gap: 32px;
-            margin-bottom: 40px;
-        }
-
-        .footer-col h4 {
-            font-family: var(--font-head);
-            font-size: 15px;
-            font-weight: 700;
-            margin: 0 0 16px;
-            color: var(--text);
-        }
-
-        .footer-col ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .footer-col a {
-            font-size: 13px;
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-        .footer-col a:hover { color: var(--text); }
-
-        .footer-bottom {
-            max-width: 1360px;
-            margin: 0 auto;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            color: var(--text-faint);
-        }
     </style>
 </head>
 <body>
@@ -150,30 +99,31 @@
         <div class="atd-modern__aurora" aria-hidden="true"></div>
         <nav class="atd-modern__bar" aria-label="Primary Navigation">
             <!-- Brand Left -->
-            <a asp-controller="Home" asp-action="Index" class="atd-modern__brand">
-                <span class="atd-modern__mark" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="7" y="2" width="10" height="20" rx="2.4"/>
-                        <line x1="11" y1="18.3" x2="13" y2="18.3"/>
-                    </svg>
-                </span>
-                <span class="atd-modern__word">PhoneStore</span>
+            <a asp-controller="Home" asp-action="Index" class="atd-modern__brand" title="Trang chủ">
+                <img src="~/images/logo.png" alt="Logo" class="site-logo-img" />
             </a>
 
             <!-- Dock Items Center (Capsule Proximity Dock - Desktop & Tablet) -->
             <!-- Dock Center (Search & Actions) -->
             <div class="atd-modern__dock ps-nav-new" aria-label="Primary">
+                <!-- Danh mục / Bộ lọc (mở mega menu kính) -->
+                
+
                 <!-- Khu vực -->
-                <div class="ps-nav-loc">
+                <button type="button" class="ps-nav-item fd-trigger" id="fd-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="fd-mega">
+                    <div class="ps-nav-icon"><i class="fa-solid fa-table-cells-large"></i></div>
+                    <div class="ps-nav-tx"><span>Danh mục</span><b>Bộ lọc <i class="fa-solid fa-caret-down"></i></b></div>
+                </button>                <div class="ps-nav-loc">
                     <span>Khu vực</span>
                     <b>Đà Nẵng <i class="fa-solid fa-caret-down"></i></b>
                 </div>
 
                 <!-- Search -->
-                <div class="ps-nav-search">
-                    <input type="text" placeholder="Bạn cần tìm gì ..." />
-                    <button type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
-                </div>
+                <form class="ps-nav-search" method="get" asp-controller="DienThoai" asp-action="Index" role="search">
+                    <input type="hidden" name="category" value="ALL" />
+                    <input type="search" name="keyword" placeholder="Tìm điện thoại..." aria-label="Tìm sản phẩm" />
+                    <button type="submit" aria-label="Tìm kiếm"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </form>
 
                 <!-- Hotline -->
                 <a href="tel:0901176222" class="ps-nav-item">
@@ -194,10 +144,10 @@
                 </a>
                 
                 <!-- Giỏ hàng -->
-                <a asp-controller="HoaDon" asp-action="Create" class="ps-nav-item">
+                <a asp-controller="DienThoai" asp-action="Cart" class="ps-nav-item" aria-label="Mở giỏ hàng">
                     <div class="ps-nav-icon ps-nav-cart">
                         <i class="fa-solid fa-cart-shopping"></i>
-                        <span class="ps-cart-badge">0</span>
+                        <span class="ps-cart-badge" data-cart-badge hidden>0</span>
                     </div>
                     <div class="ps-nav-tx"><span>Giỏ</span><b>Hàng</b></div>
                 </a>
@@ -233,42 +183,52 @@
             </div>
         </nav>
 
-        <!-- Mobile Drawer Glass Menu Card -->
+        <!-- Mobile Drawer Glass Menu Card (Aperture Dock Style) -->
         <div class="atd-mobile-drawer" id="mobile-drawer-menu" aria-hidden="true">
             <div class="atd-mobile-drawer__content">
+                <div class="atd-drawer-header">
+                    <div class="atd-drawer-brand">
+                        <img src="~/images/logo.png" alt="Logo" class="site-logo-img" />
+                    </div>
+                </div>
                 <a asp-controller="Home" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
                     <i class="fa-solid fa-house"></i> Trang Chủ
                 </a>
                 <a asp-controller="DienThoai" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                     <i class="fa-solid fa-mobile-screen"></i> Sản Phẩm Điện Thoại
                 </a>
-                <a asp-controller="HoaDon" asp-action="Create" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")">
-                    <i class="fa-solid fa-cart-shopping"></i> Bán Hàng POS XML
+                <a asp-controller="DienThoai" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")">
+                    <i class="fa-solid fa-cart-shopping"></i> Mua Hàng
                 </a>
                 <a asp-controller="DienThoai" asp-action="XsltView" class="atd-mobile-item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")">
-                    <i class="fa-solid fa-receipt"></i> Tra Cứu Hóa Đơn / Catalog
+                    <i class="fa-solid fa-receipt"></i> Tra Cứu Đơn Hàng
                 </a>
-                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-mobile-item">
-                    <i class="fa-solid fa-user-shield"></i> Bảng Quản Lý Admin
+                <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-mobile-item" hidden>
+                    <i class="fa-solid fa-user-shield"></i> Tài Khoản & Quản Lý
                 </a>
 
                 <div class="atd-mobile-drawer__divider"></div>
 
-                <div class="atd-mobile-drawer__auth">
-                    @if (Context.Session.GetString("IsLoggedIn") == "true")
-                    {
-                        <div class="user-info-pill mb-2" style="font-size: 13.5px; color: var(--text-muted);"><i class="fa-solid fa-user"></i> Tài khoản: <b style="color: var(--text);">@Context.Session.GetString("Username")</b></div>
-                        <a asp-controller="Account" asp-action="Logout" class="btn btn-primary w-100" style="justify-content: center; width: 100%;">Đăng Xuất</a>
-                    }
-                    else
-                    {
-                        <div style="display: flex; gap: 8px;">
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-ghost" style="flex: 1; justify-content: center;">Đăng Nhập</a>
-                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary" style="flex: 1; justify-content: center;">Đăng Ký</a>
-                        </div>
-                    }
-                </div>
+                @if (Context.Session.GetString("IsLoggedIn") == "true")
+                {
+                    <div class="atd-mobile-item" style="cursor:default;opacity:0.85">
+                        <i class="fa-solid fa-user"></i> @Context.Session.GetString("Username")
+                    </div>
+                    <a asp-controller="Account" asp-action="Logout" class="atd-mobile-item atd-drawer-logout">
+                        <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="atd-drawer-cta">
+                        <span>Đăng Nhập</span> <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                }
             </div>
+        </div>
+
+        <div class="fd-mega" id="fd-mega" aria-hidden="true">
+            <partial name="_FilterDock" model="new QuanLyBanDienThoai.Models.SearchFilterViewModel()" />
         </div>
     </header>
 
@@ -293,55 +253,12 @@
         @RenderBody()
     </main>
 
-    <!-- ================= STOREFRONT FOOTER ================= -->
-    <footer class="user-footer">
-        <div class="footer-grid">
-            <div class="footer-col">
-                <div class="user-brand" style="margin-bottom: 14px;">
-                    <div class="brand-mark">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.4"/><line x1="11" y1="18.3" x2="13" y2="18.3"/></svg>
-                    </div>
-                    <div class="brand-text" style="font-size: 18px;">PhoneStore 3D</div>
-                </div>
-                <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-                    Hệ thống bán lẻ điện thoại di động công nghệ cao với trải nghiệm mô phỏng 3D hiện đại. Quản lý toàn bộ dữ liệu danh mục & hóa đơn trên nền tảng XML.
-                </p>
-            </div>
-            <div class="footer-col">
-                <h4>Sản Phẩm Hot</h4>
-                <ul>
-                    <li><a href="#">iPhone 16 Pro Max</a></li>
-                    <li><a href="#">Samsung Galaxy S24 Ultra</a></li>
-                    <li><a href="#">Xiaomi 14 Ultra</a></li>
-                    <li><a href="#">Nothing Phone (2a)</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Công Nghệ XML Tích Hợp</h4>
-                <ul>
-                    <li><a asp-controller="DienThoai" asp-action="ValidateXsd"><i class="fa-solid fa-shield"></i> Validate XSD Schema</a></li>
-                    <li><a asp-controller="DienThoai" asp-action="XsltView"><i class="fa-solid fa-file-code"></i> XSLT Catalogue Rendering</a></li>
-                    <li><a asp-controller="DienThoai" asp-action="RssFeed" target="_blank"><i class="fa-solid fa-rss"></i> RSS 2.0 XML Feed</a></li>
-                    <li><a asp-controller="DienThoai" asp-action="XmlApi" target="_blank"><i class="fa-solid fa-code"></i> Web Service XML Endpoint</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Chế Độ Hệ Thống</h4>
-                <ul>
-                    <li><a asp-controller="Account" asp-action="SwitchRole" asp-route-role="User">Khách Hàng View</a></li>
-                    <li><a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin">Admin View (Bảng Quản Trị)</a></li>
-                    <li><a asp-controller="DienThoai" asp-action="Manage">Quản Lý Kho XML (CRUD)</a></li>
-                    <li><a asp-controller="ThongKe" asp-action="Index">Báo Cáo Doanh Thu</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div>© 2026 PhoneStore 3D. Tất cả quyền được bảo lưu. Công nghệ XML / XSD / XSLT.</div>
-            <div>Hệ thống Quản lý Bán Điện thoại Di động</div>
-        </div>
-    </footer>
+    <!-- ================= SHARED FOOTER ================= -->
+    @await Html.PartialAsync("_Footer")
 
+    <script src="~/js/filter-dock.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/product-cart.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

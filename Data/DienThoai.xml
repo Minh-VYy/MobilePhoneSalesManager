@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DanhSachDienThoai xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DienThoai.xsd">
-
   <!-- ================= APPLE IPHONE SERIES ================= -->
   <DienThoai>
     <MaSP>IPH-15PM-100-256-NAT</MaSP>
@@ -19,7 +18,6 @@
     <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium</HinhAnh>
     <MoTa>Mới 100% Nguyên seal hộp, chưa kích hoạt. Khung vỏ Titan tự nhiên nguyên khối siêu nhẹ.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>IPH-15P-99-128-BLU</MaSP>
     <TenSP>iPhone 15 Pro 128GB - Titan Xanh (Likenew 99%)</TenSP>
@@ -37,7 +35,6 @@
     <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-1inch-bluetitanium</HinhAnh>
     <MoTa>Khung viền titan xanh đẹp keng, pin zin 96%. Nút Action Button thông minh.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>IPH-14PM-99-256-PUR</MaSP>
     <TenSP>iPhone 14 Pro Max 256GB - Tím Deep Purple (Likenew 99%)</TenSP>
@@ -55,7 +52,6 @@
     <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-14-pro-deep-purple-select</HinhAnh>
     <MoTa>Likenew 99% - Thân máy không trầy xước, pin zin 92-96%. Dynamic Island, Always-On Display.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>IPH-13PM-99-128-SBL</MaSP>
     <TenSP>iPhone 13 Pro Max 128GB - Xanh Sierra (Cũ 99%)</TenSP>
@@ -73,7 +69,6 @@
     <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-pro-max-blue-select</HinhAnh>
     <MoTa>Màn hình nguyên bản không lỗi màn, pin zin 88%. Camera 3x Optical Zoom sắc nét.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>IPH-13-99-128-WHT</MaSP>
     <TenSP>iPhone 13 128GB - Trắng Ánh Sao (Likenew 99%)</TenSP>
@@ -91,7 +86,6 @@
     <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-13-starlight-select</HinhAnh>
     <MoTa>Máy zin nguyên bản, ngoại hình không tì vết, pin 90%. Thiết kế camera chéo thời thượng.</MoTa>
   </DienThoai>
-
   <!-- ================= SAMSUNG GALAXY SERIES ================= -->
   <DienThoai>
     <MaSP>SS-S24U-100-256-GRY</MaSP>
@@ -110,7 +104,6 @@
     <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bztaxxv-thumb-539304991</HinhAnh>
     <MoTa>Trí tuệ nhân tạo Galaxy AI đỉnh cao, bút S-Pen quyền năng, khung Titan siêu bền.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>SS-S23U-99-256-GRN</MaSP>
     <TenSP>Samsung Galaxy S23 Ultra 5G 256GB - Xanh Lục (Cũ 99%)</TenSP>
@@ -128,7 +121,6 @@
     <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2302/gallery/vn-galaxy-s23-ultra-s918-sm-s918bzgcxxv-thumb-534863401</HinhAnh>
     <MoTa>Likenew 99% - Máy nguyên bản zin áp suất, camera 200MP zoom 100x cực đỉnh.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>SS-ZFOLD5-99-512-BLU</MaSP>
     <TenSP>Samsung Galaxy Z Fold5 512GB - Xanh Icy (Likenew 99%)</TenSP>
@@ -146,7 +138,6 @@
     <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-fold5-f946-sm-f946blbcxxv-thumb-537231498</HinhAnh>
     <MoTa>Cơ gập mở mượt mà khít hoàn toàn, màn hình gập lớn đa nhiệm mượt mà.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>SS-A55-100-128-BLU</MaSP>
     <TenSP>Samsung Galaxy A55 5G 128GB - Xanh Băng (Mới 100% VN/A)</TenSP>
@@ -164,7 +155,6 @@
     <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556elbdxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556elbdxxv-thumb-540298150</HinhAnh>
     <MoTa>Mới 100% Nguyên seal chính hãng. Khung kim loại sang trọng, camera OIS sắc nét.</MoTa>
   </DienThoai>
-
   <!-- ================= XIAOMI SERIES ================= -->
   <DienThoai>
     <MaSP>MI-14U-100-512-BLK</MaSP>
@@ -183,7 +173,6 @@
     <HinhAnh>https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
     <MoTa>Mới 100% Fullbox nguyên seal, bộ 4 camera Leica 50MP cảm biến 1-inch LYT-900.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>MI-RN13PP-100-256-WHT</MaSP>
     <TenSP>Redmi Note 13 Pro+ 5G 256GB - Trắng Ánh Trăng (Mới 100%)</TenSP>
@@ -201,7 +190,6 @@
     <HinhAnh>https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
     <MoTa>Mới 100% Nguyên seal DGW, camera 200MP chống rung OIS, sạc siêu tốc 120W 19 phút đầy.</MoTa>
   </DienThoai>
-
   <!-- ================= OPPO SERIES ================= -->
   <DienThoai>
     <MaSP>OP-FX7U-100-256-BRN</MaSP>
@@ -220,7 +208,6 @@
     <HinhAnh>https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
     <MoTa>Mới 100% Nguyên hộp, 4 camera 50MP Hasselblad với 2 kính tiềm vọng độc bản.</MoTa>
   </DienThoai>
-
   <DienThoai>
     <MaSP>OP-FN3-99-512-GLD</MaSP>
     <TenSP>OPPO Find N3 512GB - Vàng Champagne (Likenew 99%)</TenSP>
@@ -238,7 +225,6 @@
     <HinhAnh>https://images.unsplash.com/photo-1575695342320-d2d2d2f9b73f?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
     <MoTa>Điện thoại gập mỏng nhẹ bậc nhất, nếp gấp vô hình, hệ thống camera Hasselblad chuyên nghiệp.</MoTa>
   </DienThoai>
-
   <!-- ================= GOOGLE PIXEL SERIES ================= -->
   <DienThoai>
     <MaSP>GG-PX8P-100-128-BLU</MaSP>
@@ -255,9 +241,8 @@
       <Chip>Google Tensor G3 (Titan M2)</Chip>
     </ThongSoKyThuat>
     <HinhAnh>https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
-    <MoTa>Mới 100% Nguyên seal hộp, thuần Android AI đỉnh cao với tính năng Magic Eraser & Best Take.</MoTa>
+    <MoTa>Mới 100% Nguyên seal hộp, thuần Android AI đỉnh cao với tính năng Magic Eraser &amp; Best Take.</MoTa>
   </DienThoai>
-
   <!-- ================= GAMING PHONE ================= -->
   <DienThoai>
     <MaSP>AS-ROG8P-100-512-BLK</MaSP>
@@ -276,5 +261,191 @@
     <HinhAnh>https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&amp;fit=crop&amp;w=600&amp;q=80</HinhAnh>
     <MoTa>Mới 100% Fullbox kèm quạt tản nhiệt AeroActive Cooler X. Màn hình LED AniMe Vision độc đáo.</MoTa>
   </DienThoai>
-
+  <DienThoai>
+    <MaSP>IPH-15-100-128-BLK</MaSP>
+    <TenSP>iPhone 15 128GB - Đen (Mới 100%)</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>18990000</GiaBan>
+    <SoLuongTon>8</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.1 inch Super Retina XDR OLED</ManHinh>
+      <RAM>6GB</RAM>
+      <BoNhoTrong>128GB</BoNhoTrong>
+      <Pin>Pin lithium-ion tích hợp; phát video tối đa 20 giờ</Pin>
+      <Chip>Apple A16 Bionic</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-black?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</HinhAnh>
+    <MoTa>Dynamic Island, camera chính 48MP, cổng USB-C. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>IPH-15-100-256-PNK</MaSP>
+    <TenSP>iPhone 15 256GB - Hồng (Mới 100%)</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>20990000</GiaBan>
+    <SoLuongTon>6</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.1 inch Super Retina XDR OLED</ManHinh>
+      <RAM>6GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>Pin lithium-ion tích hợp; phát video tối đa 20 giờ</Pin>
+      <Chip>Apple A16 Bionic</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-finish-select-202309-6-1inch-pink?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</HinhAnh>
+    <MoTa>Phiên bản 256GB màu hồng, Dynamic Island, camera 48MP. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>IPH-15PM-100-512-BLU</MaSP>
+    <TenSP>iPhone 15 Pro Max 512GB - Titan Xanh (Mới 100%)</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>32990000</GiaBan>
+    <SoLuongTon>4</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch LTPO Super Retina XDR OLED, ProMotion 120Hz</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>512GB</BoNhoTrong>
+      <Pin>Pin lithium-ion tích hợp; phát video tối đa 29 giờ</Pin>
+      <Chip>Apple A17 Pro (3nm)</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-bluetitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</HinhAnh>
+    <MoTa>Khung titan, chip A17 Pro và camera tele 5x. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SS-S24U-100-512-BLK</MaSP>
+    <TenSP>Samsung Galaxy S24 Ultra 512GB - Đen Titan (Mới 100%)</TenSP>
+    <MaHang>SAMSUNG</MaHang>
+    <TenHang>Samsung</TenHang>
+    <GiaBan>30990000</GiaBan>
+    <SoLuongTon>5</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.8 inch Dynamic AMOLED 2X, QHD+, 1-120Hz</ManHinh>
+      <RAM>12GB</RAM>
+      <BoNhoTrong>512GB</BoNhoTrong>
+      <Pin>5000 mAh</Pin>
+      <Chip>Snapdragon 8 Gen 3 for Galaxy</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s928-sm-s928bzkaxxv-thumb-539304991</HinhAnh>
+    <MoTa>Galaxy AI, bút S Pen tích hợp, camera zoom quang học. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SS-S24P-100-256-BLK</MaSP>
+    <TenSP>Samsung Galaxy S24+ 256GB - Đen Onyx (Mới 100%)</TenSP>
+    <MaHang>SAMSUNG</MaHang>
+    <TenHang>Samsung</TenHang>
+    <GiaBan>24990000</GiaBan>
+    <SoLuongTon>7</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch Dynamic AMOLED 2X, QHD+, 1-120Hz</ManHinh>
+      <RAM>12GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>4900 mAh</Pin>
+      <Chip>Exynos 2400</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s926-sm-s926bzkbxxv-thumb-539304991</HinhAnh>
+    <MoTa>Màn hình QHD+ 120Hz, camera ba ống kính, pin 4900mAh. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SS-S24-100-256-VIO</MaSP>
+    <TenSP>Samsung Galaxy S24 256GB - Tím Cobalt (Mới 100%)</TenSP>
+    <MaHang>SAMSUNG</MaHang>
+    <TenHang>Samsung</TenHang>
+    <GiaBan>21990000</GiaBan>
+    <SoLuongTon>9</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.2 inch Dynamic AMOLED 2X, FHD+, 1-120Hz</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>4000 mAh</Pin>
+      <Chip>Exynos 2400</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2401/gallery/vn-galaxy-s24-s921-sm-s921blvaxxv-thumb-539304991</HinhAnh>
+    <MoTa>Màn hình 120Hz gọn nhẹ và các tính năng Galaxy AI. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SS-A55-100-256-NVY</MaSP>
+    <TenSP>Samsung Galaxy A55 5G 256GB - Xanh Navy (Mới 100%)</TenSP>
+    <MaHang>SAMSUNG</MaHang>
+    <TenHang>Samsung</TenHang>
+    <GiaBan>8990000</GiaBan>
+    <SoLuongTon>12</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.6 inch Super AMOLED FHD+, 120Hz</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>5000 mAh</Pin>
+      <Chip>Exynos 1480</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a556ezkcxxv/gallery/vn-galaxy-a55-5g-sm-a556-sm-a556ezkcxxv-thumb-540298150</HinhAnh>
+    <MoTa>Khung kim loại, camera OIS, màn hình 120Hz. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>MI-14-100-512-WHT</MaSP>
+    <TenSP>Xiaomi 14 512GB - Trắng (Mới 100%)</TenSP>
+    <MaHang>XIAOMI</MaHang>
+    <TenHang>Xiaomi</TenHang>
+    <GiaBan>24990000</GiaBan>
+    <SoLuongTon>5</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.36 inch LTPO AMOLED 1.5K, 1-120Hz</ManHinh>
+      <RAM>12GB</RAM>
+      <BoNhoTrong>512GB</BoNhoTrong>
+      <Pin>4610 mAh</Pin>
+      <Chip>Snapdragon 8 Gen 3 (4nm)</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&amp;fit=crop&amp;w=900&amp;q=85</HinhAnh>
+    <MoTa>Ba camera Leica, màn hình LTPO 120Hz và sạc nhanh. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>SS-ZFLIP5-100-256-MNT</MaSP>
+    <TenSP>Samsung Galaxy Z Flip5 256GB - Xanh Mint (Mới 100%)</TenSP>
+    <MaHang>SAMSUNG</MaHang>
+    <TenHang>Samsung</TenHang>
+    <GiaBan>18990000</GiaBan>
+    <SoLuongTon>3</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch Dynamic AMOLED 2X 120Hz; màn hình ngoài 3.4 inch</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>3700 mAh</Pin>
+      <Chip>Snapdragon 8 Gen 2 for Galaxy</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://images.samsung.com/is/image/samsung/p6pim/vn/2307/gallery/vn-galaxy-z-flip5-f731-sm-f731blgaxxv-thumb-537231498</HinhAnh>
+    <MoTa>Thiết kế gập nhỏ, màn hình Flex Window 3.4 inch và Flex Mode. Giá và tồn kho là dữ liệu mẫu.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>IPH-15PM-99-128-NAT</MaSP>
+    <TenSP>iPhone 15 Pro Max 128GB - Titan tự nhiên (Đã dùng 99%)</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>26490000</GiaBan>
+    <SoLuongTon>4</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch LTPO Super Retina XDR OLED, ProMotion 120Hz</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>128GB</BoNhoTrong>
+      <Pin>Pin lithium-ion tích hợp; phát video tối đa 29 giờ</Pin>
+      <Chip>Apple A17 Pro (3nm)</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-naturaltitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</HinhAnh>
+    <MoTa>Máy đã qua sử dụng, phân hạng 99%; vui lòng xác nhận tình trạng pin thực tế theo từng máy. Giá và tồn kho là dữ liệu demo.</MoTa>
+  </DienThoai>
+  <DienThoai>
+    <MaSP>IPH-15PM-99-256-BLU</MaSP>
+    <TenSP>iPhone 15 Pro Max 256GB - Titan xanh (Đã dùng 99%)</TenSP>
+    <MaHang>APPLE</MaHang>
+    <TenHang>Apple</TenHang>
+    <GiaBan>27990000</GiaBan>
+    <SoLuongTon>3</SoLuongTon>
+    <ThongSoKyThuat>
+      <ManHinh>6.7 inch LTPO Super Retina XDR OLED, ProMotion 120Hz</ManHinh>
+      <RAM>8GB</RAM>
+      <BoNhoTrong>256GB</BoNhoTrong>
+      <Pin>Pin lithium-ion tích hợp; phát video tối đa 29 giờ</Pin>
+      <Chip>Apple A17 Pro (3nm)</Chip>
+    </ThongSoKyThuat>
+    <HinhAnh>https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-15-pro-finish-select-202309-6-7inch-bluetitanium?wid=1200&amp;hei=1200&amp;fmt=p-jpg&amp;qlt=90</HinhAnh>
+    <MoTa>Máy đã qua sử dụng, phân hạng 99%; vui lòng xác nhận tình trạng pin thực tế theo từng máy. Giá và tồn kho là dữ liệu demo.</MoTa>
+  </DienThoai>
 </DanhSachDienThoai>
