@@ -184,24 +184,32 @@
         </nav>
 
         <!-- Mobile Drawer Glass Menu Card (Aperture Dock Style) -->
-        <div class="atd-mobile-drawer" id="mobile-drawer-menu" aria-hidden="true">
+        <div class="atd-mobile-drawer" id="mobile-drawer-menu" aria-hidden="true" inert>
             <div class="atd-mobile-drawer__content">
                 <div class="atd-drawer-header">
                     <div class="atd-drawer-brand">
                         <img src="~/images/logo.png" alt="Logo" class="site-logo-img" />
                     </div>
                 </div>
+                <form class="atd-mobile-search" method="get" asp-controller="DienThoai" asp-action="Index" role="search">
+                    <input type="hidden" name="category" value="ALL" />
+                    <input type="search" name="keyword" placeholder="Tìm điện thoại..." aria-label="Tìm sản phẩm" />
+                    <button type="submit" aria-label="Tìm kiếm"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+                </form>
                 <a asp-controller="Home" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")">
                     <i class="fa-solid fa-house"></i> Trang Chủ
                 </a>
                 <a asp-controller="DienThoai" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                     <i class="fa-solid fa-mobile-screen"></i> Sản Phẩm Điện Thoại
                 </a>
-                <a asp-controller="DienThoai" asp-action="Index" class="atd-mobile-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" ? "active" : "")">
-                    <i class="fa-solid fa-cart-shopping"></i> Mua Hàng
+                <a asp-controller="DienThoai" asp-action="Cart" class="atd-mobile-item @(ViewContext.RouteData.Values["action"]?.ToString() == "Cart" ? "active" : "")">
+                    <i class="fa-solid fa-cart-shopping"></i> Giỏ hàng
                 </a>
                 <a asp-controller="DienThoai" asp-action="XsltView" class="atd-mobile-item @(ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")">
                     <i class="fa-solid fa-receipt"></i> Tra Cứu Đơn Hàng
+                </a>
+                <a href="tel:0901176222" class="atd-mobile-item">
+                    <i class="fa-solid fa-phone-volume"></i> Hotline 0901.176.222
                 </a>
                 <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="Admin" class="atd-mobile-item" hidden>
                     <i class="fa-solid fa-user-shield"></i> Tài Khoản & Quản Lý

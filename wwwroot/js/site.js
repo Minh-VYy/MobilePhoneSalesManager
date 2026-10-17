@@ -424,6 +424,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const isOpen = show !== undefined ? show : !mobileDrawer.classList.contains('is-open');
             if (isOpen) {
                 mobileDrawer.classList.add('is-open');
+                mobileDrawer.setAttribute('aria-hidden', 'false');
+                mobileDrawer.inert = false;
                 mobileToggleBtn.setAttribute('aria-expanded', 'true');
                 if (iconOpen)  iconOpen.style.display  = 'none';
                 if (iconClose) iconClose.style.display = 'inline-block';
@@ -434,6 +436,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } else {
                 mobileDrawer.classList.remove('is-open');
+                mobileDrawer.setAttribute('aria-hidden', 'true');
+                mobileDrawer.inert = true;
                 mobileToggleBtn.setAttribute('aria-expanded', 'false');
                 if (iconOpen)  iconOpen.style.display  = 'inline-block';
                 if (iconClose) iconClose.style.display = 'none';
