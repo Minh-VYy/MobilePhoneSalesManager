@@ -8,7 +8,7 @@
     var conditionText = string.IsNullOrWhiteSpace(meta.ConditionGrade) ? currentCondition : $"{currentCondition} · {meta.ConditionGrade}";
     var warrantyText = meta.WarrantyMonths > 0 ? $"{meta.WarrantyMonths} tháng" : "Liên hệ để xác nhận";
     var galleryImage = string.IsNullOrWhiteSpace(meta.Image) ? phone.HinhAnh : meta.Image;
-    var smsBody = Uri.EscapeDataString($"Chào PhoneStore, tôi muốn được tư vấn {phone.TenSP}, tình trạng {conditionText}, màu {meta.ColorName}, dung lượng {meta.Storage}GB, bảo hành {warrantyText}.");
+    var consultMessage = $"Chào PhoneStore, tôi muốn được tư vấn {phone.TenSP}, tình trạng {conditionText}, màu {meta.ColorName}, dung lượng {meta.Storage}GB, bảo hành {warrantyText}.";
     ViewData["Title"] = phone.TenSP;
     Layout = ViewBag.IsAdmin == true ? "_Layout" : "_LayoutUser";
 }
@@ -106,19 +106,20 @@
             </div>
 
             <div class="phone-detail-actions">
-                <button type="button" class="phone-add-cart" data-add-cart
+                <p class="phone-store-visit">Bạn có thể tham khảo giá tại đây, đặt mua online hoặc đến cửa hàng mua trực tiếp. Nhắn tin để xác nhận phiên bản còn hàng trước khi đến.</p>
+                <button type="button" class="store-action phone-add-cart" data-add-cart
                         data-product-id="@phone.MaSP" data-name="@phone.TenSP" data-price="@phone.GiaBan"
                         data-image="@galleryImage" data-stock="@phone.SoLuongTon" data-color="@meta.ColorName"
                         data-condition="@conditionText" data-storage="@phone.ThongSo.BoNhoTrong" data-warranty="@warrantyText">
                     <i class="fa-solid fa-cart-plus" aria-hidden="true"></i> Thêm vào giỏ hàng
                 </button>
-                <button type="button" class="phone-buy-now" data-buy-now
+                <button type="button" class="store-action phone-buy-now" data-buy-now
                         data-product-id="@phone.MaSP" data-name="@phone.TenSP" data-price="@phone.GiaBan"
                         data-image="@galleryImage" data-stock="@phone.SoLuongTon" data-color="@meta.ColorName"
                         data-condition="@conditionText" data-storage="@phone.ThongSo.BoNhoTrong" data-warranty="@warrantyText">
                     Mua ngay <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                 </button>
-                <a class="phone-message-link" data-variant-message href="sms:0901176222?body=@smsBody"><i class="fa-regular fa-message"></i> Nhắn tin tư vấn</a>
+                <a class="store-action phone-message-link" data-variant-message data-support-open data-support-message="@consultMessage" asp-controller="Support" asp-action="Index" asp-route-productId="@phone.MaSP"><i class="fa-regular fa-message"></i> Nhắn tin tư vấn</a>
             </div>
         </section>
     </div>
@@ -166,13 +167,20 @@
                 }
             </div>
         </div>
+        @if (User.IsInRole("User"))
+        {
         <form asp-action="SubmitReview" method="post" class="phone-review-form">
             @Html.AntiForgeryToken()<input type="hidden" id="review-product-id" name="id" value="@phone.MaSP" />
-            <label>Tên của bạn<input name="customerName" maxlength="80" required placeholder="Nhập tên hiển thị" /></label>
+            <label>Tên hiển thị<input value="@(User.FindFirst("DisplayName")?.Value ?? User.Identity?.Name)" readonly /></label>
             <label>Đánh giá<select name="rating" required><option value="5">5 sao · Rất hài lòng</option><option value="4">4 sao · Hài lòng</option><option value="3">3 sao · Bình thường</option><option value="2">2 sao · Chưa hài lòng</option><option value="1">1 sao · Không hài lòng</option></select></label>
             <label class="phone-review-form__content">Nhận xét<textarea name="content" maxlength="1200" required rows="3" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea></label>
-            <button type="submit" class="phone-review-submit">Gửi đánh giá <i class="fa-solid fa-arrow-right"></i></button>
+            <button type="submit" class="store-action phone-review-submit">Gửi đánh giá <i class="fa-solid fa-arrow-right"></i></button>
         </form>
+        }
+        else if (User.Identity?.IsAuthenticated != true)
+        {
+            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Details", new { id = phone.MaSP })" class="store-action btn">Đăng nhập để đánh giá</a>
+        }
     </section>
 
     @if (Model.SanPhamLienQuan.Count > 0)

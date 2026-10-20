@@ -1,172 +1,31 @@
-@model List<QuanLyBanDienThoai.Models.QuangCaoModel>
-@{
-    ViewData["Title"] = "Quản Lý Banner Quảng Cáo XML";
-}
-
-<!-- ================= ADD NEW BANNER SECTION ================= -->
-<div class="admin-card mb-4">
-    <div class="admin-card-header">
-        <div>
-            <h2 class="admin-card-title">
-                <i class="fa-solid fa-circle-plus" style="color: var(--admin-primary);"></i>
-                <span>THÊM BANNER QUẢNG CÁO MỚI</span>
-            </h2>
-            <div class="admin-card-desc">Tạo banner hiển thị trên trình chiếu Hero Carousel trang chủ (lưu trong QuangCao.xml)</div>
-        </div>
-        <span class="admin-badge-brand brand-apple">
-            <i class="fa-solid fa-images"></i> Hiện có: @Model.Count banner
-        </span>
-    </div>
-
-    <div class="admin-card-body">
-        <form asp-action="Create" method="post">
-            @Html.AntiForgeryToken()
-
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="admin-form-label">Tiêu đề Banner (*):</label>
-                    <input name="TieuDe" class="admin-form-control" maxlength="90" placeholder="Ví dụ: iPhone 16 Pro Max — Đỉnh Cao Công Nghệ Titan" required />
-                </div>
-
-                <div class="col-md-6">
-                    <label class="admin-form-label">Đường dẫn ảnh (*):</label>
-                    <input name="HinhAnh" class="admin-form-control" maxlength="500" placeholder="/images/phone_hero_3d.png hoặc link URL ảnh..." required />
-                </div>
-
-                <div class="col-md-12">
-                    <label class="admin-form-label">Mô tả chi tiết (*):</label>
-                    <textarea name="MoTa" class="admin-form-control" maxlength="320" rows="2" style="height: auto;" placeholder="Nội dung khuyến mãi, thông điệp nổi bật..." required></textarea>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="admin-form-label">Thứ tự hiển thị:</label>
-                    <input name="ThuTu" type="number" min="1" value="@(Model.Count + 1)" class="admin-form-control" required />
-                </div>
-
-                <div class="col-md-4">
-                    <label class="admin-form-label">Thời gian chuyển (giây):</label>
-                    <input name="ThoiGianChuyenGiay" type="number" min="3" max="30" value="6" class="admin-form-control" required />
-                </div>
-
-                <div class="col-md-4 d-flex align-items-center pt-3">
-                    <label class="d-flex align-items-center gap-2 cursor-pointer" style="color: var(--admin-text-main); font-size: 13.5px; font-weight: 500;">
-                        <input name="DangHienThi" type="checkbox" value="true" checked style="width: 18px; height: 18px; accent-color: var(--admin-primary);" />
-                        <input type="hidden" name="DangHienThi" value="false" />
-                        <span>Kích hoạt hiển thị trang chủ</span>
-                    </label>
-                </div>
-
-                <div class="col-12 d-flex justify-content-end pt-2">
-                    <button type="submit" class="admin-btn admin-btn-primary">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>Thêm Banner Vào XML</span>
-                    </button>
-                </div>
+@model List<QuangCaoModel>
+@{ ViewData["Title"] = "Banner quảng cáo"; }
+<header class="overview-heading">
+    <div><p class="overview-eyebrow">Nội dung cửa hàng</p><h1>Banner quảng cáo</h1><p>Quản lý nội dung và các ảnh tự động trình chiếu trên trang chủ.</p></div>
+    <a asp-action="Create" class="btn-saas btn-saas-primary"><i class="fa-solid fa-plus" aria-hidden="true"></i> Thêm banner</a>
+</header>
+<section class="overview-metrics overview-metrics--three" aria-label="Tình trạng banner">
+    <article class="overview-metric"><span>Tổng banner</span><strong>@Model.Count</strong><p>Nội dung đã lưu trong hệ thống</p><i class="fa-regular fa-images" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Đang hiển thị</span><strong>@Model.Count(x => x.DangHienThi)</strong><p>Được đưa vào trình chiếu trang chủ</p><i class="fa-regular fa-eye" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Chu kỳ trình chiếu</span><strong>@Model.Where(x => x.DangHienThi).Sum(x => x.ThoiGianChuyenGiay) giây</strong><p>Tổng thời gian các banner đang bật</p><i class="fa-regular fa-clock" aria-hidden="true"></i></article>
+</section>
+<section class="admin-card" data-admin-list data-admin-list-noun="banner">
+    <header class="overview-section-heading"><div><h2>Danh sách banner</h2><p>Sắp xếp theo thứ tự trình chiếu; mở chỉnh sửa để xem trước nội dung.</p></div><a asp-controller="Home" asp-action="Index" class="admin-row-link">Xem trang chủ</a></header>
+    <div class="admin-list-controls"><label>Tìm nội dung<input type="search" data-admin-keyword placeholder="Tiêu đề, mô tả…" /></label><label>Hiển thị<select data-admin-status><option value="">Tất cả</option><option value="active">Đang hiển thị</option><option value="hidden">Tạm ẩn</option></select></label><span data-admin-list-count role="status"></span></div>
+    <div class="admin-banner-list">
+    @foreach (var ad in Model.OrderBy(x => x.ThuTu))
+    {
+        <article class="admin-banner-row" data-admin-row data-search="@ad.TieuDe @ad.MoTa" data-status="@(ad.DangHienThi ? "active" : "hidden")">
+            <img src="@Url.Content(ad.HinhAnh)" alt="@ad.TieuDe" loading="lazy" />
+            <div class="admin-banner-content"><div><span class="inventory-stock @(ad.DangHienThi ? "" : "is-low")">@(ad.DangHienThi ? "Đang hiển thị" : "Tạm ẩn")</span><small>Thứ tự @ad.ThuTu · @ad.ThoiGianChuyenGiay giây / ảnh</small></div><h3>@ad.TieuDe</h3><p>@ad.MoTa</p><small class="admin-banner-source">@ad.HinhAnh</small></div>
+            <div class="admin-banner-actions">
+                <a asp-action="Edit" asp-route-id="@ad.MaQC" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-pen" aria-hidden="true"></i> Chỉnh sửa</a>
+                <form asp-action="Toggle" method="post"><input type="hidden" name="id" value="@ad.MaQC" /><input type="hidden" name="enabled" value="@(!ad.DangHienThi ? "true" : "false")" /><button type="submit" class="admin-row-link">@(ad.DangHienThi ? "Tạm ẩn" : "Bật hiển thị")</button></form>
+                <form asp-action="Delete" method="post" data-confirm="Xóa banner @ad.TieuDe?"><input type="hidden" name="id" value="@ad.MaQC" /><button type="submit" class="admin-row-link inventory-delete"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> Xóa</button></form>
             </div>
-        </form>
+        </article>
+    }
     </div>
-</div>
-
-<!-- ================= BANNER LIST SECTION ================= -->
-<div class="admin-card">
-    <div class="admin-card-header">
-        <div>
-            <h2 class="admin-card-title">
-                <i class="fa-solid fa-film" style="color: var(--admin-accent);"></i>
-                <span>DANH SÁCH BANNER ĐANG QUẢN TRỊ</span>
-            </h2>
-            <div class="admin-card-desc">Cập nhật nội dung hoặc xóa bỏ các slide banner trong tệp dữ liệu XML</div>
-        </div>
-    </div>
-
-    <div class="admin-card-body" style="padding-top: 18px;">
-        <div class="d-flex flex-column gap-3">
-            @foreach (var ad in Model.OrderBy(x => x.ThuTu))
-            {
-                <div class="admin-card" style="margin-bottom: 0; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--admin-card-border);">
-                    <div class="p-3">
-                        <div class="row g-3 align-items-start">
-                            <!-- Preview Thumbnail -->
-                            <div class="col-lg-3 col-md-4">
-                                <div style="width: 100%; aspect-ratio: 16/9; border-radius: var(--radius-sm); overflow: hidden; background: rgba(0,0,0,0.2); border: 1px solid var(--admin-card-border); position: relative;">
-                                    <img src="@ad.HinhAnh" alt="@ad.TieuDe" style="width: 100%; height: 100%; object-fit: cover;"
-                                         onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80'" />
-                                    <span style="position: absolute; top: 6px; left: 6px; font-family: var(--font-mono); font-size: 10.5px; background: rgba(0,0,0,0.65); color: #fff; padding: 2px 7px; border-radius: 4px;">
-                                        #@ad.ThuTu
-                                    </span>
-                                </div>
-                                <div class="mt-2 text-center">
-                                    @if (ad.DangHienThi)
-                                    {
-                                        <span class="admin-stat-pill pill-up"><span class="admin-pulse-dot"></span> Đang hiển thị</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="admin-stat-pill pill-down">Tạm ẩn</span>
-                                    }
-                                </div>
-                            </div>
-
-                            <!-- Edit Form -->
-                            <div class="col-lg-9 col-md-8">
-                                <form asp-action="Save" method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="MaQC" value="@ad.MaQC" />
-
-                                    <div class="row g-2">
-                                        <div class="col-md-7">
-                                            <label class="admin-form-label">Tiêu đề:</label>
-                                            <input name="TieuDe" maxlength="90" value="@ad.TieuDe" class="admin-form-control" required />
-                                        </div>
-
-                                        <div class="col-md-5">
-                                            <label class="admin-form-label">Đường dẫn ảnh:</label>
-                                            <input name="HinhAnh" maxlength="500" value="@ad.HinhAnh" class="admin-form-control" required />
-                                        </div>
-
-                                        <div class="col-12">
-                                            <label class="admin-form-label">Mô tả:</label>
-                                            <textarea name="MoTa" maxlength="320" rows="2" class="admin-form-control" style="height: auto;" required>@ad.MoTa</textarea>
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <label class="admin-form-label">Thứ tự:</label>
-                                            <input name="ThuTu" type="number" min="1" value="@ad.ThuTu" class="admin-form-control" required />
-                                        </div>
-
-                                        <div class="col-md-3">
-                                            <label class="admin-form-label">Thời gian (giây):</label>
-                                            <input name="ThoiGianChuyenGiay" type="number" min="3" max="30" value="@ad.ThoiGianChuyenGiay" class="admin-form-control" required />
-                                        </div>
-
-                                        <div class="col-md-6 d-flex align-items-center pt-3">
-                                            <label class="d-flex align-items-center gap-2 cursor-pointer" style="font-size: 13px; color: var(--admin-text-main);">
-                                                <input name="DangHienThi" type="checkbox" value="true" @(ad.DangHienThi ? "checked" : "") style="width: 17px; height: 17px; accent-color: var(--admin-primary);" />
-                                                <input type="hidden" name="DangHienThi" value="false" />
-                                                <span>Hiển thị trên trang chủ</span>
-                                            </label>
-                                        </div>
-
-                                        <div class="col-12 d-flex justify-content-end gap-2 pt-2 border-top mt-2" style="border-color: var(--admin-card-border) !important;">
-                                            <button type="submit" class="admin-btn admin-btn-primary admin-btn-sm">
-                                                <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
-                                            </button>
-                                            <button type="submit" form="delForm-@ad.MaQC" class="admin-btn admin-btn-danger admin-btn-sm">
-                                                <i class="fa-solid fa-trash-can"></i> Xóa
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-
-                                <form id="delForm-@ad.MaQC" asp-action="Delete" method="post" style="display:none;" onsubmit="return confirm('Xác nhận xóa banner này khỏi XML?');">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@ad.MaQC" />
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-</div>
+    <p class="admin-empty-note" data-admin-empty hidden>Chưa có banner phù hợp. Bạn có thể thêm banner mới hoặc đổi điều kiện tìm kiếm.</p>
+    <partial name="_AdminPagination" />
+</section>

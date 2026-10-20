@@ -1,0 +1,24 @@
+@model List<DataFileStatus>
+@{ ViewData["Title"] = "Dữ liệu hệ thống"; }
+<header class="overview-heading"><div><p class="overview-eyebrow">Vận hành cửa hàng</p><h1>Dữ liệu hệ thống</h1><p>Kiểm tra ràng buộc XML/XSD và tải dữ liệu sản phẩm, hóa đơn theo quyền quản trị.</p></div><a asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Kiểm tra lại</a></header>
+<div class="admin-notice"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div><b>Kiểm tra dữ liệu trước khi chỉnh sửa hoặc bàn giao.</b><p>Đối chiếu số bản ghi, thời điểm cập nhật và các lỗi XSD bên dưới. Tệp tải về phản ánh dữ liệu tại thời điểm tải.</p></div></div>
+<div class="admin-data-grid">
+    @foreach (var file in Model)
+    {
+        <section class="admin-card">
+            <header class="overview-section-heading"><div><h2>@file.Name</h2><p>@file.Validation.FileName · @file.Validation.SchemaName</p></div><span class="inventory-stock @(file.Validation.IsValid ? "" : "is-empty")">@(file.Validation.IsValid ? "Hợp lệ" : "Cần kiểm tra")</span></header>
+            <dl class="admin-info-list">
+                <div><dt>Số bản ghi</dt><dd>@file.Count.ToString("N0")</dd></div>
+                <div><dt>Dung lượng XML</dt><dd>@((file.Bytes / 1024m).ToString("N1")) KB</dd></div>
+                <div><dt>Cập nhật gần nhất</dt><dd>@(file.UpdatedAt?.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm:ss") ?? "Chưa có tệp")</dd></div>
+                <div><dt>Kết quả XSD</dt><dd>@(file.Validation.IsValid ? "Không phát hiện vi phạm schema" : $"{file.Validation.Errors.Count} thông báo cần xem")</dd></div>
+            </dl>
+            @if (!file.Validation.IsValid) { <ul class="admin-validation-list">@foreach (var error in file.Validation.Errors.Take(5)) { <li><b>Dòng @error.LineNumber:</b> @error.Message</li> }</ul> }
+            <footer class="admin-panel-footer"><a asp-action="Download" asp-route-id="@file.Key" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-download" aria-hidden="true"></i> Tải XML</a><a asp-action="Validation" asp-route-id="@file.Key" class="admin-row-link">Chi tiết kiểm tra</a></footer>
+        </section>
+    }
+</div>
+<section class="admin-card"><header class="overview-section-heading"><div><h2>Công cụ dữ liệu</h2><p>Các màn hình hiện có để đối chiếu hoặc trình bày dữ liệu XML.</p></div></header><div class="admin-function-grid">
+    <a asp-controller="DienThoai" asp-action="XsltView" class="admin-function-link"><i class="fa-solid fa-table" aria-hidden="true"></i><span><b>Danh mục qua XSLT</b><small>Xem kết quả chuyển đổi danh mục XML thành HTML.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+    <a asp-controller="DienThoai" asp-action="XmlApi" class="admin-function-link"><i class="fa-solid fa-code" aria-hidden="true"></i><span><b>XML sản phẩm</b><small>Mở dữ liệu XML thô trong trình duyệt.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+</div></section>

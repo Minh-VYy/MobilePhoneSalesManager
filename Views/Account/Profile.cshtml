@@ -1,0 +1,10 @@
+@model ProfileInput
+@{ ViewData["Title"] = "Tài khoản của tôi"; Layout = User.IsInRole("Admin") ? "_Layout" : "_LayoutUser"; }
+<section class="customer-page">
+    <header class="customer-heading"><h1>Tài khoản của tôi</h1><p>@User.Identity?.Name</p></header>
+    @if (!User.IsInRole("Admin")) { <partial name="_BuyerNav" /> }
+    <div class="account-card glass"><h2>Thông tin liên hệ</h2><form asp-action="Profile" method="post" class="account-form">
+        <div asp-validation-summary="ModelOnly" class="form-errors" role="alert"></div><partial name="_ProfileFields" model="Model" />
+        <button class="store-action btn btn-primary account-submit" type="submit">Lưu thông tin</button>
+    </form></div>
+</section>

@@ -1,5 +1,4 @@
 using System.Xml.Linq;
-using System.Xml.XPath;
 using QuanLyBanDienThoai.Models;
 
 namespace QuanLyBanDienThoai.Services
@@ -8,14 +7,14 @@ namespace QuanLyBanDienThoai.Services
     {
         private readonly string _xmlPath;
         private readonly string _xsdPath;
-        private readonly DienThoaiXmlService _dienThoaiService;
+        private readonly PrivateXmlStore _store;
         private readonly XmlValidationService _validationService;
 
-        public HoaDonXmlService(IWebHostEnvironment env, DienThoaiXmlService dienThoaiService, XmlValidationService validationService)
+        public HoaDonXmlService(IWebHostEnvironment env, PrivateXmlStore store, XmlValidationService validationService)
         {
             _xmlPath = Path.Combine(env.ContentRootPath, "Data", "HoaDon.xml");
             _xsdPath = Path.Combine(env.ContentRootPath, "Data", "HoaDon.xsd");
-            _dienThoaiService = dienThoaiService;
+            _store = store;
             _validationService = validationService;
         }
 
@@ -24,102 +23,83 @@ namespace QuanLyBanDienThoai.Services
 
         public List<HoaDonModel> GetAll()
         {
-            if (!File.Exists(_xmlPath)) return new List<HoaDonModel>();
-
-            XDocument doc = XDocument.Load(_xmlPath);
-            return doc.Root?.Elements("HoaDon").Select(MapFromXElement).OrderByDescending(x => x.NgayLap).ToList() ?? new List<HoaDonModel>();
+            return _store.Read("HoaDon.xml", "DanhSachHoaDon", root => root.Elements("HoaDon").Select(MapFromXElement).OrderByDescending(x => x.NgayLap).ToList());
         }
 
         public HoaDonModel? GetById(string maHd)
         {
-            if (!File.Exists(_xmlPath)) return null;
-
-            XDocument doc = XDocument.Load(_xmlPath);
-            XElement? elem = doc.XPathSelectElement($"//HoaDon[MaHD='{maHd}']");
-            return elem != null ? MapFromXElement(elem) : null;
+            return _store.Read("HoaDon.xml", "DanhSachHoaDon", root => root.Elements("HoaDon").Where(x => (string?)x.Element("MaHD") == maHd).Select(MapFromXElement).FirstOrDefault());
         }
 
         public (bool Success, string Message, string MaHD, ValidationResultModel? Validation) CreateInvoice(CreateHoaDonInputModel input)
         {
-            if (!File.Exists(_xmlPath)) return (false, "Tệp XML hóa đơn không tồn tại.", "", null);
-            if (input.Items == null || input.Items.Count == 0) return (false, "Vui lòng chọn ít nhất 1 sản phẩm!", "", null);
-
-            XDocument doc = XDocument.Load(_xmlPath);
-
-            // Tự động sinh mã HD00x
-            int maxId = 0;
-            foreach (var el in doc.Root?.Elements("HoaDon") ?? Enumerable.Empty<XElement>())
+            ValidationResultModel? result = null;
+            try
             {
-                string code = el.Element("MaHD")?.Value ?? "";
-                if (code.StartsWith("HD") && int.TryParse(code.Substring(2), out int idVal))
+                if (!Guid.TryParse(input.CheckoutToken, out _)) throw new InvalidOperationException("Mã phiên lập hóa đơn không hợp lệ. Hãy mở lại màn hình POS.");
+                if (!input.PaymentConfirmed || input.PaymentMethod is not ("Cash" or "BankTransfer")) throw new InvalidOperationException("Xác nhận thanh toán và chọn tiền mặt hoặc chuyển khoản trước khi xuất hóa đơn.");
+                if (input.Items == null || input.Items.Count is < 1 or > 100 || input.Items.Any(x => x.SoLuong is < 1 or > 999))
+                    throw new InvalidOperationException("Chọn từ 1 đến 100 phiên bản, số lượng mỗi phiên bản từ 1 đến 999.");
+                return _store.UpdatePointOfSale<(bool, string, string, ValidationResultModel?)>((invoices, products, units) =>
                 {
-                    if (idVal > maxId) maxId = idVal;
-                }
+                    var existing = invoices.Elements("HoaDon").FirstOrDefault(x => (string?)x.Element("CheckoutToken") == input.CheckoutToken);
+                    if (existing != null) return (true, "Hóa đơn này đã được lưu trước đó.", (string)existing.Element("MaHD")!, null);
+                    var nextId = invoices.Elements("HoaDon").Select(x => int.TryParse(((string?)x.Element("MaHD") ?? "").Replace("HD", ""), out var id) ? id : 0).DefaultIfEmpty(0).Max() + 1;
+                    var invoice = new HoaDonModel
+                    {
+                        MaHD = $"HD{nextId:D3}",
+                        CheckoutToken = input.CheckoutToken,
+                        PaymentMethod = input.PaymentMethod,
+                        NgayLap = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7)).DateTime,
+                        KhachHang = new KhachHangModel { TenKH = input.TenKH.Trim(), SoDienThoai = input.SoDienThoai.Trim(), DiaChi = input.DiaChi.Trim() },
+                        NhanVien = input.NhanVien,
+                        GhiChu = input.GhiChu
+                    };
+                    var lines = input.Items.GroupBy(x => x.MaSP, StringComparer.OrdinalIgnoreCase)
+                        .Select(group => new { Id = group.Key, Quantity = group.Sum(x => x.SoLuong), Codes = group.SelectMany(x => x.UnitCodes ?? []).Select(StockUnitService.Normalize).ToList() }).ToList();
+                    var usedCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    foreach (var line in lines)
+                    {
+                        var phone = products.Elements("DienThoai").FirstOrDefault(x => string.Equals((string?)x.Element("MaSP"), line.Id, StringComparison.OrdinalIgnoreCase));
+                        if (phone == null) throw new InvalidOperationException($"Sản phẩm {line.Id} không còn tồn tại.");
+                        if (line.Quantity > 999 || (int?)phone.Element("SoLuongTon") < line.Quantity)
+                            throw new InvalidOperationException($"Sản phẩm {(string?)phone.Element("TenSP")} không đủ tồn kho cho số lượng đã chọn.");
+                        if (line.Codes.Count != line.Quantity) throw new InvalidOperationException($"Cần quét đủ {line.Quantity} mã IMEI/serial cho {(string?)phone.Element("TenSP")} trước khi xuất hóa đơn.");
+                        var canonicalCodes = new List<string>();
+                        foreach (var code in line.Codes)
+                        {
+                            var unit = StockUnitService.Find(units, code) ?? throw new InvalidOperationException($"Mã máy {code} chưa được đăng ký trong kho.");
+                            var canonical = (string)unit.Attribute("code")!;
+                            if ((string?)unit.Attribute("productId") != (string?)phone.Element("MaSP")) throw new InvalidOperationException($"Mã máy {code} không thuộc phiên bản đang chọn.");
+                            if ((string?)unit.Attribute("status") != "Available") throw new InvalidOperationException($"Máy {code} đã bán hoặc đang được giữ cho một đơn trực tuyến. Không thể bán lại.");
+                            if (!usedCodes.Add(canonical)) throw new InvalidOperationException($"Máy {canonical} được quét trùng trong hóa đơn.");
+                            canonicalCodes.Add(canonical);
+                        }
+                        invoice.ChiTiet.Add(new ChiTietHoaDonModel
+                        {
+                            MaSP = (string)phone.Element("MaSP")!,
+                            TenSP = (string)phone.Element("TenSP")!,
+                            SoLuong = line.Quantity,
+                            UnitCodes = canonicalCodes,
+                            DonGia = (decimal)phone.Element("GiaBan")!
+                        });
+                    }
+                    invoice.TongTien = invoice.ChiTiet.Sum(x => x.ThanhTien);
+                    var element = MapToXElement(invoice);
+                    var proposed = new XElement(invoices); proposed.Add(element);
+                    result = _validationService.ValidateXmlContent(proposed.ToString(), _xsdPath);
+                    if (!result.IsValid) throw new InvalidOperationException("Thông tin hóa đơn chưa đáp ứng ràng buộc XSD. Hãy kiểm tra lại các trường bên dưới.");
+                    invoices.Add(element);
+                    foreach (var line in invoice.ChiTiet)
+                    {
+                        var phone = products.Elements("DienThoai").First(x => (string?)x.Element("MaSP") == line.MaSP);
+                        phone.SetElementValue("SoLuongTon", (int)phone.Element("SoLuongTon")! - line.SoLuong);
+                        foreach (var code in line.UnitCodes) StockUnitService.MarkSold(StockUnitService.Find(units, code)!, invoice.MaHD, "POS", line.DonGia, invoice.NhanVien);
+                    }
+                    return (true, $"Đã lưu hóa đơn {invoice.MaHD} và cập nhật tồn kho.", invoice.MaHD, result);
+                });
             }
-            string newMaHD = $"HD{(maxId + 1):D3}";
-
-            var hoaDonModel = new HoaDonModel
-            {
-                MaHD = newMaHD,
-                NgayLap = DateTime.Now,
-                KhachHang = new KhachHangModel
-                {
-                    TenKH = input.TenKH,
-                    SoDienThoai = input.SoDienThoai,
-                    DiaChi = input.DiaChi
-                },
-                NhanVien = string.IsNullOrWhiteSpace(input.NhanVien) ? "Nhân viên Bán hàng" : input.NhanVien,
-                GhiChu = input.GhiChu,
-                ChiTiet = new List<ChiTietHoaDonModel>()
-            };
-
-            decimal tongTien = 0;
-
-            // Xử lý từng sản phẩm trong hóa đơn
-            foreach (var item in input.Items)
-            {
-                var dt = _dienThoaiService.GetById(item.MaSP);
-                if (dt == null) return (false, $"Không tìm thấy sản phẩm '{item.MaSP}'.", "", null);
-
-                if (dt.SoLuongTon < item.SoLuong)
-                {
-                    return (false, $"Sản phẩm '{dt.TenSP}' chỉ còn tồn {dt.SoLuongTon} cái (Yêu cầu: {item.SoLuong}).", "", null);
-                }
-
-                var ct = new ChiTietHoaDonModel
-                {
-                    MaSP = dt.MaSP,
-                    TenSP = dt.TenSP,
-                    SoLuong = item.SoLuong,
-                    DonGia = dt.GiaBan
-                };
-                hoaDonModel.ChiTiet.Add(ct);
-                tongTien += ct.ThanhTien;
-            }
-
-            hoaDonModel.TongTien = tongTien;
-
-            XElement newElement = MapToXElement(hoaDonModel);
-            doc.Root?.Add(newElement);
-
-            // Validate XSD với HoaDon.xsd
-            string tempXml = doc.ToString();
-            var valResult = _validationService.ValidateXmlContent(tempXml, _xsdPath);
-            if (!valResult.IsValid)
-            {
-                return (false, "Lỗi lập hóa đơn do vi phạm XSD Schema!", "", valResult);
-            }
-
-            // Lưu XML Hóa đơn
-            doc.Save(_xmlPath);
-
-            // Cập nhật giảm số lượng tồn kho điện thoại
-            foreach (var ct in hoaDonModel.ChiTiet)
-            {
-                _dienThoaiService.UpdateStock(ct.MaSP, ct.SoLuong);
-            }
-
-            return (true, $"Lập hóa đơn {newMaHD} thành công!", newMaHD, valResult);
+            catch (InvalidOperationException error) { return (false, error.Message, "", result); }
         }
 
         private HoaDonModel MapFromXElement(XElement el)
@@ -130,12 +110,15 @@ namespace QuanLyBanDienThoai.Services
                 MaSP = c.Element("MaSP")?.Value ?? "",
                 TenSP = c.Element("TenSP")?.Value ?? "",
                 SoLuong = int.TryParse(c.Element("SoLuong")?.Value, out int sl) ? sl : 0,
+                UnitCodes = c.Element("UnitCodes")?.Elements("Code").Select(x => x.Value).ToList() ?? [],
                 DonGia = decimal.TryParse(c.Element("DonGia")?.Value, out decimal dg) ? dg : 0
             }).ToList() ?? new List<ChiTietHoaDonModel>();
 
             return new HoaDonModel
             {
                 MaHD = el.Element("MaHD")?.Value ?? "",
+                CheckoutToken = el.Element("CheckoutToken")?.Value ?? "",
+                PaymentMethod = el.Element("PaymentMethod")?.Value ?? "Unknown",
                 NgayLap = DateTime.TryParse(el.Element("NgayLap")?.Value, out DateTime d) ? d : DateTime.Now,
                 KhachHang = new KhachHangModel
                 {
@@ -167,11 +150,14 @@ namespace QuanLyBanDienThoai.Services
                         new XElement("TenSP", c.TenSP),
                         new XElement("SoLuong", c.SoLuong),
                         new XElement("DonGia", c.DonGia),
-                        new XElement("ThanhTien", c.ThanhTien)
+                        new XElement("ThanhTien", c.ThanhTien),
+                        new XElement("UnitCodes", c.UnitCodes.Select(code => new XElement("Code", code)))
                     ))
                 ),
                 new XElement("TongTien", m.TongTien),
-                new XElement("GhiChu", m.GhiChu ?? "")
+                new XElement("GhiChu", m.GhiChu ?? ""),
+                new XElement("CheckoutToken", m.CheckoutToken),
+                new XElement("PaymentMethod", m.PaymentMethod)
             );
         }
     }

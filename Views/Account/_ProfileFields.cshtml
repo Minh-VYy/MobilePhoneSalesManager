@@ -1,0 +1,5 @@
+@model ProfileInput
+<label asp-for="FullName">Họ và tên</label><input asp-for="FullName" autocomplete="name" maxlength="100" required /><span asp-validation-for="FullName" class="field-error"></span>
+<label asp-for="Email">Email</label><input asp-for="Email" type="email" autocomplete="email" maxlength="254" required /><span asp-validation-for="Email" class="field-error"></span>
+<label asp-for="Phone">Số điện thoại</label><input asp-for="Phone" type="tel" autocomplete="tel" inputmode="tel" pattern="0[35789][0-9]{8}" maxlength="10" required /><span asp-validation-for="Phone" class="field-error"></span>
+<label asp-for="Address">Địa chỉ nhận hàng <small>(không bắt buộc)</small></label><textarea asp-for="Address" autocomplete="street-address" maxlength="250" rows="2"></textarea><span asp-validation-for="Address" class="field-error"></span>

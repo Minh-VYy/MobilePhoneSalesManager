@@ -1,303 +1,163 @@
-@model QuanLyBanDienThoai.Models.ThongKeViewModel
+@model ThongKeViewModel
+@using System.Globalization
+@using System.Text.Json
 @{
-    ViewData["Title"] = "Bảng điều khiển";
+    ViewData["Title"] = "Tổng quan cửa hàng";
+    var vi = CultureInfo.GetCultureInfo("vi-VN");
+    string Money(decimal value) => value.ToString("N0", vi) + " ₫";
+    string Share(decimal value) => Model.TongDoanhThu == 0 ? "0%" : (value / Model.TongDoanhThu).ToString("P1", vi);
+    var soldBrands = Model.DoanhThuTheoHang.Where(x => x.SoLuongDaBan > 0).ToList();
+    var chartBrands = soldBrands.Take(soldBrands.Count > 6 ? 5 : 6)
+        .Select(x => new { label = x.TenHang, amount = x.TongTienBan }).ToList();
+    if (soldBrands.Count > 6) { chartBrands.Add(new { label = "Các hãng còn lại", amount = soldBrands.Skip(5).Sum(x => x.TongTienBan) }); }
 }
-
-<!-- EXECUTIVE KPI STATS ROW -->
-<div class="admin-stats-grid">
-    <!-- Stat 1: Doanh thu -->
-    <div class="admin-stat-card" style="--stat-glow: #6366F1;">
-        <div class="admin-stat-top">
-            <div class="admin-stat-icon">
-                <i class="fa-solid fa-chart-line"></i>
-            </div>
-            <span class="admin-stat-pill pill-up">
-                <i class="fa-solid fa-arrow-trend-up"></i> Tăng trưởng
-            </span>
-        </div>
-        <div class="admin-stat-value">
-            @Model.TongDoanhThu.ToString("#,##0") <small style="font-size: 13px; font-weight: 500; color: var(--admin-text-muted);">VNĐ</small>
-        </div>
-        <div class="admin-stat-label">Tổng doanh thu bán hàng XML</div>
+<header class="overview-heading">
+    <div><p class="overview-eyebrow">Cửa hàng của bạn</p><h1>Tổng quan kinh doanh</h1><p>@Model.TuNgay.ToString("dd/MM/yyyy") – @Model.DenNgay.ToString("dd/MM/yyyy") · Giờ Việt Nam (UTC+7)</p></div>
+    <div class="overview-heading-actions">
+        <form method="get" asp-action="Index" class="overview-period">
+            <label for="dashboard-days" class="sr-only">Khoảng thời gian thống kê</label>
+            <select id="dashboard-days" name="days">
+                @foreach (var days in new[] { 7, 30, 90 }) { <option value="@days" selected="@(days == Model.SoNgay)">@days ngày gần đây</option> }
+            </select>
+            <button type="submit" class="btn-saas btn-saas-secondary">Áp dụng</button>
+        </form>
+        <a asp-controller="HoaDon" asp-action="Create" class="btn-saas btn-saas-primary"><i class="fa-solid fa-plus" aria-hidden="true"></i> Lập hóa đơn</a>
     </div>
-
-    <!-- Stat 2: Hóa đơn -->
-    <div class="admin-stat-card" style="--stat-glow: #10B981;">
-        <div class="admin-stat-top">
-            <div class="admin-stat-icon">
-                <i class="fa-solid fa-receipt"></i>
-            </div>
-            <span class="admin-stat-pill pill-up">
-                +@Model.TongSoHoaDon đơn
-            </span>
-        </div>
-        <div class="admin-stat-value">@Model.TongSoHoaDon</div>
-        <div class="admin-stat-label">Hóa đơn XML đã lập</div>
+</header>
+<partial name="_AdminQuickActions" />
+<p class="overview-source-note">Doanh thu tiền sản phẩm theo giá đã bán. Ghi nhận khi chốt hóa đơn tại quầy hoặc giao đơn online thành công; chưa bao gồm tính lợi nhuận.</p>
+@if (Model.SoHoaDonLechTong > 0 || Model.SoDonThieuNgayGiao > 0)
+{
+    <div class="overview-data-warning" role="status">
+        <strong>Dữ liệu cần đối chiếu</strong>
+        @if (Model.SoHoaDonLechTong > 0) { <p>@Model.SoHoaDonLechTong hóa đơn trong kỳ có tổng tiền khác chi tiết. Các biểu đồ thống nhất tính theo tổng số lượng × đơn giá đã lưu trong từng dòng hóa đơn.</p> }
+        @if (Model.SoDonThieuNgayGiao > 0) { <p>@Model.SoDonThieuNgayGiao đơn đã giao trong toàn bộ dữ liệu thiếu ngày giao trong lịch sử, chưa được cộng vào kỳ nào.</p> }
     </div>
-
-    <!-- Stat 3: Mẫu sản phẩm -->
-    <div class="admin-stat-card" style="--stat-glow: #F59E0B;">
-        <div class="admin-stat-top">
-            <div class="admin-stat-icon">
-                <i class="fa-solid fa-mobile-screen"></i>
+}
+<section class="overview-metrics" aria-label="Kết quả kinh doanh trong kỳ đã chọn">
+    <article class="overview-metric"><span>Doanh thu trong kỳ</span><strong>@Money(Model.TongDoanhThu)</strong><p>Tại quầy + online đã giao</p><i class="fa-solid fa-chart-line" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Giao dịch hoàn tất</span><strong>@Model.SoGiaoDich.ToString("N0", vi)</strong><p>@Model.TongSoHoaDon hóa đơn quầy · @Model.SoDonDaGiao đơn đã giao</p><i class="fa-solid fa-receipt" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Số máy đã bán</span><strong>@Model.SoMayDaBan.ToString("N0", vi)</strong><p>Tổng số lượng trong giao dịch hoàn tất</p><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Giá trị trung bình / giao dịch</span><strong>@Money(Model.GiaTriTrungBinh)</strong><p>Doanh thu chia số giao dịch hoàn tất</p><i class="fa-solid fa-calculator" aria-hidden="true"></i></article>
+</section>
+<div class="overview-grid">
+    <section class="admin-card overview-chart" aria-labelledby="revenue-heading">
+        <header class="overview-section-heading">
+            <div><h2 id="revenue-heading">Doanh thu theo thời gian</h2><p>Tại quầy theo ngày lập; online theo ngày giao thành công.</p></div>
+            <div class="overview-chart-control" hidden>
+                <label for="overview-grouping">Gộp dữ liệu</label>
+                <select id="overview-grouping"><option value="1" selected="@(Model.SoNgay <= 30)">Từng ngày</option><option value="7" selected="@(Model.SoNgay > 30)">Mỗi 7 ngày</option></select>
             </div>
-            <span class="admin-stat-pill" style="color: var(--admin-warning); background: rgba(245, 158, 11, 0.15);">
-                DienThoai.xml
-            </span>
+        </header>
+        <div class="overview-chart-summary">
+            <div><span><i class="overview-dot overview-dot--pos" aria-hidden="true"></i> Tại quầy · nét liền</span><b>@Money(Model.DoanhThuPos)</b></div>
+            <div><span><i class="overview-dot overview-dot--online" aria-hidden="true"></i> Online đã giao · nét đứt</span><b>@Money(Model.DoanhThuOnline)</b></div>
         </div>
-        <div class="admin-stat-value">@Model.TongSoSanPham</div>
-        <div class="admin-stat-label">Mẫu điện thoại kinh doanh</div>
-    </div>
-
-    <!-- Stat 4: Sắp hết hàng -->
-    <div class="admin-stat-card" style="--stat-glow: #F43F5E;">
-        <div class="admin-stat-top">
-            <div class="admin-stat-icon">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <span class="admin-stat-pill pill-down">
-                Tồn &lt; 5 máy
-            </span>
-        </div>
-        <div class="admin-stat-value text-danger" style="color: var(--admin-danger) !important;">
-            @Model.SoSanPhamSapHetHang
-        </div>
-        <div class="admin-stat-label">Sản phẩm sắp hết hàng</div>
-    </div>
+        @if (Model.SoGiaoDich > 0)
+        {
+            <div class="overview-chart-frame" data-chart-frame hidden><canvas id="overview-revenue-chart" aria-label="Doanh thu theo thời gian; xem giá trị chính xác trong bảng số liệu bên dưới." role="img"></canvas></div>
+        }
+        else { <p class="overview-chart-empty">Chưa có giao dịch hoàn tất trong khoảng thời gian này.</p> }
+        <details class="overview-chart-data">
+            <summary>Xem số liệu từng ngày (@Model.SoNgay ngày)</summary>
+            <div class="admin-table-scroll"><table class="admin-data-table"><caption class="sr-only">Doanh thu từng ngày trong kỳ đã chọn, đơn vị đồng</caption><thead><tr><th scope="col">Ngày</th><th scope="col" class="num">Tại quầy</th><th scope="col" class="num">Online đã giao</th><th scope="col" class="num">Tổng tiền</th><th scope="col" class="num">Giao dịch</th><th scope="col" class="num">Số máy</th></tr></thead>
+                <tbody>@foreach (var day in Model.TheoNgay) { <tr><th scope="row">@day.Label</th><td class="num">@Money(day.Pos)</td><td class="num">@Money(day.Online)</td><td class="num"><b>@Money(day.Pos + day.Online)</b></td><td class="num">@day.Transactions</td><td class="num">@day.Units</td></tr> }</tbody>
+                <tfoot><tr><th scope="row">Tổng kỳ</th><td class="num">@Money(Model.DoanhThuPos)</td><td class="num">@Money(Model.DoanhThuOnline)</td><td class="num">@Money(Model.TongDoanhThu)</td><td class="num">@Model.SoGiaoDich</td><td class="num">@Model.SoMayDaBan</td></tr></tfoot>
+            </table></div>
+        </details>
+        <footer class="overview-section-foot" id="overview-grouping-note">Ngày không phát sinh doanh thu được ghi là 0. Đơn vị trục: đồng (₫).</footer>
+    </section>
+    <section class="admin-card overview-chart" aria-labelledby="channel-heading">
+        <header class="overview-section-heading"><div><h2 id="channel-heading">Kênh bán hàng</h2><p>Tỷ trọng trong tổng doanh thu của kỳ.</p></div></header>
+        @if (Model.TongDoanhThu > 0)
+        {
+            <div class="overview-chart-frame overview-chart-frame--channel" data-chart-frame hidden><canvas id="overview-channel-chart" aria-label="Tỷ trọng doanh thu tại quầy và online; số tiền và tỷ lệ có trong bảng bên dưới." role="img"></canvas></div>
+        }
+        else { <p class="overview-chart-empty">Chưa có doanh thu để tính tỷ trọng.</p> }
+        <div class="admin-table-scroll"><table class="admin-data-table"><thead><tr><th scope="col">Kênh bán</th><th scope="col" class="num">Doanh thu</th><th scope="col" class="num">Tỷ trọng</th></tr></thead><tbody>
+            <tr><th scope="row"><i class="overview-dot overview-dot--pos" aria-hidden="true"></i>Tại quầy<small>@Model.TongSoHoaDon hóa đơn</small></th><td class="num">@Money(Model.DoanhThuPos)</td><td class="num">@Share(Model.DoanhThuPos)</td></tr>
+            <tr><th scope="row"><i class="overview-dot overview-dot--online" aria-hidden="true"></i>Online đã giao<small>@Model.SoDonDaGiao đơn</small></th><td class="num">@Money(Model.DoanhThuOnline)</td><td class="num">@Share(Model.DoanhThuOnline)</td></tr>
+        </tbody></table></div>
+        <details class="overview-chart-data"><summary>Thanh toán tại quầy</summary>
+            @if (Model.ThanhToanPos.Count == 0) { <p class="admin-empty-note">Chưa có hóa đơn tại quầy trong kỳ.</p> }
+            else
+            {
+                <div class="admin-table-scroll"><table class="admin-data-table"><thead><tr><th scope="col">Phương thức</th><th scope="col" class="num">Hóa đơn</th><th scope="col" class="num">Số tiền</th></tr></thead><tbody>
+                @foreach (var payment in Model.ThanhToanPos) { <tr><th scope="row">@payment.Label</th><td class="num">@payment.Count</td><td class="num">@Money(payment.Amount)</td></tr> }
+                </tbody></table></div>
+            }
+        </details>
+    </section>
 </div>
-
-<!-- OPERATIONS GRID: CHART & LOW STOCK RADAR -->
-<div class="row g-4 mb-4">
-    <!-- REVENUE CHART -->
-    <div class="col-lg-8">
-        <div class="admin-card h-100 mb-0">
-            <div class="admin-card-header">
-                <div>
-                    <h3 class="admin-card-title">
-                        <i class="fa-solid fa-chart-column"></i>
-                        <span>Doanh thu theo hãng sản xuất</span>
-                    </h3>
-                    <div class="admin-card-desc">Tổng hợp bằng LINQ to XML trên tập tin HoaDon.xml</div>
-                </div>
-                <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: var(--admin-primary); font-family: var(--font-mono); font-size: 11px; padding: 4px 8px; border-radius: 6px;">
-                    Real-time XML
-                </span>
-            </div>
-            <div class="admin-card-body">
-                <div style="height: 300px; position: relative;">
-                    <canvas id="chartRevenue"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- LOW STOCK LIST RADAR -->
-    <div class="col-lg-4">
-        <div class="admin-card h-100 mb-0 d-flex flex-column">
-            <div class="admin-card-header">
-                <div>
-                    <h3 class="admin-card-title">
-                        <i class="fa-solid fa-bell text-danger"></i>
-                        <span>Cảnh báo tồn kho ít</span>
-                    </h3>
-                    <div class="admin-card-desc">Ngưỡng: dưới 5 máy cần nhập kho</div>
-                </div>
-            </div>
-            <div class="admin-card-body flex-grow-1" style="overflow-y: auto; max-height: 300px;">
-                @if (Model.SanPhamSapHetHang != null && Model.SanPhamSapHetHang.Count > 0)
-                {
-                    <div class="d-flex flex-column gap-2">
-                        @foreach (var sp in Model.SanPhamSapHetHang)
-                        {
-                            <div class="d-flex align-items-center gap-3 p-2 rounded-3" style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--admin-card-border);">
-                                <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(244, 63, 94, 0.12); color: var(--admin-danger); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                                    <i class="fa-solid fa-mobile-screen"></i>
-                                </div>
-                                <div style="flex: 1; min-width: 0;">
-                                    <div class="text-truncate fw-semibold" style="font-size: 13px; color: var(--admin-text-main);">@sp.TenSP</div>
-                                    <small style="font-family: var(--font-mono); font-size: 11px; color: var(--admin-text-faint);">@sp.MaSP · @sp.TenHang</small>
-                                </div>
-                                <span class="badge" style="background: rgba(244, 63, 94, 0.15); color: var(--admin-danger); font-family: var(--font-mono); font-weight: 700; font-size: 11px; border-radius: 99px; padding: 4px 8px;">
-                                    @sp.SoLuongTon máy
-                                </span>
-                            </div>
-                        }
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center py-5 text-muted">
-                        <i class="fa-solid fa-circle-check fs-1 text-success mb-2 d-block"></i>
-                        <div>Tất cả sản phẩm đều có số lượng an toàn!</div>
-                    </div>
-                }
-            </div>
-            <div class="p-3 border-top" style="border-color: var(--admin-card-border) !important;">
-                <a asp-controller="DienThoai" asp-action="Manage" class="admin-btn admin-btn-secondary w-100" style="justify-content: center;">
-                    <span>Xem toàn bộ kho sản phẩm XML</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
+<div class="overview-grid overview-grid--balanced">
+    <section class="admin-card overview-chart" aria-labelledby="brand-heading">
+        <header class="overview-section-heading"><div><h2 id="brand-heading">Doanh thu theo thương hiệu</h2><p>Cộng cả hai kênh bán trong kỳ đã chọn.</p></div></header>
+        @if (soldBrands.Count > 0)
+        {
+            <div class="overview-chart-frame overview-chart-frame--bars" data-chart-frame hidden><canvas id="overview-brand-chart" role="img" aria-label="Xếp hạng doanh thu theo thương hiệu; bảng đầy đủ bên dưới."></canvas></div>
+        }
+        else { <p class="overview-chart-empty">Chưa có máy bán ra trong kỳ.</p> }
+        <details class="overview-chart-data"><summary>Xem tất cả thương hiệu và tồn kho</summary>
+            <div class="admin-table-scroll"><table class="admin-data-table"><thead><tr><th scope="col">Thương hiệu</th><th scope="col" class="num">Đã bán</th><th scope="col" class="num">Còn kho</th><th scope="col" class="num">Doanh thu</th></tr></thead><tbody>
+            @foreach (var brand in Model.DoanhThuTheoHang) { <tr><th scope="row">@brand.TenHang</th><td class="num">@brand.SoLuongDaBan</td><td class="num">@brand.SoLuongTon</td><td class="num">@Money(brand.TongTienBan)</td></tr> }
+            </tbody><tfoot><tr><th scope="row">Tổng</th><td class="num">@Model.SoMayDaBan</td><td class="num">@Model.TongTonKho</td><td class="num">@Money(Model.TongDoanhThu)</td></tr></tfoot></table></div>
+        </details>
+        <footer class="overview-section-foot">Hãng theo danh mục hiện tại; mã đã xóa vào “Không phân loại”. Tồn kho là số hiện tại, không giới hạn theo kỳ.</footer>
+    </section>
+    <section class="admin-card overview-chart" aria-labelledby="product-heading">
+        <header class="overview-section-heading"><div><h2 id="product-heading">Sản phẩm tạo doanh thu cao nhất</h2><p>6 phiên bản dẫn đầu · xếp theo doanh thu, không theo giá hiện tại.</p></div></header>
+        @if (Model.SanPhamBanChay.Count > 0)
+        {
+            <div class="overview-chart-frame overview-chart-frame--bars" data-chart-frame hidden><canvas id="overview-product-chart" role="img" aria-label="Sáu phiên bản có doanh thu cao nhất; tên, mã và số lượng trong bảng bên dưới."></canvas></div>
+        }
+        else { <p class="overview-chart-empty">Chưa có sản phẩm bán ra trong kỳ.</p> }
+        <details class="overview-chart-data"><summary>Xem đầy đủ sản phẩm đã bán (@Model.SanPhamBanChay.Count phiên bản)</summary>
+            <div class="admin-table-scroll"><table class="admin-data-table"><thead><tr><th scope="col">Sản phẩm / phiên bản</th><th scope="col" class="num">Số máy</th><th scope="col" class="num">Doanh thu</th></tr></thead><tbody>
+            @foreach (var product in Model.SanPhamBanChay) { <tr><th scope="row">@product.Name<small>@product.Id</small></th><td class="num">@product.Quantity</td><td class="num">@Money(product.Amount)</td></tr> }
+            </tbody><tfoot><tr><th scope="row">Tổng tất cả sản phẩm</th><td class="num">@Model.SoMayDaBan</td><td class="num">@Money(Model.TongDoanhThu)</td></tr></tfoot></table></div>
+        </details>
+        <footer class="overview-section-foot">Mỗi dòng là một mã phiên bản (SKU); tên và đơn giá lấy từ giao dịch đã lưu. Bảng đầy đủ bao gồm cả các sản phẩm ngoài top 6.</footer>
+    </section>
 </div>
-
-<!-- BRAND ANALYTICS DATA TABLE -->
-<div class="admin-card">
-    <div class="admin-card-header">
-        <div>
-            <h3 class="admin-card-title">
-                <i class="fa-solid fa-table-list"></i>
-                <span>Phân tích dữ liệu kinh doanh theo hãng sản xuất</span>
-            </h3>
-            <div class="admin-card-desc">Báo cáo tổng hợp doanh thu và số lượng bán từ các tệp XML</div>
-        </div>
-        <div class="d-flex gap-2">
-            <a asp-controller="HoaDon" asp-action="Index" class="admin-btn admin-btn-secondary admin-btn-sm">
-                <i class="fa-solid fa-receipt"></i>
-                <span>Xem hóa đơn</span>
-            </a>
-            <a asp-controller="DienThoai" asp-action="XsltView" class="admin-btn admin-btn-primary admin-btn-sm">
-                <i class="fa-solid fa-file-code"></i>
-                <span>Xem XSLT</span>
-            </a>
-        </div>
-    </div>
-    <div class="admin-table-container">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Mã Hãng</th>
-                    <th>Tên Hãng Sản Xuất</th>
-                    <th class="text-end">Tổng Tồn Kho</th>
-                    <th class="text-end">Số Lượng Đã Bán</th>
-                    <th class="text-end">Doanh Thu Đạt Được (VNĐ)</th>
-                    <th>Trạng Thái</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var h in Model.DoanhThuTheoHang)
-                {
-                    string brandClass = h.MaHang.ToUpper() switch
-                    {
-                        "APPLE" => "brand-apple",
-                        "SAMSUNG" => "brand-samsung",
-                        "XIAOMI" => "brand-xiaomi",
-                        "OPPO" => "brand-oppo",
-                        "GOOGLE" => "brand-google",
-                        _ => ""
-                    };
-
-                    <tr>
-                        <td class="cell-code">@h.MaHang</td>
-                        <td>
-                            <span class="admin-badge-brand @brandClass">
-                                @h.TenHang
-                            </span>
-                        </td>
-                        <td class="cell-num">@h.SoLuongTon máy</td>
-                        <td class="cell-num" style="color: var(--admin-accent);">@h.SoLuongDaBan máy</td>
-                        <td class="cell-num" style="color: var(--amber-500); font-size: 14.5px;">
-                            @h.TongTienBan.ToString("#,##0") đ
-                        </td>
-                        <td>
-                            <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: var(--admin-accent); font-family: var(--font-mono); font-size: 11px;">
-                                <i class="fa-solid fa-check me-1"></i> Đồng bộ
-                            </span>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+<section class="admin-card">
+    <header class="overview-section-heading"><div><h2>Đơn trực tuyến gần nhất</h2><p>@Model.SoDonTrongKy đơn tạo trong kỳ · @Model.SoKhachHang tài khoản khách đã đăng ký. Danh sách bên dưới là các đơn mới nhất, mọi trạng thái.</p></div><a asp-controller="Orders" asp-action="Manage" class="overview-section-link">Quản lý đơn hàng <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></header>
+    @if (Model.DonGanNhat.Count == 0) { <p class="admin-empty-note">Chưa có đơn hàng trực tuyến.</p> }
+    else
+    {
+        <div class="admin-table-scroll"><table class="admin-data-table"><thead><tr><th>Mã đơn / ngày đặt</th><th>Khách hàng</th><th class="num">Số máy</th><th class="num">Tiền sản phẩm</th><th>Trạng thái</th><th><span class="sr-only">Thao tác</span></th></tr></thead><tbody>
+        @foreach (var order in Model.DonGanNhat)
+        {
+            <tr><td><b>@order.Id</b><small>@order.CreatedAt.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm")</small></td><td>@order.CustomerName<small>@order.Phone</small></td><td class="num">@order.Items.Sum(x => x.Quantity)</td><td class="num">@Money(order.Total)</td><td><span class="order-status" data-status="@order.Status">@order.StatusLabel</span></td><td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="admin-row-link">Chi tiết</a></td></tr>
+        }
+        </tbody></table></div>
+    }
+</section>
+<div class="overview-grid overview-grid--balanced">
+    <section class="admin-card">
+        <header class="overview-section-heading"><div><h2>Tồn kho cần chú ý</h2><p>Còn @Model.TongTonKho máy / @Model.TongSoSanPham phiên bản · @Model.SoSanPhamHetHang hết hàng · @Model.SoSanPhamSapHetHang sắp hết (dưới 5 máy)</p></div><a asp-controller="DienThoai" asp-action="Manage" asp-route-stock="LOW" class="overview-section-link">Xem kho <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></header>
+        @if (Model.SanPhamSapHetHang.Count == 0) { <p class="admin-empty-note">Hiện không có phiên bản hết hàng hoặc tồn dưới 5 máy.</p> }
+        else
+        {
+            <div class="overview-stock-list">@foreach (var phone in Model.SanPhamSapHetHang) { <a asp-controller="DienThoai" asp-action="Edit" asp-route-id="@phone.MaSP"><img src="@phone.HinhAnh" alt="" loading="lazy" /><span><b>@phone.TenSP</b><small>@phone.MaSP</small></span><strong class="@(phone.SoLuongTon == 0 ? "is-empty" : "")">@(phone.SoLuongTon == 0 ? "Hết hàng" : $"{phone.SoLuongTon} máy")</strong></a> }</div>
+        }
+        <footer class="overview-section-foot">Giá trị tồn theo giá bán: <b>@Money(Model.GiaTriTonKho)</b></footer>
+    </section>
+    <aside class="admin-card overview-work">
+        <header class="overview-section-heading"><div><h2>Cần xử lý</h2><p>Đơn mua và yêu cầu hỗ trợ hiện tại, không giới hạn theo kỳ.</p></div></header>
+        <a asp-controller="Orders" asp-action="Manage" asp-route-status="Pending" class="overview-work-total"><span><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Đơn chờ xác nhận</span><strong>@Model.SoDonChoXacNhan</strong></a>
+        <div class="overview-work-list">@foreach (var order in Model.DonChoXacNhan.Take(3)) { <a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id"><b>@order.CustomerName</b><small>@order.Id</small><span>@Money(order.Total)</span></a> }@if (Model.SoDonChoXacNhan == 0) { <p class="admin-empty-note">Đã xử lý hết đơn chờ xác nhận.</p> }</div>
+        <a asp-controller="Support" asp-action="Index" class="overview-work-total"><span><i class="fa-regular fa-comments" aria-hidden="true"></i> Tin nhắn chưa đọc</span><strong>@Model.SoTinChuaDoc</strong></a>
+        <div class="overview-work-list">@foreach (var message in Model.HoiThoaiChuaDoc.Take(2)) { <a asp-controller="Support" asp-action="Index"><b>@message.CustomerName</b><small>@message.Preview</small><span>@message.Unread tin</span></a> }@if (Model.SoTinChuaDoc == 0) { <p class="admin-empty-note">Không có tin nhắn chưa đọc.</p> }</div>
+    </aside>
 </div>
-
+<script type="application/json" id="overview-data">@Html.Raw(JsonSerializer.Serialize(new {
+    days = Model.TheoNgay,
+    pos = Model.DoanhThuPos,
+    online = Model.DoanhThuOnline,
+    brands = chartBrands,
+    products = Model.SanPhamBanChay.Take(6)
+}, new JsonSerializerOptions(JsonSerializerDefaults.Web)))</script>
 @section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const ctx = document.getElementById('chartRevenue');
-            if (!ctx) return;
-
-            const brandLabels = [
-                @Html.Raw(string.Join(",", Model.DoanhThuTheoHang.Select(x => $"'{x.TenHang}'")))
-            ];
-            const revenueData = [
-                @Html.Raw(string.Join(",", Model.DoanhThuTheoHang.Select(x => x.TongTienBan)))
-            ];
-
-            const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: brandLabels.length ? brandLabels : ['Apple', 'Samsung', 'Xiaomi', 'OPPO', 'Google'],
-                    datasets: [{
-                        label: 'Doanh thu (VNĐ)',
-                        data: revenueData.length ? revenueData : [299900000, 279900000, 214900000, 150000000, 90000000],
-                        backgroundColor: [
-                            'rgba(99, 102, 241, 0.85)',
-                            'rgba(16, 185, 129, 0.85)',
-                            'rgba(245, 158, 11, 0.85)',
-                            'rgba(244, 63, 94, 0.85)',
-                            'rgba(6, 182, 212, 0.85)'
-                        ],
-                        borderColor: [
-                            '#6366F1',
-                            '#10B981',
-                            '#F59E0B',
-                            '#F43F5E',
-                            '#06B6D4'
-                        ],
-                        borderWidth: 1.5,
-                        borderRadius: 10,
-                        maxBarThickness: 48
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-                            titleColor: isDark ? '#fff' : '#0F172A',
-                            bodyColor: isDark ? '#E2E8F0' : '#334155',
-                            borderColor: 'rgba(99, 102, 241, 0.3)',
-                            borderWidth: 1,
-                            padding: 12,
-                            boxPadding: 6,
-                            usePointStyle: true,
-                            callbacks: {
-                                label: function(context) {
-                                    return ' ' + context.parsed.y.toLocaleString('vi-VN') + ' VNĐ';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { 
-                                color: isDark ? '#94A3B8' : '#64748B',
-                                font: { family: 'Inter', weight: 500 }
-                            }
-                        },
-                        y: {
-                            grid: { 
-                                color: isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.06)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: isDark ? '#94A3B8' : '#64748B',
-                                font: { family: 'Fira Code', size: 11 },
-                                callback: function (value) {
-                                    return (value / 1000000).toLocaleString() + ' Tr';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+    <script src="~/js/admin-overview.js" asp-append-version="true"></script>
 }

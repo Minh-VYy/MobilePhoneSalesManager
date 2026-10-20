@@ -1,0 +1,25 @@
+@model BuyerOrder
+@{ var admin = User.IsInRole("Admin"); ViewData["Title"] = "Đơn hàng " + Model.Id; Layout = admin ? "_Layout" : "_LayoutUser"; }
+@if (admin) { <partial name="_AdminOrderDetails" model="Model" /> }
+else
+{
+<section class="customer-page">
+    <header class="customer-heading"><a asp-action="Index" class="auth-back"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Danh sách đơn hàng</a><h1>@Model.Id</h1><span class="order-status" data-status="@Model.Status">@Model.StatusLabel</span></header>
+    @if ((string?)TempData["OrderCreated"] == Model.Id) { <p class="phone-form-success" data-clear-cart role="status">Đã nhận đơn hàng. Bạn có thể theo dõi trạng thái tại trang này.</p> }
+    <div class="order-detail-grid">
+        <section class="order-card glass"><h2>Sản phẩm trong đơn</h2>
+            @foreach (var item in Model.Items)
+            {
+                <article class="order-item"><img src="@item.Image" alt="@item.Name" loading="lazy" /><div><a asp-controller="DienThoai" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a><p>@item.Options</p><small>@item.Quantity × @item.UnitPrice.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) ₫</small></div></article>
+            }
+            <div class="phone-cart-total"><span>Tiền sản phẩm</span><strong>@Model.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) ₫</strong></div>
+            <p class="phone-cart-note">Thanh toán khi nhận hàng (COD). Phí giao hàng được cửa hàng xác nhận trước khi gửi.</p>
+        </section>
+        <aside class="order-card glass"><h2>Thông tin nhận hàng</h2><p><b>@Model.CustomerName</b><br />@Model.Phone<br />@Model.Address</p>@if (!string.IsNullOrWhiteSpace(Model.Note)) { <p>Ghi chú: @Model.Note</p> }
+            <ol class="order-timeline">@foreach (var entry in Model.History) { <li><b>@BuyerOrder.StatusName(entry.Status)</b><time>@entry.At.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm")</time></li> }</ol>
+                <a asp-controller="Support" asp-action="Index" class="store-action btn">Nhắn tin hỗ trợ</a>
+                @if (Model.Status == "Pending") { <form asp-action="Cancel" method="post" data-confirm="Bạn muốn hủy đơn hàng này?"><input type="hidden" name="id" value="@Model.Id" /><button type="submit" class="store-action btn">Hủy đơn hàng</button></form> }
+        </aside>
+    </div>
+</section>
+}

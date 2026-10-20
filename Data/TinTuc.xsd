@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <!-- Định nghĩa kiểu mã tin tức TTxxx -->
+  <xs:simpleType name="MaTTType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="TT[0-9]{3,6}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!-- Phần tử gốc DanhSachTinTuc -->
+  <xs:element name="DanhSachTinTuc">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="TinTuc" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MaTT" type="MaTTType"/>
+              <xs:element name="TieuDe" type="xs:string"/>
+              <xs:element name="TomTat" type="xs:string"/>
+              <xs:element name="NoiDung" type="xs:string"/>
+              <xs:element name="HinhAnh" type="xs:string"/>
+              <xs:element name="NgayDang" type="xs:string"/>
+              <xs:element name="DanhMuc" type="xs:string"/>
+              <xs:element name="TacGia" type="xs:string"/>
+              <xs:element name="LienKetGoc" type="xs:string" minOccurs="0"/>
+              <xs:element name="LuotXem" type="xs:nonNegativeInteger"/>
+              <xs:element name="NoiBat" type="xs:boolean"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+    <!-- Đảm bảo Mã tin tức là duy nhất -->
+    <xs:unique name="UniqueMaTT">
+      <xs:selector xpath="TinTuc"/>
+      <xs:field xpath="MaTT"/>
+    </xs:unique>
+  </xs:element>
+
+</xs:schema>

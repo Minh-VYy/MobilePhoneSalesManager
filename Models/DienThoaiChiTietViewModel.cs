@@ -45,5 +45,5 @@ public class PhoneVariantOptionViewModel
     public string Weight { get; set; } = string.Empty;
     public string Sku { get; set; } = string.Empty;
     public string DetailsUrl { get; set; } = string.Empty;
-    public string SmsUrl { get; set; } = string.Empty;
+    public string SupportUrl { get; set; } = string.Empty;
 }

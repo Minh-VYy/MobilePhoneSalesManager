@@ -1,0 +1,16 @@
+@model ChatViewModel
+<div class="support-chat @(Model.IsWidget ? "support-chat--widget" : "")" data-chat-root data-chat-admin="@Model.IsAdmin.ToString().ToLowerInvariant()" data-chat-widget="@Model.IsWidget.ToString().ToLowerInvariant()" data-chat-base="@Url.Content("~/Support/")" data-chat-product="@Model.ProductId" data-chat-conversation="@Model.ConversationId">
+    @if (Model.IsWidget) { <button type="button" class="support-launch" data-chat-launch aria-label="Mở chat hỗ trợ" aria-expanded="false" aria-controls="support-chat-panel"><i class="fa-regular fa-comments" aria-hidden="true"></i><span>Chat hỗ trợ</span><b class="support-badge" data-chat-unread hidden>0</b></button> }
+    <section class="chat-shell glass" id="support-chat-panel" aria-label="Chat hỗ trợ trực tiếp" hidden="@Model.IsWidget">
+        @if (Model.IsAdmin) { <aside class="chat-inbox"><h2>Hội thoại khách hàng</h2><div data-chat-inbox><p class="chat-empty">Chưa có cuộc trò chuyện.</p></div></aside> }
+        <div class="chat-main">
+            <header class="chat-header"><div><h2 data-chat-title>@(Model.IsAdmin ? "Chọn hội thoại" : "Hỗ trợ PhoneStore")</h2><p>Nhắn trực tiếp với @(Model.IsAdmin ? "khách hàng" : "nhân viên cửa hàng")</p></div>@if (Model.IsWidget) { <button type="button" class="icon-btn" data-chat-close aria-label="Đóng chat"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button> }</header>
+            <p class="chat-connection" data-chat-connection role="status">Đang kết nối…</p>
+            <div class="chat-scroll" data-chat-scroll><button type="button" class="chat-history" data-chat-history hidden>Tải tin nhắn trước</button><div class="chat-messages" data-chat-messages role="log" aria-live="polite" aria-relevant="additions"></div><p class="chat-empty" data-chat-empty>@(Model.IsAdmin ? "Chọn một khách hàng để đọc và trả lời." : "Bạn cần tư vấn mẫu điện thoại hay hỗ trợ đơn hàng? Hãy để lại lời nhắn, nhân viên sẽ trả lời tại đây.")</p></div>
+            <form asp-controller="Support" asp-action="Send" method="post" class="chat-compose" data-chat-form>
+                <label class="sr-only" for="support-chat-text">Tin nhắn</label><textarea id="support-chat-text" name="text" rows="2" maxlength="2000" placeholder="Nhập tin nhắn…" required data-chat-text></textarea><button type="submit" class="store-action btn btn-primary" data-chat-send disabled aria-label="Gửi tin nhắn"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+                <p class="field-error" data-chat-error role="alert" hidden></p>
+            </form>
+        </div>
+    </section>
+</div>

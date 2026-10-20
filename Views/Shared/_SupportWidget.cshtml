@@ -1,0 +1,5 @@
+@if (ViewContext.RouteData.Values["controller"]?.ToString() is not ("Support" or "Account") && !User.IsInRole("Admin"))
+{
+    @if (User.Identity?.IsAuthenticated == true) { <partial name="_SupportChat" model="new ChatViewModel(IsWidget: true)" /> }
+    else { <a asp-controller="Support" asp-action="Index" class="support-launch" aria-label="Đăng nhập để chat với nhân viên"><i class="fa-regular fa-comments" aria-hidden="true"></i><span>Chat hỗ trợ</span></a> }
+}

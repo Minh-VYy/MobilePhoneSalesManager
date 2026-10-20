@@ -1,0 +1,27 @@
+@model BuyerOrder
+@using System.Globalization
+@inject QuanLyBanDienThoai.Services.SupportChatService Chat
+@inject QuanLyBanDienThoai.Services.StockUnitService Units
+@{ var vi = CultureInfo.GetCultureInfo("vi-VN"); var assignedUnits = Units.GetAll().Where(x => x.Reference == Model.Id && x.Channel == "Online").ToList(); }
+<header class="overview-heading">
+    <div><p class="overview-eyebrow">Đơn hàng trực tuyến</p><h1>@Model.Id</h1><p>Đặt lúc @Model.CreatedAt.ToOffset(TimeSpan.FromHours(7)).ToString("HH:mm · dd/MM/yyyy") · @Model.Items.Sum(x => x.Quantity) sản phẩm</p></div>
+    <a asp-action="Manage" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Danh sách đơn hàng</a>
+</header>
+<div class="admin-order-banner"><div><span class="order-status" data-status="@Model.Status">@Model.StatusLabel</span><p>@(Model.Status switch { "Pending" => "Kiểm tra tồn kho và thông tin nhận hàng trước khi xác nhận.", "Confirmed" => "Tồn kho đã được phân bổ. Chuẩn bị đóng gói và bàn giao vận chuyển.", "Shipping" => "Đơn đang được giao. Cập nhật sau khi xác nhận khách đã nhận hàng.", "Delivered" => "Đơn đã giao thành công và được ghi nhận vào doanh số trực tuyến.", _ => "Đơn đã hủy. Sản phẩm đã phân bổ được hoàn lại kho nếu chưa giao." })</p></div><strong>@Model.Total.ToString("N0", vi) ₫<small>Tiền sản phẩm · COD</small></strong></div>
+<div class="admin-order-layout">
+    <div>
+        <section class="admin-card"><header class="overview-section-heading"><div><h2>Sản phẩm trong đơn</h2><p>Giá và tùy chọn được lưu tại thời điểm khách đặt hàng.</p></div></header><div class="admin-table-scroll"><table class="admin-data-table admin-order-products"><thead><tr><th>Sản phẩm / phiên bản</th><th class="num">Đơn giá</th><th class="num">Số lượng</th><th class="num">Thành tiền</th></tr></thead><tbody>
+            @foreach (var item in Model.Items) { <tr><td><div class="admin-order-product"><img src="@item.Image" alt="" loading="lazy" /><span><b>@item.Name</b><small>@item.ProductId</small><small>@item.Options</small></span></div></td><td class="num">@item.UnitPrice.ToString("N0", vi) ₫</td><td class="num">@item.Quantity</td><td class="num"><b>@((item.UnitPrice * item.Quantity).ToString("N0", vi)) ₫</b></td></tr> }
+        </tbody></table></div><footer class="admin-order-total"><span>Tiền sản phẩm</span><strong>@Model.Total.ToString("N0", vi) ₫</strong></footer></section>
+        <section class="admin-card"><header class="overview-section-heading"><div><h2>Lịch sử trạng thái</h2><p>Các mốc xử lý đã được ghi nhận.</p></div></header><ol class="admin-event-list">@foreach (var entry in Model.History) { <li><i class="fa-solid fa-check" aria-hidden="true"></i><span><b>@BuyerOrder.StatusName(entry.Status)</b><time>@entry.At.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm")</time></span></li> }</ol></section>
+    </div>
+    <aside>
+        @if (assignedUnits.Count > 0) { <section class="admin-card"><header class="overview-section-heading"><div><h2>Mã máy của đơn online</h2><p>Đối chiếu đúng IMEI/serial này khi đóng gói giao khách.</p></div></header><dl class="admin-info-list">@foreach (var unit in assignedUnits) { <div><dt>@unit.ProductName</dt><dd><b>@unit.Code</b><br />@unit.StatusLabel</dd></div> }</dl></section> }
+        <section class="admin-card"><header class="overview-section-heading"><div><h2>Thông tin nhận hàng</h2><p>Thông tin riêng của đơn hàng này.</p></div></header><dl class="admin-info-list"><div><dt>Người nhận</dt><dd><b>@Model.CustomerName</b></dd></div><div><dt>Điện thoại</dt><dd><a href="tel:@Model.Phone">@Model.Phone</a></dd></div><div><dt>Địa chỉ</dt><dd>@Model.Address</dd></div><div><dt>Ghi chú</dt><dd>@(string.IsNullOrWhiteSpace(Model.Note) ? "Không có ghi chú" : Model.Note)</dd></div><div><dt>Thanh toán</dt><dd>Thu hộ khi nhận hàng (COD)</dd></div><div><dt>Phí giao hàng</dt><dd>Xác nhận với khách trước khi gửi</dd></div></dl><footer class="admin-panel-footer"><a asp-controller="Customers" asp-action="Details" asp-route-id="@Model.AccountId" class="admin-row-link">Hồ sơ khách hàng</a>@if (Chat.Exists(Model.AccountId)) { <a asp-controller="Support" asp-action="Index" asp-route-conversationId="@Model.AccountId" class="admin-row-link">Mở hội thoại</a> }</footer></section>
+        <section class="admin-card"><header class="overview-section-heading"><div><h2>Xử lý đơn hàng</h2><p>Trạng thái tiếp theo theo quy trình cửa hàng.</p></div></header><div class="admin-order-actions">
+            @foreach (var status in BuyerOrder.NextStatuses(Model.Status)) { <form asp-action="UpdateStatus" method="post" data-confirm="@(status == "Cancelled" ? "Hủy đơn hàng này và hoàn lại tồn đã phân bổ (nếu có)?" : status == "Delivered" ? "Xác nhận khách đã nhận hàng và hoàn tất thu hộ?" : null)"><input type="hidden" name="id" value="@Model.Id" /><input type="hidden" name="status" value="@status" /><button type="submit" class="btn-saas @(status == "Cancelled" ? "btn-saas-danger" : "btn-saas-primary")">@BuyerOrder.ActionName(status)</button></form> }
+            @if (BuyerOrder.NextStatuses(Model.Status).Length == 0) { <p class="admin-muted">Đơn đã kết thúc xử lý.</p> }
+            <p class="admin-muted">Xác nhận đơn sẽ trừ tồn kho. Hủy trước khi giao sẽ hoàn tồn đã phân bổ.</p>
+        </div></section>
+    </aside>
+</div>

@@ -35,9 +35,16 @@ public class ProductReviewModel
 
 public class CustomerOrderRequestModel
 {
+    [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(100)]
     public string CustomerName { get; set; } = string.Empty;
+    [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.RegularExpression(@"^0[35789]\d{8}$")]
     public string Phone { get; set; } = string.Empty;
+    [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(250)]
     public string Address { get; set; } = string.Empty;
+    [System.ComponentModel.DataAnnotations.Required]
+    public string CheckoutToken { get; set; } = string.Empty;
+    [System.ComponentModel.DataAnnotations.StringLength(500)]
+    public string? Note { get; set; }
     public List<CustomerOrderRequestItem> Items { get; set; } = new();
 }
 

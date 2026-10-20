@@ -1,0 +1,21 @@
+@model QuangCaoModel
+@{ var editing = ViewData["EditingBanner"] is true; }
+<header class="overview-heading"><div><p class="overview-eyebrow">Nội dung cửa hàng</p><h1>@ViewData["Title"]</h1><p>Chỉnh nội dung, ảnh và thời gian trình chiếu trên trang chủ.</p></div><a asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Danh sách banner</a></header>
+<form asp-action="@(editing ? "Save" : "Create")" method="post" class="admin-banner-editor" data-banner-editor data-base="@Url.Content("~/")">
+    <input type="hidden" asp-for="MaQC" />
+    <section class="admin-card">
+        <header class="overview-section-heading"><div><h2>Nội dung hiển thị</h2><p>Thay đổi được áp dụng sau khi lưu.</p></div></header>
+        <div asp-validation-summary="All" class="admin-form-errors" role="alert"></div>
+        <div class="admin-form-grid">
+            <div class="admin-form-field admin-form-field--full"><label asp-for="TieuDe">Tiêu đề banner *</label><input asp-for="TieuDe" class="form-input" maxlength="90" required data-banner-title /><span asp-validation-for="TieuDe"></span></div>
+            <div class="admin-form-field admin-form-field--full"><label asp-for="MoTa">Nội dung quảng cáo *</label><textarea asp-for="MoTa" class="form-textarea" rows="4" maxlength="320" required data-banner-description></textarea><span asp-validation-for="MoTa"></span></div>
+            <div class="admin-form-field admin-form-field--full"><label asp-for="HinhAnh">Đường dẫn ảnh *</label><input asp-for="HinhAnh" class="form-input" maxlength="500" placeholder="/images/banner.jpg hoặc https://…" required data-banner-image /><span asp-validation-for="HinhAnh"></span></div>
+            <div class="admin-form-field"><label asp-for="ThuTu">Thứ tự trình chiếu</label><input asp-for="ThuTu" class="form-input" type="number" min="1" max="999" required /><small>Thứ tự nhỏ hiển thị trước.</small><span asp-validation-for="ThuTu"></span></div>
+            <div class="admin-form-field"><label asp-for="ThoiGianChuyenGiay">Thời gian mỗi ảnh (giây)</label><input asp-for="ThoiGianChuyenGiay" class="form-input" type="number" min="3" max="30" required /><small>Từ 3 đến 30 giây.</small><span asp-validation-for="ThoiGianChuyenGiay"></span></div>
+            <label class="admin-check-field admin-form-field--full"><input asp-for="DangHienThi" /> Hiển thị banner trên trang chủ</label>
+        </div>
+        <footer class="admin-panel-footer"><a asp-action="Index" class="btn-saas btn-saas-secondary">Hủy</a><button type="submit" class="btn-saas btn-saas-primary"><i class="fa-solid fa-check" aria-hidden="true"></i> @(editing ? "Lưu thay đổi" : "Thêm banner")</button></footer>
+    </section>
+    <aside class="admin-card admin-banner-preview"><header class="overview-section-heading"><div><h2>Xem trước nội dung</h2><p>Kiểm tra hình ảnh và câu chữ trước khi lưu.</p></div></header><div class="admin-banner-preview-image"><img alt="Ảnh xem trước banner" data-banner-preview-image hidden /><p data-banner-preview-empty>Nhập đường dẫn để xem trước hình ảnh.</p></div><div class="admin-banner-preview-copy"><small>PhoneStore · Nội dung nổi bật</small><h3 data-banner-preview-title></h3><p data-banner-preview-description></p></div></aside>
+</form>
+@section Scripts { <script src="~/js/admin-banner.js" asp-append-version="true"></script> }

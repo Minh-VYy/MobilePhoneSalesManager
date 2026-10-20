@@ -165,7 +165,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const reviewId = document.getElementById('review-product-id');
         if (reviewId) reviewId.value = product.productId;
         const messageLink = detail.querySelector('[data-variant-message]');
-        if (messageLink) messageLink.href = product.smsUrl || '#';
+        if (messageLink) {
+            messageLink.href = product.supportUrl;
+            messageLink.dataset.supportMessage = `Tôi muốn tư vấn ${product.productName}: ${product.conditionText}, ${product.storageLabel}, ${product.color}, bảo hành ${product.warrantyText}.`;
+        }
 
         markSelectedOptions();
         updateOptionAvailability();
@@ -233,7 +236,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const messageLink = detail.querySelector('[data-variant-message]');
         if (messageLink) {
             const message = `Tôi muốn tư vấn ${activeProduct.modelSeries}: ${selectedLabel('condition')}, ${selectedLabel('storage')}, ${selectedLabel('color')}, bảo hành ${selectedLabel('warranty')}.`;
-            messageLink.href = 'sms:0901176222?body=' + encodeURIComponent(message);
+            messageLink.href = activeProduct.supportUrl;
+            messageLink.dataset.supportMessage = message;
         }
         detail.querySelectorAll('[data-add-cart], [data-buy-now]').forEach(action => { action.disabled = true; });
     }
@@ -264,7 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            window.PhoneStoreCart?.add(item);
+            try { window.PhoneStoreCart.add(item); }
+            catch (error) { window.showToast?.(error.message || 'Chưa thể lưu giỏ hàng. Vui lòng thử lại.'); return; }
             if (this.hasAttribute('data-buy-now')) {
                 window.location.href = '/DienThoai/Cart';
                 return;

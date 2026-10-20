@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using QuanLyBanDienThoai.Models;
 using QuanLyBanDienThoai.Services;
 
 namespace QuanLyBanDienThoai.Controllers
 {
+    [Authorize(Roles = "Admin"), ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
     public class HoaDonController : Controller
     {
         private readonly HoaDonXmlService _hoaDonService;
@@ -26,7 +28,6 @@ namespace QuanLyBanDienThoai.Controllers
         // Danh sách tất cả hóa đơn XML
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             var invoices = _hoaDonService.GetAll();
             return View(invoices);
         }
@@ -35,16 +36,16 @@ namespace QuanLyBanDienThoai.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             ViewBag.PhoneList = _dienThoaiService.GetAll();
-            return View(new CreateHoaDonInputModel());
+            return View(new CreateHoaDonInputModel { NhanVien = User.FindFirst("DisplayName")?.Value ?? User.Identity!.Name! });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CreateHoaDonInputModel input)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
+            input.NhanVien = User.FindFirst("DisplayName")?.Value ?? User.Identity!.Name!;
+            ModelState.Remove(nameof(input.NhanVien));
             if (!ModelState.IsValid)
             {
                 ViewBag.PhoneList = _dienThoaiService.GetAll();
@@ -67,7 +68,6 @@ namespace QuanLyBanDienThoai.Controllers
         // In / Xem mẫu Hóa đơn bán lẻ được Transform trực tiếp qua XSLT
         public IActionResult Print(string id)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             if (string.IsNullOrWhiteSpace(id)) return NotFound();
 
             var invoice = _hoaDonService.GetById(id);
@@ -76,13 +76,12 @@ namespace QuanLyBanDienThoai.Controllers
             string htmlContent = _xsltService.TransformSingleInvoiceToHtml(id);
             ViewBag.HtmlContent = htmlContent;
             ViewBag.InvoiceCode = id;
-            return View();
+            return View(invoice);
         }
 
         // Validate file HoaDon.xml với HoaDon.xsd
         public IActionResult ValidateXsd()
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             string xmlPath = _hoaDonService.GetXmlPath();
             string xsdPath = _hoaDonService.GetXsdPath();
 

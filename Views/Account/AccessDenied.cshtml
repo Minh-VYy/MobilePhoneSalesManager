@@ -1,0 +1,2 @@
+@{ ViewData["Title"] = "Không có quyền truy cập"; Layout = User.IsInRole("Admin") ? "_Layout" : "_LayoutUser"; }
+<section class="customer-page"><div class="account-card glass"><h1>Không có quyền truy cập</h1><p>Tài khoản hiện tại không được sử dụng chức năng này.</p><a asp-controller="Home" asp-action="Index" class="btn">Về cửa hàng</a><form asp-controller="Account" asp-action="Logout" method="post"><button class="btn" type="submit">Đăng xuất và dùng tài khoản khác</button></form></div></section>

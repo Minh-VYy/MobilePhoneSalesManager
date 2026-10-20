@@ -1,0 +1,6 @@
+@model ChatViewModel
+@{ ViewData["Title"] = Model.IsAdmin ? "Hộp thư hỗ trợ" : "Hỗ trợ mua hàng"; Layout = Model.IsAdmin ? "_Layout" : "_LayoutUser"; }
+<section class="customer-page"><header class="customer-heading"><h1>@ViewData["Title"]</h1><p>@(Model.IsAdmin ? "Đọc và trả lời tin nhắn từ khách hàng." : "Trao đổi với nhân viên và xem lại lịch sử tư vấn của bạn.")</p></header>
+    @if (!Model.IsAdmin) { <partial name="_BuyerNav" /> }
+    <partial name="_SupportChat" model="Model" />
+</section>

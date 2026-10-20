@@ -1,209 +1,88 @@
+@inject QuanLyBanDienThoai.Services.CustomerOrderService AdminOrders
+@inject QuanLyBanDienThoai.Services.SupportChatService AdminChat
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    var pending = AdminOrders.GetAll().Count(x => x.Status == "Pending");
+    var unread = AdminChat.Conversations().Sum(x => x.Unread);
+    var displayName = User.FindFirst("DisplayName")?.Value ?? User.Identity?.Name ?? "Quản trị viên";
+    var avatar = string.IsNullOrWhiteSpace(displayName) ? "P" : displayName.Trim()[..1].ToUpperInvariant();
+    var links = new[] {
+        new { Group = "Điều hành", Controller = "ThongKe", Action = "Index", Text = "Tổng quan", Icon = "fa-chart-simple", Badge = 0 },
+        new { Group = "Điều hành", Controller = "Orders", Action = "Manage", Text = "Đơn hàng trực tuyến", Icon = "fa-bag-shopping", Badge = pending },
+        new { Group = "Điều hành", Controller = "Support", Action = "Index", Text = "Tin nhắn hỗ trợ", Icon = "fa-comments", Badge = unread },
+        new { Group = "Điều hành", Controller = "Customers", Action = "Index", Text = "Khách hàng", Icon = "fa-users", Badge = 0 },
+        new { Group = "Sản phẩm & bán hàng", Controller = "DienThoai", Action = "Manage", Text = "Sản phẩm & tồn kho", Icon = "fa-boxes-stacked", Badge = 0 },
+        new { Group = "Sản phẩm & bán hàng", Controller = "StockUnits", Action = "Index", Text = "Mã máy & IMEI", Icon = "fa-barcode", Badge = 0 },
+        new { Group = "Sản phẩm & bán hàng", Controller = "DienThoai", Action = "Create", Text = "Thêm sản phẩm", Icon = "fa-plus", Badge = 0 },
+        new { Group = "Sản phẩm & bán hàng", Controller = "HoaDon", Action = "Create", Text = "Bán hàng tại quầy", Icon = "fa-cash-register", Badge = 0 },
+        new { Group = "Sản phẩm & bán hàng", Controller = "HoaDon", Action = "Index", Text = "Hóa đơn tại quầy", Icon = "fa-receipt", Badge = 0 },
+        new { Group = "Cửa hàng", Controller = "QuangCao", Action = "Index", Text = "Banner quảng cáo", Icon = "fa-images", Badge = 0 },
+        new { Group = "Cửa hàng", Controller = "AdminData", Action = "Index", Text = "Dữ liệu hệ thống", Icon = "fa-database", Badge = 0 },
+        new { Group = "Cửa hàng", Controller = "Account", Action = "Profile", Text = "Tài khoản quản trị", Icon = "fa-user", Badge = 0 },
+        new { Group = "Cửa hàng", Controller = "Account", Action = "ChangePassword", Text = "Đổi mật khẩu", Icon = "fa-key", Badge = 0 }
+    };
+}
 <!DOCTYPE html>
 <html lang="vi" data-theme="light">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>@ViewData["Title"] — PhoneStore XML Enterprise</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/admin-theme.css" asp-append-version="true" />
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>@ViewData["Title"] · Smart XML Solutions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /><link rel="stylesheet" href="~/css/commerce.css" asp-append-version="true" /><link rel="stylesheet" href="~/css/admin-theme.css" asp-append-version="true" /><link rel="stylesheet" href="~/css/admin-workspace.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
 </head>
-<body>
-    <div class="admin-shell">
-        <!-- ================= SIDEBAR (MATCHING SCREENSHOT 3) ================= -->
-        <aside class="admin-sidebar" id="adminSidebar">
-            <a asp-controller="ThongKe" asp-action="Index" class="admin-sidebar-header">
-                <div class="admin-brand-icon">
-                    <i class="fa-solid fa-bolt"></i>
-                </div>
-                <div class="admin-brand-title">PhoneStore Admin</div>
+<body class="admin-body">
+<a href="#admin-content" class="admin-skip-link">Đến nội dung chính</a>
+<div class="admin-shell">
+    <aside class="admin-sidebar" id="adminSidebar" aria-label="Điều hướng quản trị">
+        <div class="admin-sidebar-brand">
+            <a asp-controller="ThongKe" asp-action="Index" class="admin-sidebar-header" aria-label="Trang quản trị Smart XML Solutions">
+                <img src="~/images/logo.png" asp-append-version="true" class="admin-brand-logo" width="56" height="56" alt="Smart XML Solutions" />
+                <span class="admin-brand-title"><strong>Smart XML Solutions</strong><small>Quản trị cửa hàng</small></span>
             </a>
-
-            <nav class="admin-sidebar-nav">
-                <!-- Main Items -->
-                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "ThongKe" ? "active" : "")"
-                   asp-controller="ThongKe" asp-action="Index">
-                    <i class="fa-solid fa-gauge-high"></i>
-                    <span>Dashboard</span>
-                </a>
-
-                <div class="admin-nav-category">QUẢN LÝ KHO DỮ LIỆU</div>
-
-                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Manage" ? "active" : "")"
-                   asp-controller="DienThoai" asp-action="Manage">
-                    <i class="fa-solid fa-table-columns"></i>
-                    <span>Kho XML (Kanban)</span>
-                </a>
-
-                <div class="admin-nav-sublist">
-                    <a class="admin-nav-sublink @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")"
-                       asp-controller="DienThoai" asp-action="Create">
-                        <span>+ Thêm sản phẩm</span>
-                    </a>
-                    <a class="admin-nav-sublink @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "ValidateXsd" ? "active" : "")"
-                       asp-controller="DienThoai" asp-action="ValidateXsd">
-                        <span>Kiểm tra XSD Schema</span>
-                    </a>
-                    <a class="admin-nav-sublink @(ViewContext.RouteData.Values["controller"]?.ToString() == "DienThoai" && ViewContext.RouteData.Values["action"]?.ToString() == "XsltView" ? "active" : "")"
-                       asp-controller="DienThoai" asp-action="XsltView">
-                        <span>XSLT Catalogue</span>
-                    </a>
-                </div>
-
-                <div class="admin-nav-category">GIAO DỊCH & HÓA ĐƠN</div>
-
-                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" && ViewContext.RouteData.Values["action"]?.ToString() == "Create" ? "active" : "")"
-                   asp-controller="HoaDon" asp-action="Create">
-                    <i class="fa-solid fa-cash-register"></i>
-                    <span>Bán hàng (POS XML)</span>
-                </a>
-
-                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "HoaDon" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                   asp-controller="HoaDon" asp-action="Index">
-                    <i class="fa-solid fa-receipt"></i>
-                    <span>Danh sách hóa đơn</span>
-                </a>
-
-                <div class="admin-nav-category">NỘI DUNG & DỊCH VỤ</div>
-
-                <a class="admin-nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "QuangCao" ? "active" : "")"
-                   asp-controller="QuangCao" asp-action="Index">
-                    <i class="fa-solid fa-images"></i>
-                    <span>Banner quảng cáo</span>
-                </a>
-
-                <a class="admin-nav-item" asp-controller="DienThoai" asp-action="RssFeed" target="_blank">
-                    <i class="fa-solid fa-rss"></i>
-                    <span>RSS 2.0 XML Feed</span>
-                </a>
-
-                <a class="admin-nav-item" asp-controller="DienThoai" asp-action="XmlApi" target="_blank">
-                    <i class="fa-solid fa-network-wired"></i>
-                    <span>Web Service API</span>
-                </a>
-            </nav>
-
-            <!-- Sidebar User Profile (Matching Screenshot 3) -->
-            <div class="admin-sidebar-footer">
-                <div class="admin-user-cell">
-                    <div class="admin-avatar">
-                        AD
-                        <span class="admin-avatar-dot"></span>
-                    </div>
-                    <div class="admin-user-meta">
-                        <div class="admin-user-name">Quản Trị Viên</div>
-                        <div class="admin-user-role">Administrator</div>
-                    </div>
-                </div>
-                <a asp-controller="Account" asp-action="Logout" class="admin-icon-btn" title="Đăng xuất" style="width: 30px; height: 30px;">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </a>
-            </div>
-        </aside>
-
-        <!-- ================= MAIN CONTENT ================= -->
-        <div class="admin-main">
-            <!-- Topbar (Matching Screenshot 3) -->
-            <header class="admin-topbar">
-                <div class="admin-topbar-left">
-                    <button type="button" class="admin-icon-btn d-lg-none" id="mobileSidebarToggle" aria-label="Menu">
-                        <i class="fa-solid fa-bars"></i>
-                    </button>
-                    <nav class="admin-breadcrumb">
-                        <a asp-controller="ThongKe" asp-action="Index">Admin</a>
-                        <i class="fa-solid fa-chevron-right" style="font-size: 10px; color: var(--text-faint);"></i>
-                        <span class="admin-breadcrumb-current">@ViewData["Title"]</span>
-                    </nav>
-                </div>
-
-                <div class="admin-topbar-right">
-                    <!-- Search Input -->
-                    <div class="admin-top-search">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="globalAdminSearch" placeholder="Tìm kiếm nhanh... (Ctrl+K)" />
-                    </div>
-
-                    <!-- Storefront Switch -->
-                    <a asp-controller="Account" asp-action="SwitchRole" asp-route-role="User" class="admin-storefront-btn" title="Xem giao diện khách hàng">
-                        <i class="fa-solid fa-store"></i>
-                        <span>Storefront ↗</span>
-                    </a>
-
-                    <!-- Notification Bell -->
-                    <button type="button" class="admin-icon-btn" title="Thông báo hệ thống">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="admin-badge-dot"></span>
-                    </button>
-
-                    <!-- Theme Toggle -->
-                    <button type="button" class="admin-icon-btn" id="theme-toggle" title="Đổi giao diện sáng/tối">
-                        <i class="fa-regular fa-moon"></i>
-                    </button>
-
-                    <!-- Profile Avatar -->
-                    <div class="admin-avatar" style="width: 32px; height: 32px; font-size: 12px; cursor: pointer;" title="Tài khoản Admin">
-                        AD
-                    </div>
-                </div>
-            </header>
-
-            <!-- Main Workspace -->
-            <main role="main" class="admin-content-view">
-                @if (TempData["SuccessMessage"] != null)
-                {
-                    <div class="admin-card p-3 mb-4 d-flex align-items-center gap-3" style="background: var(--status-success-bg); border-color: var(--status-success-border); color: var(--status-success);">
-                        <i class="fa-solid fa-circle-check fs-5"></i>
-                        <div>
-                            <strong>Thành công:</strong> @TempData["SuccessMessage"]
-                        </div>
-                    </div>
-                }
-                @if (TempData["ErrorMessage"] != null)
-                {
-                    <div class="admin-card p-3 mb-4 d-flex align-items-center gap-3" style="background: var(--status-danger-bg); border-color: var(--status-danger-border); color: var(--status-danger);">
-                        <i class="fa-solid fa-triangle-exclamation fs-5"></i>
-                        <div>
-                            <strong>Lưu ý:</strong> @TempData["ErrorMessage"]
-                        </div>
-                    </div>
-                }
-
-                @RenderBody()
-            </main>
+            <button type="button" class="admin-icon-btn admin-menu-toggle" data-admin-close aria-label="Đóng điều hướng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
         </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>
-        // Mobile Sidebar Toggle
-        const toggleBtn = document.getElementById('mobileSidebarToggle');
-        const sidebar = document.getElementById('adminSidebar');
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                sidebar.classList.toggle('open');
-            });
-            document.addEventListener('click', (e) => {
-                if (!sidebar.contains(e.target) && !toggleBtn.contains(e.target)) {
-                    sidebar.classList.remove('open');
+        <nav class="admin-sidebar-nav">
+            @foreach (var group in links.GroupBy(x => x.Group))
+            {
+                <div class="admin-nav-category">@group.Key</div>
+                @foreach (var link in group)
+                {
+                    var active = controller == link.Controller && (action == link.Action
+                        || (controller == "Orders" && link.Action == "Manage")
+                        || (controller is "Customers" or "Support" or "QuangCao" && link.Action == "Index")
+                        || (controller == "DienThoai" && action is "Edit" or "VariantSettings" && link.Action == "Manage")
+                        || (controller == "HoaDon" && action == "Print" && link.Action == "Index"));
+                    <a asp-controller="@link.Controller" asp-action="@link.Action" class="admin-nav-item @(active ? "active" : "")" aria-current="@(active ? "page" : null)"><i class="fa-solid @link.Icon" aria-hidden="true"></i><span>@link.Text</span>@if (link.Badge > 0) { <b class="admin-nav-count">@link.Badge</b> }</a>
                 }
-            });
-        }
-
-        // Global search shortcut (Ctrl + K)
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                const s = document.getElementById('globalAdminSearch');
-                if (s) s.focus();
             }
-        });
-    </script>
-    @await RenderSectionAsync("Scripts", required: false)
+        </nav>
+        <div class="admin-sidebar-footer"><a asp-controller="Account" asp-action="Profile" class="admin-user-cell"><span class="admin-avatar">@avatar</span><span class="admin-user-meta"><b class="admin-user-name">@displayName</b><small class="admin-user-role">Quản trị viên</small></span></a><form asp-controller="Account" asp-action="Logout" method="post" class="nav-logout"><button type="submit" class="admin-icon-btn" aria-label="Đăng xuất"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i></button></form></div>
+    </aside>
+    <button class="admin-sidebar-backdrop" type="button" data-admin-close aria-label="Đóng điều hướng" hidden></button>
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="admin-topbar-left"><button class="admin-icon-btn admin-menu-toggle" type="button" id="mobileSidebarToggle" aria-label="Mở điều hướng" aria-controls="adminSidebar" aria-expanded="false"><i class="fa-solid fa-bars" aria-hidden="true"></i></button><nav class="admin-breadcrumb" aria-label="Đường dẫn"><a asp-controller="ThongKe" asp-action="Index">Quản trị</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span class="admin-breadcrumb-current">@ViewData["Title"]</span></nav></div>
+            <div class="admin-topbar-right">
+                <form asp-controller="DienThoai" asp-action="Manage" method="get" class="admin-top-search" role="search">
+                    <label for="globalAdminSearch" class="sr-only">Tìm sản phẩm trong kho</label>
+                    <input type="search" name="keyword" id="globalAdminSearch" placeholder="Tìm sản phẩm…" />
+                    <button type="submit" class="admin-search-submit" aria-label="Tìm sản phẩm trong kho"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+                </form>
+                <a asp-controller="Home" asp-action="Index" class="admin-storefront-btn"><i class="fa-solid fa-store" aria-hidden="true"></i><span>Xem cửa hàng</span></a>
+                <details class="admin-notifications"><summary class="admin-icon-btn" aria-label="Việc cần xử lý"><i class="fa-regular fa-bell" aria-hidden="true"></i>@if (pending + unread > 0) { <b class="admin-notification-count">@(pending + unread)</b> }</summary><div class="admin-notifications-panel"><h2>Việc cần xử lý</h2><a asp-controller="Orders" asp-action="Manage" asp-route-status="Pending"><span>Đơn chờ xác nhận</span><b>@pending</b></a><a asp-controller="Support" asp-action="Index"><span>Tin nhắn chưa đọc</span><b>@unread</b></a><a asp-controller="DienThoai" asp-action="Manage" asp-route-stock="LOW">Kiểm tra hàng sắp hết <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div></details>
+                <button type="button" class="admin-icon-btn" id="theme-toggle" aria-label="Đổi giao diện sáng/tối"><i class="fa-regular fa-moon" aria-hidden="true"></i></button>
+            </div>
+        </header>
+        <main role="main" class="admin-content-view" id="admin-content">
+            @if (TempData["SuccessMessage"] != null) { <div class="admin-feedback admin-feedback--success" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><span>@TempData["SuccessMessage"]</span></div> }
+            @if (TempData["ErrorMessage"] != null) { <div class="admin-feedback admin-feedback--error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i><span>@TempData["ErrorMessage"]</span></div> }
+            @RenderBody()
+        </main>
+    </div>
+</div>
+<script src="~/js/account.js" asp-append-version="true"></script><script src="~/js/site.js" asp-append-version="true"></script><script src="~/js/admin-workspace.js" asp-append-version="true"></script><script src="~/js/support-chat.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

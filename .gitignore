@@ -14,3 +14,12 @@
 
 ## ASP.NET temp files
 appsettings*.Local.json
+
+## Private runtime data (accounts, customer messages and orders)
+Data/Accounts.xml
+Data/AdminSetup.key
+Data/SupportChats.xml
+Data/BuyerOrders.xml
+Data/CommerceTransaction.xml
+Data/StockUnits.xml
+Data/*.tmp

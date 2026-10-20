@@ -1,0 +1,6 @@
+@model ValidationResultModel
+@{ ViewData["Title"] = "Kết quả kiểm tra XSD"; }
+<header class="overview-heading"><div><p class="overview-eyebrow">Dữ liệu hệ thống</p><h1>Kết quả kiểm tra XSD</h1><p>@Model.FileName · @Model.SchemaName</p></div><a asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Dữ liệu hệ thống</a></header>
+<section class="admin-card"><header class="overview-section-heading"><div><h2>@(Model.IsValid ? "Dữ liệu đáp ứng schema" : "Có thông báo cần xử lý")</h2><p>@(Model.IsValid ? "Không phát hiện vi phạm cấu trúc hoặc kiểu dữ liệu trong lần kiểm tra này." : "Đối chiếu dòng và cột để chỉnh dữ liệu theo schema.")</p></div><span class="inventory-stock @(Model.IsValid ? "" : "is-empty")">@(Model.IsValid ? "Hợp lệ" : $"{Model.Errors.Count} thông báo")</span></header>
+@if (!Model.IsValid) { <div class="admin-table-scroll"><table class="admin-data-table admin-validation-table"><thead><tr><th>Dòng / cột</th><th>Mức độ</th><th>Nội dung</th></tr></thead><tbody>@foreach (var error in Model.Errors) { <tr><td>@error.LineNumber / @error.LinePosition</td><td>@error.Severity</td><td>@error.Message</td></tr> }</tbody></table></div> }
+</section>

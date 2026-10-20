@@ -52,6 +52,7 @@ function showToast(message) {
 
 // Scroll Reveal & Dynamic Interactions (Kage Architecture Engine)
 document.addEventListener('DOMContentLoaded', function () {
+    if (document.body.classList.contains('admin-body')) return;
     // 1. Custom Animated Cursor Dot
     const cursor = document.createElement('div');
     cursor.className = 'cur-dot';

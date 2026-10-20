@@ -1,0 +1,40 @@
+@model StockUnitPageModel
+@using System.Globalization
+@{ ViewData["Title"] = "Mã máy & IMEI"; var vi = CultureInfo.GetCultureInfo("vi-VN"); }
+<header class="overview-heading"><div><p class="overview-eyebrow">Kho &amp; bán tại cửa hàng</p><h1>Mã máy &amp; IMEI</h1><p>Đăng ký IMEI/serial để theo dõi trạng thái của từng chiếc điện thoại.</p></div><a asp-controller="HoaDon" asp-action="Create" class="btn-saas btn-saas-primary"><i class="fa-solid fa-barcode" aria-hidden="true"></i> Quét mã bán hàng</a></header>
+<section class="overview-metrics overview-metrics--three" aria-label="Trạng thái máy đã gắn mã">
+    <article class="overview-metric"><span>Máy đã đăng ký còn trong kho</span><strong>@Model.Units.Count(x => x.Status == "Available")</strong><p>Có thể quét để bán tại quầy</p><i class="fa-solid fa-box" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Đang giữ cho đơn online</span><strong>@Model.Units.Count(x => x.Status == "Reserved")</strong><p>Chưa được phép bán cho đơn khác</p><i class="fa-solid fa-truck-fast" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Máy đã bán có mã theo dõi</span><strong>@Model.Units.Count(x => x.Status == "Sold")</strong><p>Tra cứu hóa đơn hoặc đơn mua liên quan</p><i class="fa-solid fa-receipt" aria-hidden="true"></i></article>
+</section>
+<details class="admin-card admin-unit-register" open="@(!ViewData.ModelState.IsValid || !string.IsNullOrWhiteSpace(Model.Input.ProductId))">
+    <summary><i class="fa-solid fa-plus" aria-hidden="true"></i> Đăng ký mã cho máy trong kho</summary>
+    <div class="admin-notice"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div><b>Gắn mã cho số máy đã có trong tồn kho.</b><p>Chọn đúng phiên bản rồi quét mã IMEI/serial trên hộp hoặc thân máy. Việc đăng ký không tăng số lượng tồn. Nếu máy có hai IMEI, ghi mã thứ hai ở ô mã phụ để cả hai cùng nhận diện một máy.</p></div></div>
+    <form asp-action="Register" method="post">
+        <div asp-validation-summary="All" class="admin-form-errors" role="alert"></div>
+        <div class="admin-form-grid">
+            <div class="admin-form-field admin-form-field--full"><label asp-for="Input.ProductId">Phiên bản sản phẩm *</label><select asp-for="Input.ProductId" class="form-select" required><option value="">Chọn đúng phiên bản của máy</option>@foreach (var phone in Model.Products.OrderBy(x => x.TenSP)) { <option value="@phone.MaSP">@phone.MaSP · @phone.TenSP · Tồn @phone.SoLuongTon</option> }</select><span asp-validation-for="Input.ProductId"></span></div>
+            <div class="admin-form-field"><label asp-for="Input.Code">IMEI / serial chính *</label><input asp-for="Input.Code" class="form-input" maxlength="80" pattern="[A-Za-z0-9][A-Za-z0-9._/-]{2,79}" autocomplete="off" spellcheck="false" required autofocus="@(!string.IsNullOrWhiteSpace(Model.Input.ProductId))" /><span asp-validation-for="Input.Code"></span></div>
+            <div class="admin-form-field"><label asp-for="Input.AlternateCode">IMEI / mã phụ của cùng máy</label><input asp-for="Input.AlternateCode" class="form-input" maxlength="80" pattern="[A-Za-z0-9][A-Za-z0-9._/-]{2,79}" autocomplete="off" spellcheck="false" /><small>Không bắt buộc. Mã phụ không tạo thêm một máy.</small><span asp-validation-for="Input.AlternateCode"></span></div>
+        </div>
+        <footer class="admin-panel-footer"><button type="submit" class="btn-saas btn-saas-primary"><i class="fa-solid fa-check" aria-hidden="true"></i> Gắn mã cho máy</button></footer>
+    </form>
+</details>
+<section class="admin-card" data-admin-list data-admin-list-noun="máy">
+    <header class="overview-section-heading"><div><h2>Tra cứu từng máy</h2><p>Quét hoặc nhập mã để biết máy còn kho, đang giữ hay đã bán.</p></div></header>
+    <div class="admin-list-controls"><label>IMEI, serial hoặc sản phẩm<input type="search" data-admin-keyword placeholder="Quét / nhập mã máy…" autocomplete="off" /></label><label>Trạng thái<select data-admin-status><option value="">Tất cả</option><option value="Available">Còn trong kho</option><option value="Reserved">Đang giữ cho đơn online</option><option value="Sold">Đã bán</option></select></label><span data-admin-list-count role="status"></span></div>
+    <div class="admin-table-scroll"><table class="admin-data-table"><thead><tr><th>Mã máy / mã phụ</th><th>Sản phẩm</th><th>Trạng thái</th><th>Giao dịch liên quan</th><th class="num">Giá đã bán</th><th>Thời điểm bán</th><th>Thao tác</th></tr></thead><tbody>
+    @foreach (var unit in Model.Units)
+    {
+        <tr data-admin-row data-status="@unit.Status" data-search="@unit.Code @unit.AlternateCode @unit.ProductId @unit.ProductName @unit.Reference">
+            <td><b>@unit.Code</b>@if (!string.IsNullOrEmpty(unit.AlternateCode)) { <small>Mã phụ: @unit.AlternateCode</small> }</td>
+            <td>@unit.ProductName<small>@unit.ProductId</small></td>
+            <td><span class="inventory-stock @(unit.Status == "Sold" ? "is-empty" : unit.Status == "Reserved" ? "is-low" : "")">@unit.StatusLabel</span></td>
+            <td>@if (!string.IsNullOrEmpty(unit.Reference)) { <a asp-controller="@(unit.Channel == "POS" ? "HoaDon" : "Orders")" asp-action="@(unit.Channel == "POS" ? "Print" : "Details")" asp-route-id="@unit.Reference" class="admin-row-link">@unit.Reference</a><small>@(unit.Channel == "POS" ? "Tại quầy" : "Trực tuyến")</small> } else { <span>Chưa có giao dịch</span> }</td>
+            <td class="num">@(unit.Status == "Sold" ? unit.SalePrice.ToString("N0", vi) + " ₫" : "—")</td>
+            <td>@(unit.SoldAt?.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm") ?? "—")<small>@unit.Employee</small></td>
+            <td>@if (unit.Status == "Available") { <form asp-action="Unregister" method="post" data-confirm="Gỡ mã đăng ký này để sửa thông tin? Máy vẫn còn trong tồn kho."><input type="hidden" name="code" value="@unit.Code" /><button type="submit" class="admin-row-link">Gỡ mã đăng ký</button></form> } else { <span>Đã gắn với giao dịch</span> }</td>
+        </tr>
+    }
+    </tbody></table></div><p class="admin-empty-note" data-admin-empty hidden>Chưa có mã máy phù hợp. Các máy chưa đăng ký IMEI/serial sẽ chưa xuất hiện trong danh sách này.</p><partial name="_AdminPagination" />
+</section>

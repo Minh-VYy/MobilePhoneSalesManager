@@ -15,9 +15,12 @@ public class QuangCaoXmlService
 
     public List<QuangCaoModel> GetAll()
     {
-        if (!File.Exists(_xmlPath)) return new List<QuangCaoModel>();
-        var doc = XDocument.Load(_xmlPath);
-        return doc.Root?.Elements("QuangCao").Select(ReadAd).OrderBy(x => x.ThuTu).ToList() ?? new List<QuangCaoModel>();
+        lock (FileLock)
+        {
+            if (!File.Exists(_xmlPath)) return new List<QuangCaoModel>();
+            var doc = XDocument.Load(_xmlPath);
+            return doc.Root?.Elements("QuangCao").Select(ReadAd).OrderBy(x => x.ThuTu).ToList() ?? new List<QuangCaoModel>();
+        }
     }
 
     public List<QuangCaoModel> GetActive() => GetAll().Where(x => x.DangHienThi).ToList();
@@ -41,6 +44,19 @@ public class QuangCaoXmlService
             var index = ads.FindIndex(x => x.MaQC == ad.MaQC);
             if (index < 0) return false;
             ads[index] = ad;
+            SaveAll(ads);
+            return true;
+        }
+    }
+
+    public bool SetVisibility(string id, bool enabled)
+    {
+        lock (FileLock)
+        {
+            var ads = GetAll();
+            var ad = ads.FirstOrDefault(x => x.MaQC == id);
+            if (ad == null) return false;
+            ad.DangHienThi = enabled;
             SaveAll(ads);
             return true;
         }

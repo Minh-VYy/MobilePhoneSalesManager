@@ -69,12 +69,15 @@
 
 @if (ViewBag.IsAdmin == true)
 {
-<!-- XPATH EXPRESSION READOUT -->
-<div class="xpath-readout mb-4">
-    <i class="fa-solid fa-code text-primary me-1"></i> 
-    XPath: <strong>@xpathQuery</strong> &nbsp;·&nbsp; Khớp <strong>@Model.Items.Count</strong> kết quả trong DienThoai.xml
+<div class="mb-3 d-flex align-items-center justify-content-between p-3 rounded-2" style="background: var(--bg-surface); border: 1px solid var(--border-default);">
+    <div style="font-size: 13px; color: var(--text-body);">
+        <i class="fa-solid fa-filter text-primary me-2"></i>
+        <span>Bộ lọc kết quả: Tìm thấy <strong>@Model.Items.Count</strong> mẫu điện thoại phù hợp</span>
+    </div>
+    <a asp-action="Manage" class="btn-table-details">
+        <i class="fa-solid fa-boxes-stacked"></i> Mở bảng quản lý kho
+    </a>
 </div>
-
 }
 @{
     var heading = !string.IsNullOrWhiteSpace(Model.Keyword) ? "Kết quả tìm kiếm" : Model.Category == "IPHONE" ? "iPhone" : Model.Category == "ANDROID" ? "Điện thoại Android" : "Điện thoại";

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <!-- Định nghĩa kiểu mã sản phẩm SPxxx -->
@@ -16,7 +16,7 @@
       <xs:enumeration value="XIAOMI"/>
       <xs:enumeration value="OPPO"/>
       <xs:enumeration value="GOOGLE"/>
-      <xs:enumeration value="OPPO"/>
+      <xs:enumeration value="SONY"/>
       <xs:enumeration value="GAMING"/>
       <xs:enumeration value="KHAC"/>
     </xs:restriction>

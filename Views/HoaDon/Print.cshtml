@@ -1,29 +1,8 @@
-@{
-    ViewData["Title"] = "Xem & In Hóa Đơn " + ViewBag.InvoiceCode;
-}
-
-<div class="admin-card no-print">
-    <div class="admin-card-header" style="border-bottom: none; padding-bottom: 0;">
-        <div>
-            <h2 class="admin-card-title">
-                <i class="fa-solid fa-print" style="color: var(--primary-blue);"></i>
-                <span>Hóa đơn bán lẻ (Transform từ XSLT): @ViewBag.InvoiceCode</span>
-            </h2>
-        </div>
-        <div class="d-flex gap-2">
-            <button onclick="printInvoice()" class="admin-btn admin-btn-primary admin-btn-sm">
-                <i class="fa-solid fa-print"></i>
-                <span>In Hóa Đơn</span>
-            </button>
-            <a asp-action="Index" class="admin-btn admin-btn-secondary admin-btn-sm">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Danh sách Hóa Đơn</span>
-            </a>
-        </div>
-    </div>
-</div>
-
-<div class="invoice-container-wrapper">
-    @Html.Raw(ViewBag.HtmlContent)
-</div>
+@model HoaDonModel
+@{ ViewData["Title"] = "Hóa đơn " + Model.MaHD; }
+<header class="overview-heading no-print">
+    <div><p class="overview-eyebrow">Hóa đơn tại quầy</p><h1>@Model.MaHD</h1><p>Đối chiếu thông tin và in hóa đơn bán hàng cho khách.</p></div>
+    <div class="overview-heading-actions"><a asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Danh sách hóa đơn</a><button type="button" onclick="window.print()" class="btn-saas btn-saas-primary"><i class="fa-solid fa-print" aria-hidden="true"></i> In hóa đơn</button></div>
+</header>
+@Html.Raw(ViewBag.HtmlContent)
 

@@ -1,6 +1,6 @@
 @model QuanLyBanDienThoai.Models.ValidationResultModel
 @{
-    ViewData["Title"] = "XSD Validation — Hóa Đơn";
+    ViewData["Title"] = "Kiểm Tra Dữ Liệu Đơn Hàng";
 }
 
 <div class="admin-card">
@@ -8,11 +8,11 @@
         <div>
             <h2 class="admin-card-title">
                 <i class="fa-solid fa-shield-halved" style="color: var(--status-success);"></i>
-                <span>Báo cáo kiểm tra XSD Schema Hóa Đơn</span>
+                <span>Báo Cáo Kiểm Tra Toàn Vẹn Đơn Hàng</span>
             </h2>
-            <div class="admin-card-desc">Validate cấu trúc tệp HoaDon.xml theo quy tắc XSD Schema</div>
+            <div class="admin-card-desc">Kiểm tra tính hợp lệ dữ liệu hóa đơn, mã khách hàng, số điện thoại và tổng tiền</div>
         </div>
-        <a asp-action="Index" class="admin-btn admin-btn-secondary admin-btn-sm">
+        <a asp-action="Index" class="btn-saas btn-saas-secondary">
             <i class="fa-solid fa-arrow-left"></i>
             <span>Trở về Danh sách</span>
         </a>
@@ -20,11 +20,11 @@
 
     <div class="admin-card-body">
         <div class="d-flex flex-wrap gap-4 mb-4" style="font-size: 13.5px; color: var(--text-body);">
-            <div><strong style="color: var(--text-muted);">Tệp dữ liệu XML:</strong>&nbsp;
-                <code style="background: var(--bg-surface-subtle); padding: 2px 8px; border-radius: var(--radius-sm); font-family: var(--font-family-mono); font-size: 12.5px;">@Model.FileName</code>
+            <div><strong style="color: var(--text-muted);">Tập tin dữ liệu:</strong>&nbsp;
+                <code style="background: var(--bg-surface-subtle); padding: 2px 8px; border-radius: var(--radius-sm); font-size: 12.5px;">@Model.FileName</code>
             </div>
-            <div><strong style="color: var(--text-muted);">Lược đồ Schema:</strong>&nbsp;
-                <code style="background: var(--bg-surface-subtle); padding: 2px 8px; border-radius: var(--radius-sm); font-family: var(--font-family-mono); font-size: 12.5px;">@Model.SchemaName</code>
+            <div><strong style="color: var(--text-muted);">Quy tắc chuẩn hóa:</strong>&nbsp;
+                <code style="background: var(--bg-surface-subtle); padding: 2px 8px; border-radius: var(--radius-sm); font-size: 12.5px;">@Model.SchemaName</code>
             </div>
         </div>
 
@@ -33,9 +33,9 @@
             <div class="d-flex align-items-center gap-3 p-4 rounded-3" style="background: var(--status-success-bg); border: 1px solid var(--status-success-border);">
                 <i class="fa-solid fa-circle-check" style="font-size: 2.2rem; color: var(--status-success);"></i>
                 <div>
-                    <h4 style="margin: 0 0 4px; font-weight: 700; color: var(--status-success); font-size: 16px;">TỆP HÓA ĐƠN XML HOÀN TOÀN HỢP LỆ (VALID)!</h4>
+                    <h4 style="margin: 0 0 4px; font-weight: 700; color: var(--status-success); font-size: 16px;">TẤT CẢ DỮ LIỆU ĐƠN HÀNG HOÀN TOÀN HỢP LỆ!</h4>
                     <p style="margin: 0; font-size: 13.5px; color: var(--text-body);">
-                        Tệp <code>@Model.FileName</code> đạt chuẩn 100% quy tắc cấu trúc của <code>@Model.SchemaName</code>.
+                        Các hóa đơn và lịch sử giao dịch đều tuân thủ chính xác 100% quy tắc nghiệp vụ hệ thống.
                     </p>
                 </div>
             </div>
@@ -45,14 +45,14 @@
             <div class="p-4 rounded-3 mb-3" style="background: var(--status-danger-bg); border: 1px solid var(--status-danger-border);">
                 <div class="d-flex align-items-center gap-2 mb-3">
                     <i class="fa-solid fa-circle-xmark" style="font-size: 1.6rem; color: var(--status-danger);"></i>
-                    <h4 style="margin: 0; font-weight: 700; color: var(--status-danger); font-size: 15px;">TỆP HÓA ĐƠN KHÔNG HỢP LỆ (INVALID)!</h4>
+                    <h4 style="margin: 0; font-weight: 700; color: var(--status-danger); font-size: 15px;">PHÁT HIỆN SAI LỆCH DỮ LIỆU HÓA ĐƠN!</h4>
                 </div>
                 <p style="font-size: 13.5px; color: var(--text-body); margin-bottom: 16px;">
-                    Có <strong style="color: var(--status-danger);">@Model.Errors.Count</strong> lỗi vi phạm ràng buộc XSD Schema:
+                    Có <strong style="color: var(--status-danger);">@Model.Errors.Count</strong> cảnh báo vi phạm ràng buộc dữ liệu:
                 </p>
 
-                <div class="admin-table-container" style="border-radius: var(--radius-md); overflow: hidden;">
-                    <table class="admin-table">
+                <div class="table-wrapper">
+                    <table class="table-saas">
                         <thead>
                             <tr>
                                 <th style="width: 50px;">#</th>
@@ -67,11 +67,11 @@
                             {
                                 var err = Model.Errors[i];
                                 <tr>
-                                    <td style="font-family: var(--font-family-mono); font-size: 12px; color: var(--text-faint);">@(i + 1)</td>
-                                    <td><strong style="color: var(--status-warning); font-family: var(--font-family-mono);">@err.LineNumber</strong></td>
-                                    <td><strong style="color: var(--status-warning); font-family: var(--font-family-mono);">@err.LinePosition</strong></td>
+                                    <td class="cell-code">@(i + 1)</td>
+                                    <td class="cell-code">@err.LineNumber</td>
+                                    <td class="cell-code">@err.LinePosition</td>
                                     <td>
-                                        <span style="display: inline-flex; padding: 2px 8px; border-radius: var(--radius-full); background: var(--status-danger-bg); color: var(--status-danger); font-size: 11.5px; font-weight: 600; border: 1px solid var(--status-danger-border);">
+                                        <span class="badge-pill danger">
                                             @err.Severity
                                         </span>
                                     </td>

@@ -8,19 +8,19 @@ public class PhoneDetailXmlService
 {
     private readonly string _catalogPath;
     private readonly string _reviewPath;
-    private readonly string _orderRequestPath;
+    private readonly XmlValidationService _validation;
     private static readonly object FileLock = new();
 
-    public PhoneDetailXmlService(IWebHostEnvironment env)
+    public PhoneDetailXmlService(IWebHostEnvironment env, XmlValidationService validation)
     {
         _catalogPath = Path.Combine(env.ContentRootPath, "Data", "MobileStoreDatabase.xml");
         _reviewPath = Path.Combine(env.ContentRootPath, "Data", "ProductReviews.xml");
-        _orderRequestPath = Path.Combine(env.ContentRootPath, "Data", "CustomerOrderRequests.xml");
+        _validation = validation;
     }
 
     public Dictionary<string, string> GetModelSeriesMap()
     {
-        var document = XDocument.Load(_catalogPath);
+        var document = ReadCatalog();
         return document.Descendants("Product")
             .Where(x => x.Attribute("id") != null)
             .ToDictionary(
@@ -31,7 +31,7 @@ public class PhoneDetailXmlService
 
     public PhoneDetailMetadata? GetProductMetadata(string productId)
     {
-        var document = XDocument.Load(_catalogPath);
+        var document = ReadCatalog();
         var product = document.Descendants("Product")
             .FirstOrDefault(x => string.Equals((string?)x.Attribute("id"), productId, StringComparison.OrdinalIgnoreCase));
         return product == null ? null : MapMetadata(product);
@@ -39,7 +39,7 @@ public class PhoneDetailXmlService
 
     public List<PhoneDetailMetadata> GetVariants(string productId)
     {
-        var document = XDocument.Load(_catalogPath);
+        var document = ReadCatalog();
         var product = document.Descendants("Product").FirstOrDefault(x => (string?)x.Attribute("id") == productId);
         if (product == null) return new List<PhoneDetailMetadata>();
 
@@ -84,33 +84,60 @@ public class PhoneDetailXmlService
                 new XElement("Rating", review.Rating),
                 new XElement("Content", review.Content),
                 new XElement("CreatedAt", review.CreatedAt.ToString("O", CultureInfo.InvariantCulture))));
-            document.Save(_reviewPath);
+            PrivateXmlStore.Save(document, _reviewPath);
         }
     }
 
-    public string AddOrderRequest(CustomerOrderRequestModel request, IReadOnlyList<(DienThoaiModel Product, int Quantity)> items)
+    private XDocument ReadCatalog()
     {
-        lock (FileLock)
+        lock (PrivateXmlStore.Gate) return XDocument.Load(_catalogPath);
+    }
+
+    public (bool Success, string Message) SaveVariant(DienThoaiModel phone, AdminVariantInput input)
+    {
+        lock (PrivateXmlStore.Gate)
         {
-            var document = File.Exists(_orderRequestPath) ? XDocument.Load(_orderRequestPath) : new XDocument(new XElement("CustomerOrderRequests"));
-            var requestId = $"YCM-{DateTime.Now:yyyyMMddHHmmss}-{Guid.NewGuid():N}"[..28];
-            var order = new XElement("Request",
-                new XAttribute("id", requestId),
-                new XAttribute("createdAt", DateTime.Now.ToString("O", CultureInfo.InvariantCulture)),
-                new XElement("Customer",
-                    new XElement("Name", request.CustomerName),
-                    new XElement("Phone", request.Phone),
-                    new XElement("Address", request.Address)),
-                new XElement("Items", items.Select(x => new XElement("Item",
-                    new XAttribute("productId", x.Product.MaSP),
-                    new XElement("Name", x.Product.TenSP),
-                    new XElement("Quantity", x.Quantity),
-                    new XElement("UnitPrice", x.Product.GiaBan),
-                    new XElement("Subtotal", x.Product.GiaBan * x.Quantity)))),
-                new XElement("Status", "PendingContact"));
-            document.Root!.Add(order);
-            document.Save(_orderRequestPath);
-            return requestId;
+            var document = ReadCatalog();
+            var root = document.Root!;
+            var categoryId = phone.MaHang == "APPLE" ? "CAT-IPHONE" : "CAT-" + phone.MaHang;
+            var categories = root.Element("Categories")!;
+            if (!categories.Elements("Category").Any(x => (string?)x.Attribute("id") == categoryId))
+                categories.Add(new XElement("Category", new XAttribute("id", categoryId), new XAttribute("name", phone.TenHang), new XAttribute("slug", phone.MaHang.ToLowerInvariant())));
+            var product = root.Element("Products")!.Elements("Product").FirstOrDefault(x => (string?)x.Attribute("id") == phone.MaSP);
+            if (product == null)
+            {
+                product = new XElement("Product", new XAttribute("id", phone.MaSP), new XAttribute("categoryId", categoryId),
+                    new XElement("BasicInfo", new XElement("Name"), new XElement("Brand"), new XElement("ModelSeries"), new XElement("Condition"), new XElement("WarrantyMonths")),
+                    new XElement("ColorVariant", new XElement("ColorName"), new XElement("ColorCode"), new XElement("PrimaryImage"), new XElement("Gallery")),
+                    new XElement("PricingAndStock", new XElement("OriginalPrice"), new XElement("SellingPrice"), new XElement("StockQuantity"), new XElement("SKU"), new XElement("IsFeatured", false)),
+                    new XElement("Specifications"));
+                root.Element("Products")!.Add(product);
+            }
+            var basic = product.Element("BasicInfo")!;
+            basic.SetElementValue("Name", phone.TenSP); basic.SetElementValue("Brand", phone.TenHang); basic.SetElementValue("ModelSeries", input.ModelSeries.Trim());
+            basic.Element("Condition")!.ReplaceWith(new XElement("Condition", new XAttribute("type", input.ConditionType), new XAttribute("grade", input.ConditionGrade.Trim()), input.ConditionDescription ?? ""));
+            basic.SetElementValue("WarrantyMonths", input.WarrantyMonths);
+            var color = product.Element("ColorVariant")!;
+            var image = string.IsNullOrWhiteSpace(input.ImageUrl) ? phone.HinhAnh : input.ImageUrl.Trim();
+            color.SetElementValue("ColorName", input.ColorName.Trim()); color.SetElementValue("ColorCode", input.ColorCode); color.SetElementValue("PrimaryImage", image);
+            if (!color.Element("Gallery")!.Elements("Image").Any()) color.Element("Gallery")!.Add(new XElement("Image", new XAttribute("url", image), new XAttribute("caption", phone.TenSP)));
+            var pricing = product.Element("PricingAndStock")!;
+            pricing.SetElementValue("OriginalPrice", input.OriginalPrice); pricing.SetElementValue("SellingPrice", phone.GiaBan); pricing.SetElementValue("StockQuantity", phone.SoLuongTon); pricing.SetElementValue("SKU", string.IsNullOrWhiteSpace(input.Sku) ? phone.MaSP : input.Sku.Trim());
+            var specs = product.Element("Specifications")!;
+            void SetSpec(string group, string key, string value)
+            {
+                var section = specs.Element(group);
+                if (section == null) { section = new XElement(group); specs.Add(section); }
+                section.SetElementValue(key, value);
+            }
+            SetSpec("Display", "ScreenSize", phone.ThongSo.ManHinh); SetSpec("Display", "Resolution", input.Resolution ?? "");
+            SetSpec("Performance", "Storage", input.StorageGB.ToString(CultureInfo.InvariantCulture)); SetSpec("Performance", "RAM", phone.ThongSo.RAM); SetSpec("Performance", "Chipset", phone.ThongSo.Chip);
+            SetSpec("Camera", "MainSensor", input.Camera ?? ""); SetSpec("BatteryAndCharging", "CapacityMah", phone.ThongSo.Pin); SetSpec("BatteryAndCharging", "ChargingTechnology", input.ChargingTechnology ?? "");
+            SetSpec("DesignAndConnectivity", "Ports", input.Ports ?? ""); SetSpec("DesignAndConnectivity", "WeightGrams", input.Weight ?? "");
+            var validation = _validation.ValidateXmlContent(document.ToString(), Path.ChangeExtension(_catalogPath, ".xsd"));
+            if (!validation.IsValid) return (false, string.Join(" ", validation.Errors.Take(3).Select(x => x.Message)));
+            PrivateXmlStore.Save(document, _catalogPath);
+            return (true, "Đã cập nhật phiên bản, màu sắc, dung lượng và bảo hành.");
         }
     }
 

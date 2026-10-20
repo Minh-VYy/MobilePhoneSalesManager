@@ -1,0 +1,5 @@
+@model RegisterInput
+<partial name="_ProfileFields" model="Model" />
+<label asp-for="Username">Tên đăng nhập</label><input asp-for="Username" autocomplete="username" minlength="3" maxlength="32" pattern="[a-zA-Z0-9_.-]{3,32}" required /><small class="field-hint">3–32 ký tự, dùng chữ không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.</small><span asp-validation-for="Username" class="field-error"></span>
+<label asp-for="Password">Mật khẩu</label><div class="password-field"><input asp-for="Password" type="password" autocomplete="new-password" minlength="10" maxlength="128" required /><button type="button" data-toggle-password aria-label="Hiện mật khẩu" aria-pressed="false"><i class="fa-regular fa-eye" aria-hidden="true"></i></button></div><small class="field-hint">Ít nhất 10 ký tự. Có thể dùng một cụm từ dễ nhớ.</small><span asp-validation-for="Password" class="field-error"></span>
+<label asp-for="ConfirmPassword">Xác nhận mật khẩu</label><input asp-for="ConfirmPassword" type="password" autocomplete="new-password" minlength="10" maxlength="128" required /><span asp-validation-for="ConfirmPassword" class="field-error"></span>

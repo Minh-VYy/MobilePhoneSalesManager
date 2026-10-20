@@ -1,0 +1,31 @@
+@model AdminVariantInput
+@{ ViewData["Title"] = "Thiết lập phiên bản"; var phone = (DienThoaiModel)ViewBag.Phone; }
+<header class="overview-heading"><div><p class="overview-eyebrow">Sản phẩm / @phone.MaSP</p><h1>Thiết lập phiên bản</h1><p>@phone.TenSP</p></div><a asp-action="Edit" asp-route-id="@phone.MaSP" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Thông tin sản phẩm</a></header>
+<div class="admin-notice"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><div><b>Gộp phiên bản theo tên dòng máy.</b><p>Các mã sản phẩm cùng tên dòng được hiển thị chung ở danh mục. Khách chọn mới/cũ, dung lượng, màu và bảo hành trong chi tiết sản phẩm.</p></div></div>
+<form asp-action="VariantSettings" method="post" class="admin-product-form">
+    <input type="hidden" asp-for="ProductId" />
+    <div asp-validation-summary="All" class="admin-form-errors" role="alert"></div>
+    <section class="admin-card"><header class="overview-section-heading"><div><h2>Phiên bản và tình trạng</h2><p>Điền đúng thông tin của mã sản phẩm @phone.MaSP.</p></div></header><div class="admin-form-grid">
+        <div class="admin-form-field"><label asp-for="ModelSeries">Tên dòng máy *</label><input asp-for="ModelSeries" class="form-input" placeholder="iPhone 15 Pro Max" maxlength="100" required /><small>Dùng cùng tên cho tất cả phiên bản của một dòng máy.</small><span asp-validation-for="ModelSeries"></span></div>
+        <div class="admin-form-field"><label asp-for="StorageGB">Dung lượng (GB) *</label><input asp-for="StorageGB" class="form-input" type="number" min="1" max="4096" required /><span asp-validation-for="StorageGB"></span></div>
+        <div class="admin-form-field"><label asp-for="ConditionType">Loại máy</label><select asp-for="ConditionType" class="form-select"><option value="New">Máy mới</option><option value="Used">Máy đã sử dụng</option><option value="Refurbished">Máy tân trang</option></select><span asp-validation-for="ConditionType"></span></div>
+        <div class="admin-form-field"><label asp-for="ConditionGrade">Mức tình trạng *</label><input asp-for="ConditionGrade" class="form-input" placeholder="100% hoặc 99%" maxlength="50" required /><span asp-validation-for="ConditionGrade"></span></div>
+        <div class="admin-form-field"><label asp-for="ColorName">Tên màu *</label><input asp-for="ColorName" class="form-input" placeholder="Titan tự nhiên" maxlength="60" required /><span asp-validation-for="ColorName"></span></div>
+        <div class="admin-form-field"><label asp-for="ColorCode">Mã màu hiển thị</label><input asp-for="ColorCode" class="form-input" type="color" /><span asp-validation-for="ColorCode"></span></div>
+        <div class="admin-form-field"><label asp-for="WarrantyMonths">Bảo hành (tháng)</label><input asp-for="WarrantyMonths" class="form-input" type="number" min="0" max="60" /><small>Đặt 0 để hiển thị liên hệ xác nhận.</small><span asp-validation-for="WarrantyMonths"></span></div>
+        <div class="admin-form-field"><label asp-for="Sku">SKU</label><input asp-for="Sku" class="form-input" maxlength="100" /><small>Để trống sẽ dùng mã sản phẩm.</small><span asp-validation-for="Sku"></span></div>
+        <div class="admin-form-field admin-form-field--full"><label asp-for="ConditionDescription">Mô tả tình trạng</label><textarea asp-for="ConditionDescription" class="form-textarea" rows="3" maxlength="500"></textarea><span asp-validation-for="ConditionDescription"></span></div>
+    </div></section>
+    <section class="admin-card"><header class="overview-section-heading"><div><h2>Hình ảnh và giá niêm yết</h2><p>Giá bán và tồn kho được chỉnh trong thông tin sản phẩm.</p></div></header><div class="admin-form-grid">
+        <div class="admin-form-field"><label asp-for="OriginalPrice">Giá niêm yết (₫)</label><input asp-for="OriginalPrice" class="form-input" type="number" min="0" step="1" /><small>Chỉ hiển thị giảm giá khi giá niêm yết lớn hơn giá bán.</small><span asp-validation-for="OriginalPrice"></span></div>
+        <div class="admin-form-field"><label asp-for="ImageUrl">Ảnh riêng của phiên bản</label><input asp-for="ImageUrl" class="form-input" maxlength="500" /><small>Để trống sẽ dùng ảnh từ thông tin sản phẩm.</small><span asp-validation-for="ImageUrl"></span></div>
+    </div></section>
+    <section class="admin-card"><header class="overview-section-heading"><div><h2>Thông số mở rộng</h2><p>Bổ sung thông tin cho bảng thông số khách hàng.</p></div></header><div class="admin-form-grid">
+        <div class="admin-form-field"><label asp-for="Camera">Camera</label><input asp-for="Camera" class="form-input" maxlength="250" /></div>
+        <div class="admin-form-field"><label asp-for="Resolution">Độ phân giải màn hình</label><input asp-for="Resolution" class="form-input" maxlength="100" /></div>
+        <div class="admin-form-field"><label asp-for="ChargingTechnology">Công nghệ sạc</label><input asp-for="ChargingTechnology" class="form-input" maxlength="150" /></div>
+        <div class="admin-form-field"><label asp-for="Ports">Cổng kết nối</label><input asp-for="Ports" class="form-input" maxlength="100" /></div>
+        <div class="admin-form-field"><label asp-for="Weight">Khối lượng (gram)</label><input asp-for="Weight" class="form-input" maxlength="50" /></div>
+    </div></section>
+    <footer class="admin-form-actions"><a asp-action="Edit" asp-route-id="@phone.MaSP" class="btn-saas btn-saas-secondary">Quay lại</a><button type="submit" class="btn-saas btn-saas-primary"><i class="fa-solid fa-check" aria-hidden="true"></i> Lưu thiết lập phiên bản</button></footer>
+</form>

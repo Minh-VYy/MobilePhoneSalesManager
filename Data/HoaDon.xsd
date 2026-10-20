@@ -4,7 +4,7 @@
   <!-- Định nghĩa kiểu Mã Hóa Đơn HDxxx -->
   <xs:simpleType name="MaHDType">
     <xs:restriction base="xs:string">
-      <xs:pattern value="HD[0-9]{3}"/>
+      <xs:pattern value="HD[0-9]{3,}"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -45,6 +45,7 @@
                           <xs:element name="SoLuong" type="xs:positiveInteger"/>
                           <xs:element name="DonGia" type="xs:decimal"/>
                           <xs:element name="ThanhTien" type="xs:decimal"/>
+                          <xs:element name="UnitCodes" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="Code" type="xs:string" minOccurs="0" maxOccurs="unbounded"/></xs:sequence></xs:complexType></xs:element>
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
@@ -53,6 +54,8 @@
               </xs:element>
               <xs:element name="TongTien" type="xs:decimal"/>
               <xs:element name="GhiChu" type="xs:string" minOccurs="0"/>
+              <xs:element name="CheckoutToken" type="xs:string" minOccurs="0"/>
+              <xs:element name="PaymentMethod" type="xs:string" minOccurs="0"/>
             </xs:sequence>
           </xs:complexType>
         </xs:element>

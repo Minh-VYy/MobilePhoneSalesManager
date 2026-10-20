@@ -1,252 +1,59 @@
-@model QuanLyBanDienThoai.Models.CreateHoaDonInputModel
+@model CreateHoaDonInputModel
+@using System.Globalization
+@using System.Text.Json
 @{
-    ViewData["Title"] = "Lập Hóa Đơn Bán Hàng (POS XML)";
-    var phoneList = (List<QuanLyBanDienThoai.Models.DienThoaiModel>)ViewBag.PhoneList;
+    ViewData["Title"] = "Bán hàng tại quầy";
+    var phones = ViewBag.PhoneList as List<DienThoaiModel> ?? [];
+    var vi = CultureInfo.GetCultureInfo("vi-VN");
 }
-
-@if (ViewBag.ErrorMessage != null)
-{
-    <div class="alert alert-danger d-flex align-items-center gap-3 p-3 mb-4 rounded-3" style="background: rgba(244, 63, 94, 0.15); border: 1px solid rgba(244, 63, 94, 0.35); color: var(--admin-danger);">
-        <i class="fa-solid fa-triangle-exclamation fs-4"></i>
-        <div>
-            <strong>Không thể lập hóa đơn XML:</strong> @ViewBag.ErrorMessage
-        </div>
-    </div>
-}
-
-<form asp-action="Create" method="post" id="posForm">
-    @Html.AntiForgeryToken()
-
-    <div class="row g-4">
-        <!-- LEFT: PRODUCT PICK CATALOGUE -->
-        <div class="col-lg-7 col-xl-8">
-            <div class="admin-card">
-                <div class="admin-card-header">
-                    <div>
-                        <h2 class="admin-card-title">
-                            <i class="fa-solid fa-cash-register" style="color: var(--admin-primary);"></i>
-                            <span>CHỌN SẢN PHẨM BÁN HÀNG</span>
-                        </h2>
-                        <div class="admin-card-desc">Nhấp chọn thiết bị để đưa trực tiếp vào danh sách chi tiết hóa đơn (ChiTietHoaDon node)</div>
-                    </div>
-                    <span class="admin-badge-brand brand-apple">
-                        <i class="fa-solid fa-boxes-stacked"></i> Kho: @(phoneList?.Count ?? 0) mẫu
-                    </span>
-                </div>
-
-                <div class="admin-card-body">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px;" id="pick-grid">
-                        @if (phoneList != null)
-                        {
-                            foreach (var phone in phoneList)
-                            {
-                                string brandClass = phone.MaHang.ToUpper() switch
-                                {
-                                    "APPLE" => "brand-apple",
-                                    "SAMSUNG" => "brand-samsung",
-                                    "XIAOMI" => "brand-xiaomi",
-                                    "OPPO" => "brand-oppo",
-                                    "GOOGLE" => "brand-google",
-                                    _ => "brand-other"
-                                };
-
-                                <div class="admin-card p-3 d-flex flex-column justify-content-between cursor-pointer"
-                                     style="margin-bottom: 0; background: rgba(255,255,255,0.03); border: 1px solid var(--admin-card-border); transition: all 0.2s ease; cursor: pointer;"
-                                     onmouseover="this.style.borderColor='var(--admin-primary)'; this.style.transform='translateY(-2px)';"
-                                     onmouseout="this.style.borderColor='var(--admin-card-border)'; this.style.transform='none';"
-                                     onclick="addToCart('@phone.MaSP', '@phone.TenSP', @phone.GiaBan, '@phone.HinhAnh', @phone.SoLuongTon)">
-                                    
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="admin-badge-brand @brandClass" style="font-size: 10px; padding: 2px 6px;">@phone.TenHang</span>
-                                        <span style="font-family: var(--font-mono); font-size: 11px; color: @(phone.SoLuongTon < 5 ? "var(--admin-danger)" : "var(--admin-accent)"); font-weight: 600;">
-                                            Tồn: @phone.SoLuongTon
-                                        </span>
-                                    </div>
-
-                                    <div style="height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
-                                        <img src="@phone.HinhAnh" alt="@phone.TenSP" style="max-height: 100%; max-width: 100%; object-fit: contain;"
-                                             onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&amp;fit=crop&amp;w=600&amp;q=80'" />
-                                    </div>
-
-                                    <div>
-                                        <div style="font-weight: 600; font-size: 13px; color: var(--admin-text-main); line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                                            @phone.TenSP
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--admin-card-border);">
-                                            <span style="font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; color: var(--amber-500);">
-                                                @phone.GiaBan.ToString("#,##0")đ
-                                            </span>
-                                            <span class="admin-btn admin-btn-primary admin-btn-sm" style="width: 28px; height: 28px; padding: 0; border-radius: 50%;">
-                                                <i class="fa-solid fa-plus" style="font-size: 11px;"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        }
-                    </div>
-                </div>
+<header class="overview-heading"><div><p class="overview-eyebrow">Bán hàng tại quầy</p><h1>Lập hóa đơn bán hàng</h1><p>Tìm phiên bản, chọn số lượng và kiểm tra thông tin khách trước khi lưu.</p></div><a asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Lịch sử hóa đơn</a></header>
+@if (ViewBag.ErrorMessage != null) { <p class="admin-feedback admin-feedback--error" role="alert">@ViewBag.ErrorMessage</p> }
+<form asp-action="Create" method="post" class="admin-pos" data-pos data-pos-lookup-url="@Url.Action("Lookup", "StockUnits")">
+    <input type="hidden" asp-for="CheckoutToken" />
+    <div asp-validation-summary="All" class="admin-form-errors" role="alert"></div>
+    @if (ViewBag.ValidationResult is ValidationResultModel validation && !validation.IsValid) { <ul class="admin-form-errors">@foreach (var error in validation.Errors) { <li>@error.Message</li> }</ul> }
+    <section class="admin-card admin-pos-scanner" aria-labelledby="pos-scanner-title">
+        <div><h2 id="pos-scanner-title"><i class="fa-solid fa-barcode" aria-hidden="true"></i> Quét IMEI / serial</h2><p>Đặt con trỏ vào ô dưới, quét bằng máy quét dạng bàn phím và kết thúc bằng Enter. Có thể nhập mã thủ công.</p></div>
+        <div class="admin-pos-scan-input"><label for="pos-scan-code" class="sr-only">IMEI hoặc serial máy cần bán</label><input type="text" id="pos-scan-code" data-pos-scan-code maxlength="80" placeholder="Quét mã trên hộp hoặc thân máy…" autocomplete="off" spellcheck="false" autofocus="@ViewData.ModelState.IsValid" /><button type="button" class="btn-saas btn-saas-primary" data-pos-scan-button>Kiểm tra &amp; thêm máy</button></div>
+        <p class="admin-pos-scan-result" data-pos-scan-result role="status" hidden></p>
+        <a class="admin-row-link" data-pos-scan-reference hidden>Xem giao dịch liên quan</a>
+        <a asp-controller="StockUnits" asp-action="Index" class="admin-row-link">Đăng ký / tra cứu mã máy</a>
+    </section>
+    <div class="admin-pos-layout">
+        <section class="admin-card">
+            <header class="overview-section-heading"><div><h2>Chọn sản phẩm</h2><p>Giá và tồn kho được kiểm tra lại khi lưu hóa đơn.</p></div><span class="admin-muted">@phones.Count phiên bản</span></header>
+            <div class="admin-list-controls"><label>Tìm trong kho<input type="search" placeholder="Tên, mã, cấu hình…" data-pos-search /></label><label>Thương hiệu<select data-pos-brand><option value="">Tất cả</option>@foreach (var brand in phones.GroupBy(x => x.MaHang)) { <option value="@brand.Key">@brand.First().TenHang</option> }</select></label></div>
+            <div class="admin-pos-products">
+            @foreach (var phone in phones.OrderByDescending(x => x.SoLuongTon > 0).ThenBy(x => x.TenSP))
+            {
+                <button type="button" class="admin-pos-product" data-pos-pick="@phone.MaSP" disabled="@(phone.SoLuongTon <= 0)">
+                    <span class="admin-pos-product-top"><small>@phone.TenHang</small><small data-pos-stock>@(phone.SoLuongTon > 0 ? $"Còn {phone.SoLuongTon} máy" : "Hết hàng")</small></span>
+                    <img src="@phone.HinhAnh" alt="" loading="lazy" />
+                    <b>@phone.TenSP</b><small>@phone.ThongSo.RAM · @phone.ThongSo.BoNhoTrong</small>
+                    <span class="admin-pos-product-price"><strong>@phone.GiaBan.ToString("N0", vi) ₫</strong><i class="fa-solid fa-plus" aria-hidden="true"></i></span>
+                </button>
+            }
             </div>
-        </div>
-
-        <!-- RIGHT: LIVE CART & CUSTOMER ORDER FORM -->
-        <div class="col-lg-5 col-xl-4">
-            <div class="admin-card" style="position: sticky; top: 90px;">
-                <div class="admin-card-header">
-                    <div>
-                        <h2 class="admin-card-title">
-                            <i class="fa-solid fa-receipt" style="color: var(--admin-accent);"></i>
-                            <span>HÓA ĐƠN ĐANG LẬP</span>
-                        </h2>
-                        <div class="admin-card-desc" id="cart-count">Chưa có sản phẩm nào</div>
-                    </div>
-                </div>
-
-                <div class="admin-card-body">
-                    <!-- DYNAMIC CART ITEMS -->
-                    <div id="cart-items" style="max-height: 240px; overflow-y: auto; padding-right: 4px; margin-bottom: 16px;">
-                        <div class="text-center py-4" style="color: var(--admin-text-faint);">
-                            <i class="fa-solid fa-cart-arrow-down fs-2 mb-2 d-block opacity-50"></i>
-                            <div style="font-size: 13px;">Nhấp chọn sản phẩm bên trái để thêm vào đơn hàng</div>
-                        </div>
-                    </div>
-
-                    <!-- HIDDEN INPUTS FOR ASP.NET BINDING -->
-                    <div id="hidden-inputs-container"></div>
-
-                    <!-- CUSTOMER INFORMATION -->
-                    <div class="pt-3" style="border-top: 1px solid var(--admin-card-border);">
-                        <div class="mb-2">
-                            <label class="admin-form-label">Tên khách hàng (*):</label>
-                            <input asp-for="TenKH" class="admin-form-control" placeholder="Nguyễn Văn A" required />
-                        </div>
-                        <div class="mb-2">
-                            <label class="admin-form-label">Số điện thoại (*):</label>
-                            <input asp-for="SoDienThoai" class="admin-form-control" placeholder="09xxxxxxxx" required />
-                            <small style="color: var(--admin-text-faint); font-size: 11px; font-family: var(--font-mono);">XSD: (0[3|5|7|8|9])+[0-9]{8}</small>
-                        </div>
-                        <div class="mb-2">
-                            <label class="admin-form-label">Địa chỉ giao hàng (*):</label>
-                            <input asp-for="DiaChi" class="admin-form-control" placeholder="123 Nguyễn Huệ, Q.1, TP.HCM" required />
-                        </div>
-                        <div class="mb-2">
-                            <label class="admin-form-label">Thu ngân lập đơn:</label>
-                            <input asp-for="NhanVien" class="admin-form-control" value="Phạm Minh Thu (Admin)" />
-                        </div>
-                        <div class="mb-3">
-                            <label class="admin-form-label">Ghi chú:</label>
-                            <input asp-for="GhiChu" class="admin-form-control" placeholder="Giao giờ hành chính..." />
-                        </div>
-                    </div>
-
-                    <!-- TOTAL AND CHECKOUT -->
-                    <div class="p-3 mb-3 rounded-3" style="background: rgba(255,255,255,0.03); border: 1px solid var(--admin-card-border); display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 13px; color: var(--admin-text-muted); font-weight: 500;">Tổng tiền hóa đơn:</span>
-                        <b style="font-family: var(--font-mono); font-size: 18px; color: var(--amber-500);" id="cart-total">0 VNĐ</b>
-                    </div>
-
-                    <button type="submit" class="admin-btn admin-btn-primary w-100" id="btn-checkout" style="height: 44px; font-size: 14.5px;" disabled>
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                        <span>Lập &amp; Lưu Hóa Đơn XML</span>
-                    </button>
-                </div>
+            <p class="admin-empty-note" data-pos-no-results hidden>Không có sản phẩm phù hợp với bộ lọc.</p>
+        </section>
+        <aside class="admin-card admin-pos-checkout">
+            <header class="overview-section-heading"><div><h2>Hóa đơn đang lập</h2><p data-pos-count>Chưa có sản phẩm được chọn.</p></div></header>
+            <div class="admin-pos-cart" data-pos-cart></div>
+            <div data-pos-inputs></div>
+            <p class="admin-form-errors admin-pos-error" data-pos-error role="alert" hidden></p>
+            <div class="admin-form-grid">
+                <div class="admin-form-field admin-form-field--full"><label asp-for="TenKH">Tên khách hàng *</label><input asp-for="TenKH" class="form-input" maxlength="100" autocomplete="name" required /><span asp-validation-for="TenKH"></span></div>
+                <div class="admin-form-field admin-form-field--full"><label asp-for="SoDienThoai">Số điện thoại *</label><input asp-for="SoDienThoai" class="form-input" type="tel" inputmode="tel" pattern="0[35789][0-9]{8}" maxlength="10" autocomplete="tel" required /><span asp-validation-for="SoDienThoai"></span></div>
+                <div class="admin-form-field admin-form-field--full"><label asp-for="DiaChi">Địa chỉ nhận hàng</label><input asp-for="DiaChi" class="form-input" maxlength="250" autocomplete="street-address" /><small>Có thể để trống nếu khách nhận trực tiếp tại quầy.</small><span asp-validation-for="DiaChi"></span></div>
+                <div class="admin-form-field admin-form-field--full"><label asp-for="NhanVien">Nhân viên lập hóa đơn</label><input asp-for="NhanVien" class="form-input" readonly /></div>
+                <div class="admin-form-field admin-form-field--full"><label asp-for="GhiChu">Ghi chú</label><textarea asp-for="GhiChu" class="form-textarea" rows="2" maxlength="1000"></textarea><span asp-validation-for="GhiChu"></span></div>
             </div>
-        </div>
+            <footer class="admin-pos-summary"><div><span>Tổng tiền sản phẩm</span><strong data-pos-total>0 ₫</strong></div><p data-pos-unit-summary>Quét đủ mã máy trước khi xuất hóa đơn.</p><div class="admin-form-field"><label asp-for="PaymentMethod">Hình thức đã thanh toán</label><select asp-for="PaymentMethod" class="form-select"><option value="Cash">Tiền mặt</option><option value="BankTransfer">Chuyển khoản</option></select></div><label class="admin-check-field admin-pos-payment-check"><input asp-for="PaymentConfirmed" required /> Khách đã thanh toán đủ số tiền trên</label><span asp-validation-for="PaymentConfirmed" class="field-error"></span><p>Xác nhận sẽ đánh dấu các mã máy đã bán, trừ tồn và ghi nhận doanh thu tại quầy.</p><button type="submit" class="btn-saas btn-saas-primary" data-pos-submit disabled><i class="fa-solid fa-check" aria-hidden="true"></i> Xác nhận bán &amp; xuất hóa đơn</button></footer>
+        </aside>
     </div>
 </form>
-
-@section Scripts {
-    <script>
-        const cartState = {}; // maSp -> { maSp, tenSp, giaBan, qty, img, maxStock }
-
-        function addToCart(maSp, tenSp, giaBan, img, maxStock) {
-            if (!cartState[maSp]) {
-                cartState[maSp] = { maSp, tenSp, giaBan, qty: 1, img, maxStock };
-            } else {
-                if (cartState[maSp].qty < maxStock) {
-                    cartState[maSp].qty++;
-                } else {
-                    if (typeof showToast === 'function') {
-                        showToast(`Sản phẩm ${tenSp} chỉ còn tồn ${maxStock} máy trong kho!`);
-                    } else {
-                        alert(`Sản phẩm ${tenSp} chỉ còn tồn ${maxStock} máy trong kho!`);
-                    }
-                }
-            }
-            renderCart();
-        }
-
-        function changeQty(maSp, delta) {
-            if (cartState[maSp]) {
-                cartState[maSp].qty += delta;
-                if (cartState[maSp].qty <= 0) {
-                    delete cartState[maSp];
-                }
-            }
-            renderCart();
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cart-items');
-            const hiddenContainer = document.getElementById('hidden-inputs-container');
-            const checkoutBtn = document.getElementById('btn-checkout');
-            const cartCountEl = document.getElementById('cart-count');
-            const cartTotalEl = document.getElementById('cart-total');
-
-            const keys = Object.keys(cartState);
-            hiddenContainer.innerHTML = '';
-
-            if (keys.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-4" style="color: var(--admin-text-faint);">
-                        <i class="fa-solid fa-cart-arrow-down fs-2 mb-2 d-block opacity-50"></i>
-                        <div style="font-size: 13px;">Nhấp chọn sản phẩm bên trái để thêm vào đơn hàng</div>
-                    </div>
-                `;
-                checkoutBtn.disabled = true;
-                cartCountEl.innerText = 'Chưa có sản phẩm nào';
-                cartTotalEl.innerText = '0 VNĐ';
-                return;
-            }
-
-            checkoutBtn.disabled = false;
-            let total = 0;
-            let totalQty = 0;
-            let html = '';
-
-            keys.forEach((maSp, index) => {
-                const item = cartState[maSp];
-                const itemTotal = item.giaBan * item.qty;
-                total += itemTotal;
-                totalQty += item.qty;
-
-                html += `
-                    <div class="d-flex align-items-center justify-content-between p-2 mb-2 rounded-2" style="background: rgba(255,255,255,0.03); border: 1px solid var(--admin-card-border);">
-                        <div style="width: 36px; height: 36px; border-radius: 6px; overflow: hidden; background: rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-right: 10px;">
-                            <img src="${item.img}" style="max-height: 100%; max-width: 100%; object-fit: contain;" onerror="this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'" />
-                        </div>
-                        <div style="flex: 1; min-width: 0; margin-right: 8px;">
-                            <div style="font-size: 12.5px; font-weight: 600; color: var(--admin-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.tenSp}</div>
-                            <div style="font-size: 11.5px; font-family: var(--font-mono); color: var(--amber-500);">${item.giaBan.toLocaleString('vi-VN')}đ</div>
-                        </div>
-                        <div class="d-flex align-items-center gap-1">
-                            <button type="button" class="admin-btn admin-btn-secondary" style="width: 24px; height: 24px; padding: 0; font-size: 12px; border-radius: 4px;" onclick="changeQty('${item.maSp}', -1)">-</button>
-                            <span style="font-family: var(--font-mono); font-size: 12px; font-weight: 600; min-width: 20px; text-align: center;">${item.qty}</span>
-                            <button type="button" class="admin-btn admin-btn-secondary" style="width: 24px; height: 24px; padding: 0; font-size: 12px; border-radius: 4px;" onclick="changeQty('${item.maSp}', 1)">+</button>
-                        </div>
-                    </div>
-                `;
-
-                hiddenContainer.innerHTML += `
-                    <input type="hidden" name="Items[${index}].MaSP" value="${item.maSp}" />
-                    <input type="hidden" name="Items[${index}].SoLuong" value="${item.qty}" />
-                `;
-            });
-
-            container.innerHTML = html;
-            cartCountEl.innerText = `${keys.length} mẫu sản phẩm (${totalQty} máy)`;
-            cartTotalEl.innerText = total.toLocaleString('vi-VN') + ' VNĐ';
-        }
-    </script>
-}
+<template id="pos-line-template"><article class="admin-pos-line"><div><b data-line-name></b><small data-line-price></small></div><div class="admin-pos-quantity"><button type="button" data-line-minus aria-label="Giảm số lượng">−</button><input type="number" min="1" data-line-quantity aria-label="Số lượng sản phẩm" /><button type="button" data-line-plus aria-label="Tăng số lượng">+</button><button type="button" data-line-remove aria-label="Xóa khỏi hóa đơn"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></button></div></article></template>
+<script type="application/json" id="pos-products">@Html.Raw(JsonSerializer.Serialize(phones.Select(x => new { id = x.MaSP, name = x.TenSP, brand = x.MaHang, brandName = x.TenHang, price = x.GiaBan, stock = x.SoLuongTon, storage = x.ThongSo.BoNhoTrong })))</script>
+<script type="application/json" id="pos-selected">@Html.Raw(JsonSerializer.Serialize(Model.Items.Select(x => new { id = x.MaSP, quantity = x.SoLuong, codes = x.UnitCodes })))</script>
+@section Scripts { <script src="~/js/admin-pos.js" asp-append-version="true"></script> }
 

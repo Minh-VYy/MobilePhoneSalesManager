@@ -1,0 +1,14 @@
+@model AdminSetupInput
+@{ ViewData["Title"] = "Thiết lập quản trị viên"; Layout = "_LayoutUser"; }
+<section class="auth-page">
+    <div class="auth-intro"><h1>Thiết lập cửa hàng.</h1><p>Tạo tài khoản quản trị viên đầu tiên bằng mã khởi tạo trên máy chủ. Trang này đóng sau khi thiết lập thành công.</p></div>
+    <div class="auth-panel glass"><h2>Tài khoản quản trị viên</h2>
+        <p class="auth-caption">Chủ dự án lấy mã tại <code>Data/AdminSetup.key</code> trên máy đang chạy ứng dụng.</p>
+        <form asp-action="Setup" method="post" class="account-form">
+            <div asp-validation-summary="ModelOnly" class="form-errors" role="alert"></div>
+            <label asp-for="SetupKey">Mã khởi tạo</label><input asp-for="SetupKey" type="password" autocomplete="off" required /><span asp-validation-for="SetupKey" class="field-error"></span>
+            <partial name="_RegistrationFields" model="Model" />
+            <button type="submit" class="store-action btn btn-primary account-submit">Tạo quản trị viên</button>
+        </form>
+    </div>
+</section>

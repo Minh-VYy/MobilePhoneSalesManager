@@ -1,99 +1,111 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
+using QuanLyBanDienThoai.Models;
+using QuanLyBanDienThoai.Services;
 
-namespace QuanLyBanDienThoai.Controllers
+namespace QuanLyBanDienThoai.Controllers;
+
+[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+public class AccountController(AccountXmlService accounts) : Controller
 {
-    public class AccountController : Controller
+    [HttpGet]
+    public IActionResult Login(string? returnUrl = null)
     {
-        // GET: /Account/Login
-        public IActionResult Login(string? returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
-        }
-
-        // POST: /Account/Login
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Login(string username, string password, string role = "User", string? returnUrl = null)
-        {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                ViewBag.Error = "Vui lòng nhập đầy đủ Tên đăng nhập và Mật khẩu!";
-                return View();
-            }
-
-            // Save User Session & Role
-            HttpContext.Session.SetString("Username", username);
-            HttpContext.Session.SetString("Role", role);
-            HttpContext.Session.SetString("IsLoggedIn", "true");
-
-            TempData["SuccessMessage"] = $"Đăng nhập thành công với vai trò {(role == "Admin" ? "Quản Trị Viên" : "Khách Hàng")}!";
-
-            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-
-            if (role == "Admin")
-            {
-                return RedirectToAction("Index", "ThongKe");
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        // GET: /Account/Register
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-        // POST: /Account/Register
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Register(string fullname, string email, string phone, string username, string password, string confirmPassword)
-        {
-            if (password != confirmPassword)
-            {
-                ViewBag.Error = "Mật khẩu xác nhận không khớp!";
-                return View();
-            }
-
-            // Save Registered User
-            HttpContext.Session.SetString("Username", username);
-            HttpContext.Session.SetString("Role", "User");
-            HttpContext.Session.SetString("IsLoggedIn", "true");
-
-            TempData["SuccessMessage"] = "Đăng ký tài khoản mới thành công! Chào mừng bạn đến với PhoneStore 3D.";
-            return RedirectToAction("Index", "Home");
-        }
-
-        // GET: /Account/SwitchRole
-        public IActionResult SwitchRole(string role, string? returnUrl = null)
-        {
-            var targetRole = role == "Admin" ? "Admin" : "User";
-            HttpContext.Session.SetString("Role", targetRole);
-            if (HttpContext.Session.GetString("IsLoggedIn") != "true")
-            {
-                HttpContext.Session.SetString("Username", targetRole == "Admin" ? "AdminDemo" : "KhachHangDemo");
-                HttpContext.Session.SetString("IsLoggedIn", "true");
-            }
-
-            TempData["SuccessMessage"] = $"Đã chuyển giao diện sang chế độ: {(targetRole == "Admin" ? "Giao Diện Quản Trị (Admin Dashboard)" : "Giao Diện Khách Hàng (User Storefront)")}";
-
-            if (targetRole == "Admin")
-            {
-                return RedirectToAction("Index", "ThongKe");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
-        // GET: /Account/Logout
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            TempData["SuccessMessage"] = "Đã đăng xuất khỏi hệ thống!";
-            return RedirectToAction("Index", "Home");
-        }
+        if (User.Identity?.IsAuthenticated == true) return RedirectToAction("Index", User.IsInRole("Admin") ? "ThongKe" : "Home");
+        ViewBag.HasAdmin = accounts.HasAdmin;
+        return View(new LoginInput { ReturnUrl = returnUrl });
     }
+
+    [HttpPost, ValidateAntiForgeryToken, EnableRateLimiting("auth")]
+    public async Task<IActionResult> Login(LoginInput input)
+    {
+        ViewBag.HasAdmin = accounts.HasAdmin;
+        if (!ModelState.IsValid) return View(input);
+        var account = accounts.Authenticate(input.Username, input.Password);
+        if (account == null)
+        {
+            ModelState.AddModelError("", "Tên đăng nhập/email hoặc mật khẩu chưa đúng. Nếu nhập sai nhiều lần, hãy thử lại sau 15 phút.");
+            return View(input);
+        }
+        await SignIn(account);
+        if (account.Role == "Admin") return RedirectToAction("Index", "ThongKe");
+        if (Url.IsLocalUrl(input.ReturnUrl) && !input.ReturnUrl!.Contains("/Account/", StringComparison.OrdinalIgnoreCase)) return LocalRedirect(input.ReturnUrl);
+        return RedirectToAction("Index", "Home");
+    }
+
+    [HttpGet] public IActionResult Register() => User.Identity?.IsAuthenticated == true ? RedirectToAction(nameof(Profile)) : View(new RegisterInput());
+
+    [HttpPost, ValidateAntiForgeryToken, EnableRateLimiting("auth")]
+    public IActionResult Register(RegisterInput input)
+    {
+        if (!ModelState.IsValid) return View(input);
+        var error = accounts.Register(input);
+        if (error != null) { ModelState.AddModelError("", error); return View(input); }
+        TempData["SuccessMessage"] = "Tài khoản đã được tạo. Hãy đăng nhập để bắt đầu mua sắm.";
+        return RedirectToAction(nameof(Login));
+    }
+
+    [HttpGet] public IActionResult Setup() => accounts.HasAdmin ? NotFound() : View(new AdminSetupInput());
+
+    [HttpPost, ValidateAntiForgeryToken, EnableRateLimiting("auth")]
+    public IActionResult Setup(AdminSetupInput input)
+    {
+        if (accounts.HasAdmin) return NotFound();
+        if (!ModelState.IsValid) return View(input);
+        var error = accounts.Register(input, true, input.SetupKey);
+        if (error != null) { ModelState.AddModelError("", error); return View(input); }
+        TempData["SuccessMessage"] = "Đã tạo quản trị viên. Đăng nhập bằng tài khoản vừa thiết lập.";
+        return RedirectToAction(nameof(Login));
+    }
+
+    [Authorize, HttpGet]
+    public IActionResult Profile()
+    {
+        var account = accounts.Find(User.FindFirstValue(ClaimTypes.NameIdentifier))!;
+        return View(new ProfileInput { FullName = account.FullName, Email = account.Email, Phone = account.Phone, Address = account.Address });
+    }
+
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Profile(ProfileInput input)
+    {
+        if (!ModelState.IsValid) return View(input);
+        var id = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var error = accounts.UpdateProfile(id, input);
+        if (error != null) { ModelState.AddModelError("", error); return View(input); }
+        await SignIn(accounts.Find(id)!);
+        TempData["SuccessMessage"] = "Đã lưu thông tin tài khoản.";
+        return RedirectToAction(nameof(Profile));
+    }
+
+    [Authorize, HttpGet] public IActionResult ChangePassword() => View(new ChangePasswordInput());
+
+    [Authorize, HttpPost, ValidateAntiForgeryToken, EnableRateLimiting("auth")]
+    public async Task<IActionResult> ChangePassword(ChangePasswordInput input)
+    {
+        if (!ModelState.IsValid) return View(input);
+        if (!accounts.ChangePassword(User.FindFirstValue(ClaimTypes.NameIdentifier)!, input.CurrentPassword, input.Password))
+        { ModelState.AddModelError(nameof(input.CurrentPassword), "Mật khẩu hiện tại chưa đúng."); return View(input); }
+        await HttpContext.SignOutAsync();
+        TempData["SuccessMessage"] = "Đã đổi mật khẩu. Vui lòng đăng nhập lại.";
+        return RedirectToAction(nameof(Login));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync();
+        return RedirectToAction(nameof(Login));
+    }
+
+    public IActionResult AccessDenied() { Response.StatusCode = 403; return View(); }
+
+    private Task SignIn(AccountRecord account) => HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+        new ClaimsPrincipal(new ClaimsIdentity(new[] {
+            new Claim(ClaimTypes.NameIdentifier, account.Id), new Claim(ClaimTypes.Name, account.Username),
+            new Claim(ClaimTypes.Role, account.Role), new Claim("DisplayName", account.FullName), new Claim("SecurityStamp", account.SecurityStamp)
+        }, CookieAuthenticationDefaults.AuthenticationScheme)), new AuthenticationProperties { IsPersistent = false, AllowRefresh = true });
 }

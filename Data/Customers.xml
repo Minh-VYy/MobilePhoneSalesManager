@@ -1,26 +1,141 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" ?>
 <Customers>
   <Customer id="CUS-001">
     <FullName>Nguyễn Văn An</FullName>
-    <Phone>0901234567</Phone>
-    <Email>an.nguyen@gmail.com</Email>
-    <Address>Quận Hải Châu, TP. Đà Nẵng</Address>
+    <Phone>0987654321</Phone>
+    <Email>customer1@gmail.com</Email>
+    <Address>123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh</Address>
+    <LoyaltyPoints>1200</LoyaltyPoints>
+    <MembershipLevel>Platinum</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+      <VoucherCode>TRIAN200</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-002">
+    <FullName>Trần Thị Thu</FullName>
+    <Phone>0912345678</Phone>
+    <Email>customer2@gmail.com</Email>
+    <Address>456 Đường Nguyễn Huệ, Quận 3, TP. Hồ Chí Minh</Address>
+    <LoyaltyPoints>1200</LoyaltyPoints>
+    <MembershipLevel>Platinum</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+      <VoucherCode>TRIAN200</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-003">
+    <FullName>Lê Hoàng Long</FullName>
+    <Phone>0905123456</Phone>
+    <Email>customer3@gmail.com</Email>
+    <Address>78 Quang Trung, Quận Hải Châu, TP. Đà Nẵng</Address>
+    <LoyaltyPoints>550</LoyaltyPoints>
+    <MembershipLevel>Gold</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+      <VoucherCode>TRIAN200</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-004">
+    <FullName>Phạm Minh Tuấn</FullName>
+    <Phone>0934567890</Phone>
+    <Email>customer4@gmail.com</Email>
+    <Address>12 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội</Address>
+    <LoyaltyPoints>550</LoyaltyPoints>
+    <MembershipLevel>Gold</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+      <VoucherCode>TRIAN200</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-005">
+    <FullName>Võ Thị Bích Ngọc</FullName>
+    <Phone>0978123456</Phone>
+    <Email>customer5@gmail.com</Email>
+    <Address>89 Nguyễn Văn Linh, Thanh Khê, Đà Nẵng</Address>
+    <LoyaltyPoints>550</LoyaltyPoints>
+    <MembershipLevel>Gold</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+      <VoucherCode>TRIAN200</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-006">
+    <FullName>Đỗ Quốc Huy</FullName>
+    <Phone>0989012345</Phone>
+    <Email>customer6@gmail.com</Email>
+    <Address>34 Điện Biên Phủ, Bình Thạnh, TP.HCM</Address>
+    <LoyaltyPoints>550</LoyaltyPoints>
+    <MembershipLevel>Gold</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+      <VoucherCode>TRIAN200</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-007">
+    <FullName>Hoàng Kim Ngân</FullName>
+    <Phone>0918765432</Phone>
+    <Email>customer7@gmail.com</Email>
+    <Address>56 Hai Bà Trưng, Quận 1, TP.HCM</Address>
     <LoyaltyPoints>150</LoyaltyPoints>
     <MembershipLevel>Silver</MembershipLevel>
     <VoucherWallet>
       <VoucherCode>VIPAPPLE500</VoucherCode>
     </VoucherWallet>
   </Customer>
-  <Customer id="CUS-002">
-    <FullName>Trần Thị Thu</FullName>
-    <Phone>0918889999</Phone>
-    <Email>thu.tran@gmail.com</Email>
-    <Address>Quận 1, TP. Hồ Chí Minh</Address>
-    <LoyaltyPoints>620</LoyaltyPoints>
-    <MembershipLevel>Gold</MembershipLevel>
+  <Customer id="CUS-008">
+    <FullName>Ngô Văn Hùng</FullName>
+    <Phone>0908123789</Phone>
+    <Email>customer8@gmail.com</Email>
+    <Address>90 Cầu Giấy, Quận Cầu Giấy, Hà Nội</Address>
+    <LoyaltyPoints>150</LoyaltyPoints>
+    <MembershipLevel>Silver</MembershipLevel>
     <VoucherWallet>
-      <VoucherCode>TRIAN200</VoucherCode>
-      <VoucherCode>SALE100K</VoucherCode>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-009">
+    <FullName>Bùi Thanh Trúc</FullName>
+    <Phone>0933456789</Phone>
+    <Email>customer9@gmail.com</Email>
+    <Address>15 Lê Duẩn, Hải Châu, Đà Nẵng</Address>
+    <LoyaltyPoints>150</LoyaltyPoints>
+    <MembershipLevel>Silver</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-010">
+    <FullName>Đinh Tấn Phát</FullName>
+    <Phone>0976543210</Phone>
+    <Email>customer10@gmail.com</Email>
+    <Address>102 Pasteur, Quận 3, TP. Hồ Chí Minh</Address>
+    <LoyaltyPoints>150</LoyaltyPoints>
+    <MembershipLevel>Silver</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-011">
+    <FullName>Lương Mỹ Duyên</FullName>
+    <Phone>0982345678</Phone>
+    <Email>customer11@gmail.com</Email>
+    <Address>45 Nguyễn Thị Minh Khai, Quận 1, TP.HCM</Address>
+    <LoyaltyPoints>150</LoyaltyPoints>
+    <MembershipLevel>Silver</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
+    </VoucherWallet>
+  </Customer>
+  <Customer id="CUS-012">
+    <FullName>Vũ Minh Quân</FullName>
+    <Phone>0909876543</Phone>
+    <Email>customer12@gmail.com</Email>
+    <Address>67 Hoàng Diệu, Hải Châu, Đà Nẵng</Address>
+    <LoyaltyPoints>150</LoyaltyPoints>
+    <MembershipLevel>Silver</MembershipLevel>
+    <VoucherWallet>
+      <VoucherCode>VIPAPPLE500</VoucherCode>
     </VoucherWallet>
   </Customer>
 </Customers>

@@ -1,0 +1,212 @@
+@model List<QuanLyBanDienThoai.Models.TinTucModel>
+@{
+    ViewData["Title"] = "Tin Tức & Đánh Giá Công Nghệ Thời Gian Thực";
+    Layout = "_LayoutUser";
+    string currentCat = ViewBag.CurrentCategory as string ?? "ALL";
+    string keyword = ViewBag.Keyword as string ?? "";
+    var hotNews = ViewBag.HotNews as List<QuanLyBanDienThoai.Models.TinTucModel> ?? new List<QuanLyBanDienThoai.Models.TinTucModel>();
+}
+
+<section class="news-page-container" style="max-width: 1200px; margin: 0 auto; padding: 24px 16px;">
+    <!-- HEADER BAR -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h1 class="h2 mb-1" style="font-weight: 700; color: var(--text-heading); display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-newspaper text-primary"></i> Tin Tức &amp; Đánh Giá Công Nghệ
+            </h1>
+            <p class="text-muted mb-0" style="font-size: 14px;">Kho dữ liệu tin tức công nghệ, đánh giá smartphone và xu hướng mới nhất lưu trữ bằng XML.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge-tag badge-primary" style="padding: 8px 16px; font-size: 13px; font-weight: 600;">
+                <i class="fa-solid fa-file-code me-1"></i> Cơ Sở Dữ Liệu XML
+            </span>
+        </div>
+    </div>
+
+    <!-- FILTER & SEARCH BAR -->
+    <div class="glass p-3 mb-4 rounded-3 d-flex flex-wrap justify-content-between align-items-center gap-3" style="background: var(--bg-surface); border: 1px solid var(--border-default);">
+        <!-- Category pills -->
+        <div class="d-flex flex-wrap gap-2">
+            @{
+                var categories = new[] {
+                    ("ALL", "Tất Cả"),
+                    ("Đánh giá", "Đánh Giá"),
+                    ("Apple", "Apple iPhone"),
+                    ("Samsung", "Samsung Galaxy"),
+                    ("Công nghệ AI", "Công Nghệ AI"),
+                    ("So sánh", "So Sánh"),
+                    ("Thủ thuật", "Thủ Thuật")
+                };
+            }
+            @foreach (var (catKey, catName) in categories)
+            {
+                <a asp-action="Index" asp-route-category="@catKey" asp-route-keyword="@keyword" 
+                   class="btn btn-sm @(currentCat == catKey ? "btn-primary" : "btn-outline-secondary")"
+                   style="border-radius: 20px; font-weight: 500; font-size: 13px;">
+                    @catName
+                </a>
+            }
+        </div>
+
+        <!-- Keyword search -->
+        <form method="get" asp-action="Index" class="d-flex gap-2">
+            <input type="hidden" name="category" value="@currentCat" />
+            <input type="search" name="keyword" value="@keyword" placeholder="Tìm kiếm bài viết..." class="form-control form-control-sm" style="width: 220px; border-radius: 8px;" />
+            <button type="submit" class="btn btn-sm btn-secondary" style="border-radius: 8px;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- FEATURED / HOT NEWS GRID (If available) -->
+    @if (hotNews.Count > 0 && string.IsNullOrWhiteSpace(keyword) && currentCat == "ALL")
+    {
+        <div class="mb-5">
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="fa-solid fa-fire text-danger fs-5"></i>
+                <h3 class="h5 mb-0" style="font-weight: 700; color: var(--text-heading);">Tiêu Điểm Công Nghệ Nổi Bật</h3>
+            </div>
+            <div class="news-featured-grid">
+                @for (int i = 0; i < hotNews.Count && i < 3; i++)
+                {
+                    var hot = hotNews[i];
+                    <a asp-action="Details" asp-route-id="@hot.MaTT" class="news-card-item">
+                        <div style="height: 190px; overflow: hidden; position: relative; flex-shrink: 0;">
+                            <img src="@hot.HinhAnh" alt="@hot.TieuDe" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80';" />
+                            <span class="badge-tag badge-hot" style="position: absolute; top: 10px; left: 10px;">HOT</span>
+                            <span class="badge-tag badge-cat" style="position: absolute; bottom: 10px; right: 10px;">@hot.DanhMuc</span>
+                        </div>
+                        <div style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
+                            <div class="text-muted mb-2" style="font-size: 12px;">
+                                <i class="fa-regular fa-clock me-1"></i> @hot.NgayDang.ToString("dd/MM/yyyy HH:mm") &middot; <i class="fa-regular fa-eye me-1"></i> @hot.LuotXem lượt xem
+                            </div>
+                            <h4 style="font-size: 15px; font-weight: 700; color: var(--text-heading); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;">
+                                @hot.TieuDe
+                            </h4>
+                            <p class="text-muted" style="font-size: 13px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 14px;">
+                                @hot.TomTat
+                            </p>
+                            <span style="margin-top: auto; color: var(--accent-primary, #3b82f6); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                                Đọc chi tiết <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- MAIN NEWS LIST -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="h5 mb-0" style="font-weight: 700; color: var(--text-heading);">
+            Danh Sách Bài Viết (@Model.Count bài)
+        </h3>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="text-center py-5 glass rounded-3" style="border: 1px dashed var(--border-default); padding: 40px 20px;">
+            <i class="fa-solid fa-newspaper text-muted mb-3" style="font-size: 48px;"></i>
+            <h4 class="h5 text-muted">Chưa có bài viết nào phù hợp</h4>
+            <p class="text-muted" style="font-size: 14px;">Hãy thử tìm kiếm với từ khóa khác hoặc bấm nút "Cào &amp; Cập Nhật Dữ Liệu Thời Gian Thực".</p>
+            <button class="btn btn-primary btn-sm" onclick="triggerCrawl()">Cập Nhật Ngay</button>
+        </div>
+    }
+    else
+    {
+        <div class="news-catalog-grid">
+            @foreach (var item in Model)
+            {
+                <a asp-action="Details" asp-route-id="@item.MaTT" class="news-card-item">
+                    <div style="height: 180px; overflow: hidden; position: relative; flex-shrink: 0;">
+                        <img src="@item.HinhAnh" alt="@item.TieuDe" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=80';" />
+                        <span class="badge-tag badge-primary" style="position: absolute; top: 10px; left: 10px;">@item.DanhMuc</span>
+                    </div>
+                    <div style="padding: 16px; display: flex; flex-direction: column; flex-grow: 1;">
+                        <div class="text-muted mb-2 d-flex justify-content-between" style="font-size: 11px;">
+                            <span><i class="fa-regular fa-clock me-1"></i> @item.NgayDang.ToString("dd/MM/yyyy HH:mm")</span>
+                            <span><i class="fa-regular fa-eye me-1"></i> @item.LuotXem</span>
+                        </div>
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--text-heading); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px;">
+                            @item.TieuDe
+                        </h4>
+                        <p class="text-muted" style="font-size: 12.5px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 14px;">
+                            @item.TomTat
+                        </p>
+                        <span style="margin-top: auto; color: var(--accent-primary, #3b82f6); font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 4px;">
+                            Đọc tiếp <i class="fa-solid fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+</section>
+
+<style>
+.news-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+.news-catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+@@media (max-width: 960px) {
+    .news-featured-grid,
+    .news-catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+}
+@@media (max-width: 600px) {
+    .news-featured-grid,
+    .news-catalog-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+}
+
+.news-card-item {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-surface, #ffffff);
+    border: 1px solid var(--border-default, rgba(0, 0, 0, 0.08));
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text-heading, #1e293b);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease;
+    height: 100%;
+}
+.news-card-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+    border-color: rgba(59, 130, 246, 0.45);
+}
+
+.badge-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+.badge-tag.badge-hot {
+    background: #ef4444;
+    color: #ffffff;
+}
+.badge-tag.badge-cat {
+    background: rgba(15, 23, 42, 0.75);
+    color: #ffffff;
+    backdrop-filter: blur(4px);
+}
+.badge-tag.badge-primary {
+    background: #3b82f6;
+    color: #ffffff;
+}
+
+</style>

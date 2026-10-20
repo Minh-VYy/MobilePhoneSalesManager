@@ -1,63 +1,67 @@
 @model QuanLyBanDienThoai.Models.ValidationResultModel
 @{
-    ViewData["Title"] = "Kiểm Tra Schema XSD";
+    ViewData["Title"] = "Kiểm Tra Dữ Liệu Hệ Thống";
 }
 
 <div class="admin-card">
     <div class="admin-card-header">
         <div>
             <h3 class="admin-card-title">
-                <i class="fa-solid fa-shield-halved text-success"></i>
-                <span>Báo cáo kiểm tra tính hợp lệ XSD Schema</span>
+                <i class="fa-solid fa-shield-halved" style="color: var(--status-success);"></i>
+                <span>Báo Cáo Kiểm Định Toàn Vẹn Dữ Liệu Hệ Thống</span>
             </h3>
-            <div class="admin-card-desc">Kiểm tra tài liệu XML với lược đồ định nghĩa XSD bằng .NET XmlReaderSettings</div>
+            <div class="admin-card-desc">Kiểm tra tính chuẩn hóa cấu trúc, các ràng buộc dữ liệu sản phẩm và tính toàn vẹn thông tin</div>
         </div>
-        <a asp-action="Manage" class="admin-btn admin-btn-secondary admin-btn-sm">
+        <a asp-action="Manage" class="btn-saas btn-saas-secondary">
             <i class="fa-solid fa-arrow-left"></i>
-            <span>Trở về kho XML</span>
+            <span>Trở về quản lý kho</span>
         </a>
     </div>
     <div class="admin-card-body">
-        <div class="d-flex flex-wrap gap-4 p-3 rounded-3 mb-4" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--admin-card-border); font-family: var(--font-mono); font-size: 13px;">
-            <div><strong style="color: var(--admin-text-faint);">Tệp XML:</strong> <span style="color: var(--admin-primary);">@Model.FileName</span></div>
-            <div><strong style="color: var(--admin-text-faint);">Lược đồ XSD:</strong> <span style="color: var(--admin-primary);">@Model.SchemaName</span></div>
-            <div><strong style="color: var(--admin-text-faint);">Trạng thái:</strong> 
+        <div class="d-flex flex-wrap gap-4 p-3 rounded-3 mb-4" style="background: var(--bg-surface-subtle); border: 1px solid var(--border-default); font-size: 13px;">
+            <div><strong style="color: var(--text-muted);">Tập tin dữ liệu:</strong> <span style="color: var(--primary-blue); font-weight: 600;">@Model.FileName</span></div>
+            <div><strong style="color: var(--text-muted);">Chuẩn quy cách:</strong> <span style="color: var(--primary-blue); font-weight: 600;">@Model.SchemaName</span></div>
+            <div><strong style="color: var(--text-muted);">Trạng thái kiểm định:</strong>
                 @if (Model.IsValid) {
-                    <span style="color: var(--admin-accent); font-weight: 700;">HỢP LỆ (100% VALID)</span>
+                    <span class="badge-pill success">
+                        <i class="fa-solid fa-check"></i> ĐẠT CHUẨN TOÀN VẸN (100% PASS)
+                    </span>
                 } else {
-                    <span style="color: var(--admin-danger); font-weight: 700;">PHÁT HIỆN LỖI (INVALID)</span>
+                    <span class="badge-pill danger">
+                        <i class="fa-solid fa-triangle-exclamation"></i> CẦN XỬ LÝ LỖI
+                    </span>
                 }
             </div>
         </div>
 
         @if (Model.IsValid)
         {
-            <div class="p-4 rounded-3 d-flex align-items-center gap-3" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35); color: var(--admin-accent);">
+            <div class="p-4 rounded-3 d-flex align-items-center gap-3" style="background: var(--status-success-bg); border: 1px solid var(--status-success-border); color: var(--status-success);">
                 <i class="fa-solid fa-circle-check fs-1 flex-shrink-0"></i>
                 <div>
-                    <h4 class="fw-bold mb-1" style="font-size: 18px;">TỆP XML HOÀN TOÀN HỢP LỆ VỚI LƯỢC ĐỒ SCHEMA!</h4>
-                    <p class="mb-0" style="font-size: 13.5px; opacity: 0.9;">Tất cả các phần tử, kiểu dữ liệu, khóa chính và ràng buộc trong <code>@Model.FileName</code> đều tuân thủ chính xác 100% lược đồ <code>@Model.SchemaName</code>.</p>
+                    <h4 class="fw-bold mb-1" style="font-size: 16px;">CƠ SỞ DỮ LIỆU ĐẠT TIÊU CHUẨN CHUẨN HÓA VÀ TOÀN VẸN!</h4>
+                    <p class="mb-0" style="font-size: 13.5px; opacity: 0.95;">Tất cả các sản phẩm, đơn giá, số lượng tồn kho và thuộc tính kỹ thuật đều tuân thủ chính xác các ràng buộc nghiệp vụ của hệ thống.</p>
                 </div>
             </div>
         }
         else
         {
-            <div class="p-4 rounded-3" style="background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); color: var(--admin-danger);">
+            <div class="p-4 rounded-3" style="background: var(--status-danger-bg); border: 1px solid var(--status-danger-border); color: var(--status-danger);">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <i class="fa-solid fa-circle-xmark fs-2"></i>
-                    <h4 class="fw-bold mb-0">TỆP XML KHÔNG HỢP LỆ (INVALID)!</h4>
+                    <h4 class="fw-bold mb-0">PHÁT HIỆN LỖI SAI LỆCH DỮ LIỆU!</h4>
                 </div>
-                <p style="font-size: 13.5px;">Phát hiện @Model.Errors.Count lỗi vi phạm ràng buộc XSD Schema:</p>
+                <p style="font-size: 13.5px;">Phát hiện @Model.Errors.Count điểm dữ liệu chưa chuẩn hóa hoặc sai định dạng quy định:</p>
                 
-                <div class="admin-table-container mt-3">
-                    <table class="admin-table">
+                <div class="table-wrapper mt-3">
+                    <table class="table-saas">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Dòng</th>
+                                <th>Vị trí dòng</th>
                                 <th>Cột</th>
                                 <th>Mức độ</th>
-                                <th>Chi tiết lỗi</th>
+                                <th>Chi tiết cảnh báo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -66,10 +70,10 @@
                                 var err = Model.Errors[i];
                                 <tr>
                                     <td>@(i + 1)</td>
-                                    <td class="cell-code" style="color: var(--amber-500);">@err.LineNumber</td>
-                                    <td class="cell-code" style="color: var(--amber-500);">@err.LinePosition</td>
-                                    <td><span class="badge" style="background: rgba(244, 63, 94, 0.2); color: var(--admin-danger); font-family: var(--font-mono);">@err.Severity</span></td>
-                                    <td style="color: var(--admin-danger); font-size: 13px;">@err.Message</td>
+                                    <td class="cell-code">@err.LineNumber</td>
+                                    <td class="cell-code">@err.LinePosition</td>
+                                    <td><span class="badge-pill danger">@err.Severity</span></td>
+                                    <td style="color: var(--status-danger); font-size: 13px;">@err.Message</td>
                                 </tr>
                             }
                         </tbody>

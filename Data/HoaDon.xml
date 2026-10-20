@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" ?>
 <DanhSachHoaDon xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="HoaDon.xsd">
   <HoaDon>
     <MaHD>HD001</MaHD>
-    <NgayLap>2026-09-15T10:30:00</NgayLap>
+    <NgayLap>2026-10-20T11:08:00</NgayLap>
     <KhachHang>
       <TenKH>Nguyễn Văn An</TenKH>
       <SoDienThoai>0987654321</SoDienThoai>
@@ -11,19 +11,20 @@
     <NhanVien>Phạm Thị Minh</NhanVien>
     <ChiTietHoaDon>
       <ChiTiet>
-        <MaSP>SP001</MaSP>
-        <TenSP>iPhone 15 Pro Max 256GB</TenSP>
+        <MaSP>IPH-15PM-100-256-NAT</MaSP>
+        <TenSP>iPhone 15 Pro Max 256GB - Titan Tự Nhiên (VN/A Mới 100%)</TenSP>
         <SoLuong>1</SoLuong>
-        <DonGia>29990000</DonGia>
-        <ThanhTien>29990000</ThanhTien>
+        <DonGia>28990000</DonGia>
+        <ThanhTien>28990000</ThanhTien>
       </ChiTiet>
     </ChiTietHoaDon>
-    <TongTien>29990000</TongTien>
-    <GhiChu>Khách hàng thanh toán chuyển khoản ngân hàng.</GhiChu>
+    <TongTien>28990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
   </HoaDon>
   <HoaDon>
     <MaHD>HD002</MaHD>
-    <NgayLap>2026-09-16T14:15:00</NgayLap>
+    <NgayLap>2026-10-20T10:00:00</NgayLap>
     <KhachHang>
       <TenKH>Trần Thị Thu</TenKH>
       <SoDienThoai>0912345678</SoDienThoai>
@@ -32,21 +33,541 @@
     <NhanVien>Lê Hoàng Nam</NhanVien>
     <ChiTietHoaDon>
       <ChiTiet>
-        <MaSP>SP002</MaSP>
-        <TenSP>Samsung Galaxy S24 Ultra 5G</TenSP>
+        <MaSP>SS-A55-100-128-BLU</MaSP>
+        <TenSP>Samsung Galaxy A55 5G 128GB - Xanh Băng Lilac (Chính Hãng VN/A)</TenSP>
         <SoLuong>1</SoLuong>
-        <DonGia>27990000</DonGia>
-        <ThanhTien>27990000</ThanhTien>
+        <DonGia>8490000</DonGia>
+        <ThanhTien>8490000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>8490000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD003</MaHD>
+    <NgayLap>2026-10-19T10:47:00</NgayLap>
+    <KhachHang>
+      <TenKH>Lê Hoàng Long</TenKH>
+      <SoDienThoai>0905123456</SoDienThoai>
+      <DiaChi>78 Quang Trung, Quận Hải Châu, TP. Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Nguyễn Thanh Tùng</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>MI-RN13PP-100-256-PUR</MaSP>
+        <TenSP>Redmi Note 13 Pro+ 5G 256GB - Tím Cực Quang (Camera 200MP)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>8690000</DonGia>
+        <ThanhTien>8690000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>8690000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD004</MaHD>
+    <NgayLap>2026-10-19T08:49:00</NgayLap>
+    <KhachHang>
+      <TenKH>Phạm Minh Tuấn</TenKH>
+      <SoDienThoai>0934567890</SoDienThoai>
+      <DiaChi>12 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội</DiaChi>
+    </KhachHang>
+    <NhanVien>Trần Thu Hà</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>GG-PX9PXL-100-256-BLK</MaSP>
+        <TenSP>Google Pixel 9 Pro XL 256GB - Đen Obsidian (Google Tensor G4)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>25990000</DonGia>
+        <ThanhTien>25990000</ThanhTien>
       </ChiTiet>
       <ChiTiet>
-        <MaSP>SP005</MaSP>
-        <TenSP>Google Pixel 8 Pro</TenSP>
+        <MaSP>IPH-15PM-100-256-NAT</MaSP>
+        <TenSP>iPhone 15 Pro Max 256GB - Titan Tự Nhiên (VN/A Mới 100%)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>28990000</DonGia>
+        <ThanhTien>28990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>54980000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD005</MaHD>
+    <NgayLap>2026-10-18T12:56:00</NgayLap>
+    <KhachHang>
+      <TenKH>Võ Thị Bích Ngọc</TenKH>
+      <SoDienThoai>0978123456</SoDienThoai>
+      <DiaChi>89 Nguyễn Văn Linh, Thanh Khê, Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Phạm Thị Minh</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>IPH-16-100-128-TEA</MaSP>
+        <TenSP>iPhone 16 128GB - Xanh Mòng Két Teal (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>21990000</DonGia>
+        <ThanhTien>21990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>21990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD006</MaHD>
+    <NgayLap>2026-10-18T12:06:00</NgayLap>
+    <KhachHang>
+      <TenKH>Đỗ Quốc Huy</TenKH>
+      <SoDienThoai>0989012345</SoDienThoai>
+      <DiaChi>34 Điện Biên Phủ, Bình Thạnh, TP.HCM</DiaChi>
+    </KhachHang>
+    <NhanVien>Lê Hoàng Nam</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SS-S24P-100-256-BLK</MaSP>
+        <TenSP>Samsung Galaxy S24+ 5G 256GB - Đen Onyx (Galaxy AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>21990000</DonGia>
+        <ThanhTien>21990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>21990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD007</MaHD>
+    <NgayLap>2026-10-17T12:24:00</NgayLap>
+    <KhachHang>
+      <TenKH>Hoàng Kim Ngân</TenKH>
+      <SoDienThoai>0918765432</SoDienThoai>
+      <DiaChi>56 Hai Bà Trưng, Quận 1, TP.HCM</DiaChi>
+    </KhachHang>
+    <NhanVien>Nguyễn Thanh Tùng</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>MI-14-100-256-GRN</MaSP>
+        <TenSP>Xiaomi 14 256GB - Xanh Ngọc Lục Bảo (Leica Summilux)</TenSP>
         <SoLuong>1</SoLuong>
         <DonGia>18990000</DonGia>
         <ThanhTien>18990000</ThanhTien>
       </ChiTiet>
     </ChiTietHoaDon>
-    <TongTien>46980000</TongTien>
-    <GhiChu>Tặng kèm dán cường lực &amp; ốp lưng cao cấp.</GhiChu>
+    <TongTien>18990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD008</MaHD>
+    <NgayLap>2026-10-16T08:58:00</NgayLap>
+    <KhachHang>
+      <TenKH>Ngô Văn Hùng</TenKH>
+      <SoDienThoai>0908123789</SoDienThoai>
+      <DiaChi>90 Cầu Giấy, Quận Cầu Giấy, Hà Nội</DiaChi>
+    </KhachHang>
+    <NhanVien>Trần Thu Hà</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>OP-RN12P-100-512-SLV</MaSP>
+        <TenSP>OPPO Reno12 Pro 5G 512GB - Bạc Vũ Trụ (OPPO AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>15490000</DonGia>
+        <ThanhTien>15490000</ThanhTien>
+      </ChiTiet>
+      <ChiTiet>
+        <MaSP>SS-S24P-100-256-BLK</MaSP>
+        <TenSP>Samsung Galaxy S24+ 5G 256GB - Đen Onyx (Galaxy AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>21990000</DonGia>
+        <ThanhTien>21990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>37480000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD009</MaHD>
+    <NgayLap>2026-10-15T08:54:00</NgayLap>
+    <KhachHang>
+      <TenKH>Bùi Thanh Trúc</TenKH>
+      <SoDienThoai>0933456789</SoDienThoai>
+      <DiaChi>15 Lê Duẩn, Hải Châu, Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Phạm Thị Minh</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>IPH-16P-100-128-BLK</MaSP>
+        <TenSP>iPhone 16 Pro 128GB - Titan Đen (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>28490000</DonGia>
+        <ThanhTien>28490000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>28490000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD010</MaHD>
+    <NgayLap>2026-10-14T08:43:00</NgayLap>
+    <KhachHang>
+      <TenKH>Đinh Tấn Phát</TenKH>
+      <SoDienThoai>0976543210</SoDienThoai>
+      <DiaChi>102 Pasteur, Quận 3, TP. Hồ Chí Minh</DiaChi>
+    </KhachHang>
+    <NhanVien>Lê Hoàng Nam</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SS-S24U-100-256-GRY</MaSP>
+        <TenSP>Samsung Galaxy S24 Ultra 5G 256GB - Xám Titan (Galaxy AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>26990000</DonGia>
+        <ThanhTien>26990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>26990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD011</MaHD>
+    <NgayLap>2026-10-13T11:17:00</NgayLap>
+    <KhachHang>
+      <TenKH>Lương Mỹ Duyên</TenKH>
+      <SoDienThoai>0982345678</SoDienThoai>
+      <DiaChi>45 Nguyễn Thị Minh Khai, Quận 1, TP.HCM</DiaChi>
+    </KhachHang>
+    <NhanVien>Nguyễn Thanh Tùng</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>MI-14U-100-512-BLK</MaSP>
+        <TenSP>Xiaomi 14 Ultra 512GB - Ống Kính Leica Huyền Thoại (Mới 100%)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>27990000</DonGia>
+        <ThanhTien>27990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>27990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD012</MaHD>
+    <NgayLap>2026-10-12T09:10:00</NgayLap>
+    <KhachHang>
+      <TenKH>Vũ Minh Quân</TenKH>
+      <SoDienThoai>0909876543</SoDienThoai>
+      <DiaChi>67 Hoàng Diệu, Hải Châu, Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Trần Thu Hà</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>OP-FX7U-100-256-BRN</MaSP>
+        <TenSP>OPPO Find X7 Ultra 256GB - Nâu Da Sepia (Dual Periscope Camera)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>21890000</DonGia>
+        <ThanhTien>21890000</ThanhTien>
+      </ChiTiet>
+      <ChiTiet>
+        <MaSP>MI-14U-100-512-BLK</MaSP>
+        <TenSP>Xiaomi 14 Ultra 512GB - Ống Kính Leica Huyền Thoại (Mới 100%)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>27990000</DonGia>
+        <ThanhTien>27990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>49880000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD013</MaHD>
+    <NgayLap>2026-10-11T10:59:00</NgayLap>
+    <KhachHang>
+      <TenKH>Nguyễn Văn An</TenKH>
+      <SoDienThoai>0987654321</SoDienThoai>
+      <DiaChi>123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh</DiaChi>
+    </KhachHang>
+    <NhanVien>Phạm Thị Minh</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>IPH-16PM-100-256-DES</MaSP>
+        <TenSP>iPhone 16 Pro Max 256GB - Titan Sa Mạc (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>34990000</DonGia>
+        <ThanhTien>34990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>34990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD014</MaHD>
+    <NgayLap>2026-10-10T14:18:00</NgayLap>
+    <KhachHang>
+      <TenKH>Trần Thị Thu</TenKH>
+      <SoDienThoai>0912345678</SoDienThoai>
+      <DiaChi>456 Đường Nguyễn Huệ, Quận 3, TP. Hồ Chí Minh</DiaChi>
+    </KhachHang>
+    <NhanVien>Lê Hoàng Nam</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>IPH-15PM-100-256-NAT</MaSP>
+        <TenSP>iPhone 15 Pro Max 256GB - Titan Tự Nhiên (VN/A Mới 100%)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>28990000</DonGia>
+        <ThanhTien>28990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>28990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD015</MaHD>
+    <NgayLap>2026-10-09T12:20:00</NgayLap>
+    <KhachHang>
+      <TenKH>Lê Hoàng Long</TenKH>
+      <SoDienThoai>0905123456</SoDienThoai>
+      <DiaChi>78 Quang Trung, Quận Hải Châu, TP. Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Nguyễn Thanh Tùng</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SS-A55-100-128-BLU</MaSP>
+        <TenSP>Samsung Galaxy A55 5G 128GB - Xanh Băng Lilac (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>8490000</DonGia>
+        <ThanhTien>8490000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>8490000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD016</MaHD>
+    <NgayLap>2026-10-08T08:59:00</NgayLap>
+    <KhachHang>
+      <TenKH>Phạm Minh Tuấn</TenKH>
+      <SoDienThoai>0934567890</SoDienThoai>
+      <DiaChi>12 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội</DiaChi>
+    </KhachHang>
+    <NhanVien>Trần Thu Hà</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>MI-RN13PP-100-256-PUR</MaSP>
+        <TenSP>Redmi Note 13 Pro+ 5G 256GB - Tím Cực Quang (Camera 200MP)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>8690000</DonGia>
+        <ThanhTien>8690000</ThanhTien>
+      </ChiTiet>
+      <ChiTiet>
+        <MaSP>MI-RN13PP-100-256-PUR</MaSP>
+        <TenSP>Redmi Note 13 Pro+ 5G 256GB - Tím Cực Quang (Camera 200MP)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>8690000</DonGia>
+        <ThanhTien>8690000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>17380000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD017</MaHD>
+    <NgayLap>2026-10-07T10:00:00</NgayLap>
+    <KhachHang>
+      <TenKH>Võ Thị Bích Ngọc</TenKH>
+      <SoDienThoai>0978123456</SoDienThoai>
+      <DiaChi>89 Nguyễn Văn Linh, Thanh Khê, Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Phạm Thị Minh</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>GG-PX9PXL-100-256-BLK</MaSP>
+        <TenSP>Google Pixel 9 Pro XL 256GB - Đen Obsidian (Google Tensor G4)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>25990000</DonGia>
+        <ThanhTien>25990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>25990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD018</MaHD>
+    <NgayLap>2026-10-06T11:21:00</NgayLap>
+    <KhachHang>
+      <TenKH>Đỗ Quốc Huy</TenKH>
+      <SoDienThoai>0989012345</SoDienThoai>
+      <DiaChi>34 Điện Biên Phủ, Bình Thạnh, TP.HCM</DiaChi>
+    </KhachHang>
+    <NhanVien>Lê Hoàng Nam</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>IPH-16-100-128-TEA</MaSP>
+        <TenSP>iPhone 16 128GB - Xanh Mòng Két Teal (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>21990000</DonGia>
+        <ThanhTien>21990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>21990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD019</MaHD>
+    <NgayLap>2026-10-05T09:17:00</NgayLap>
+    <KhachHang>
+      <TenKH>Hoàng Kim Ngân</TenKH>
+      <SoDienThoai>0918765432</SoDienThoai>
+      <DiaChi>56 Hai Bà Trưng, Quận 1, TP.HCM</DiaChi>
+    </KhachHang>
+    <NhanVien>Nguyễn Thanh Tùng</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SS-S24P-100-256-BLK</MaSP>
+        <TenSP>Samsung Galaxy S24+ 5G 256GB - Đen Onyx (Galaxy AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>21990000</DonGia>
+        <ThanhTien>21990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>21990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD020</MaHD>
+    <NgayLap>2026-10-04T11:02:00</NgayLap>
+    <KhachHang>
+      <TenKH>Ngô Văn Hùng</TenKH>
+      <SoDienThoai>0908123789</SoDienThoai>
+      <DiaChi>90 Cầu Giấy, Quận Cầu Giấy, Hà Nội</DiaChi>
+    </KhachHang>
+    <NhanVien>Trần Thu Hà</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>MI-14-100-256-GRN</MaSP>
+        <TenSP>Xiaomi 14 256GB - Xanh Ngọc Lục Bảo (Leica Summilux)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>18990000</DonGia>
+        <ThanhTien>18990000</ThanhTien>
+      </ChiTiet>
+      <ChiTiet>
+        <MaSP>OP-RN12P-100-512-SLV</MaSP>
+        <TenSP>OPPO Reno12 Pro 5G 512GB - Bạc Vũ Trụ (OPPO AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>15490000</DonGia>
+        <ThanhTien>15490000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>34480000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD021</MaHD>
+    <NgayLap>2026-10-03T13:56:00</NgayLap>
+    <KhachHang>
+      <TenKH>Bùi Thanh Trúc</TenKH>
+      <SoDienThoai>0933456789</SoDienThoai>
+      <DiaChi>15 Lê Duẩn, Hải Châu, Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Phạm Thị Minh</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>OP-RN12P-100-512-SLV</MaSP>
+        <TenSP>OPPO Reno12 Pro 5G 512GB - Bạc Vũ Trụ (OPPO AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>15490000</DonGia>
+        <ThanhTien>15490000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>15490000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD022</MaHD>
+    <NgayLap>2026-10-02T12:21:00</NgayLap>
+    <KhachHang>
+      <TenKH>Đinh Tấn Phát</TenKH>
+      <SoDienThoai>0976543210</SoDienThoai>
+      <DiaChi>102 Pasteur, Quận 3, TP. Hồ Chí Minh</DiaChi>
+    </KhachHang>
+    <NhanVien>Lê Hoàng Nam</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>IPH-16P-100-128-BLK</MaSP>
+        <TenSP>iPhone 16 Pro 128GB - Titan Đen (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>28490000</DonGia>
+        <ThanhTien>28490000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>28490000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD023</MaHD>
+    <NgayLap>2026-10-01T09:20:00</NgayLap>
+    <KhachHang>
+      <TenKH>Lương Mỹ Duyên</TenKH>
+      <SoDienThoai>0982345678</SoDienThoai>
+      <DiaChi>45 Nguyễn Thị Minh Khai, Quận 1, TP.HCM</DiaChi>
+    </KhachHang>
+    <NhanVien>Nguyễn Thanh Tùng</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>SS-S24U-100-256-GRY</MaSP>
+        <TenSP>Samsung Galaxy S24 Ultra 5G 256GB - Xám Titan (Galaxy AI)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>26990000</DonGia>
+        <ThanhTien>26990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>26990000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>Cash</PaymentMethod>
+  </HoaDon>
+  <HoaDon>
+    <MaHD>HD024</MaHD>
+    <NgayLap>2026-09-30T09:56:00</NgayLap>
+    <KhachHang>
+      <TenKH>Vũ Minh Quân</TenKH>
+      <SoDienThoai>0909876543</SoDienThoai>
+      <DiaChi>67 Hoàng Diệu, Hải Châu, Đà Nẵng</DiaChi>
+    </KhachHang>
+    <NhanVien>Trần Thu Hà</NhanVien>
+    <ChiTietHoaDon>
+      <ChiTiet>
+        <MaSP>MI-14U-100-512-BLK</MaSP>
+        <TenSP>Xiaomi 14 Ultra 512GB - Ống Kính Leica Huyền Thoại (Mới 100%)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>27990000</DonGia>
+        <ThanhTien>27990000</ThanhTien>
+      </ChiTiet>
+      <ChiTiet>
+        <MaSP>IPH-16PM-100-256-DES</MaSP>
+        <TenSP>iPhone 16 Pro Max 256GB - Titan Sa Mạc (Chính Hãng VN/A)</TenSP>
+        <SoLuong>1</SoLuong>
+        <DonGia>34990000</DonGia>
+        <ThanhTien>34990000</ThanhTien>
+      </ChiTiet>
+    </ChiTietHoaDon>
+    <TongTien>62980000</TongTien>
+    <GhiChu>Thanh toán thành công tại quầy POS.</GhiChu>
+    <PaymentMethod>BankTransfer</PaymentMethod>
   </HoaDon>
 </DanhSachHoaDon>

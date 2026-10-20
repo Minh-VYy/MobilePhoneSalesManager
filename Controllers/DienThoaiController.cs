@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using QuanLyBanDienThoai.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using QuanLyBanDienThoai.Services;
 
 namespace QuanLyBanDienThoai.Controllers
@@ -7,17 +9,20 @@ namespace QuanLyBanDienThoai.Controllers
     public class DienThoaiController : Controller
     {
         private readonly DienThoaiXmlService _dienThoaiService;
+        private readonly AccountXmlService _accounts;
         private readonly PhoneDetailXmlService _phoneDetailService;
         private readonly XmlValidationService _validationService;
         private readonly XsltTransformService _xsltService;
 
         public DienThoaiController(
             DienThoaiXmlService dienThoaiService,
+            AccountXmlService accounts,
             PhoneDetailXmlService phoneDetailService,
             XmlValidationService validationService,
             XsltTransformService xsltService)
         {
             _dienThoaiService = dienThoaiService;
+            _accounts = accounts;
             _phoneDetailService = phoneDetailService;
             _validationService = validationService;
             _xsltService = xsltService;
@@ -29,7 +34,7 @@ namespace QuanLyBanDienThoai.Controllers
             category = (category ?? "ALL").Trim().ToUpperInvariant();
             if (category != "IPHONE" && category != "ANDROID") category = "ALL";
 
-            var isAdmin = HttpContext.Session.GetString("Role") == "Admin";
+            const bool isAdmin = false;
             var allPhones = _dienThoaiService.GetAll();
             var seriesById = _phoneDetailService.GetModelSeriesMap();
             var totalVariantsBySeries = allPhones
@@ -43,9 +48,7 @@ namespace QuanLyBanDienThoai.Controllers
                     .OrderByDescending(p => p.SoLuongTon > 0)
                     .ThenByDescending(p => p.GiaBan)
                     .ToList();
-
-            if (!isAdmin && category == "ALL" && string.IsNullOrWhiteSpace(keyword))
-                items.Clear();
+            // Hiển thị tất cả sản phẩm đầy đủ và ổn định
 
             items = items
                 .GroupBy(phone => GetSeries(phone, seriesById), StringComparer.OrdinalIgnoreCase)
@@ -105,7 +108,7 @@ namespace QuanLyBanDienThoai.Controllers
             if (variants.Count == 0)
                 variants.Add(CreateFallbackVariant(phone));
 
-            ViewBag.IsAdmin = HttpContext.Session.GetString("Role") == "Admin";
+            ViewBag.IsAdmin = false;
             var model = new DienThoaiChiTietViewModel
             {
                 SanPham = phone,
@@ -142,8 +145,6 @@ namespace QuanLyBanDienThoai.Controllers
                 ? $"{metadata.WarrantyMonths} th\u00e1ng"
                 : "Li\u00ean h\u1ec7 \u0111\u1ec3 x\u00e1c nh\u1eadn";
 
-            var smsMessage = $"Ch\u00e0o PhoneStore, t\u00f4i mu\u1ed1n \u0111\u01b0\u1ee3c t\u01b0 v\u1ea5n {phone.TenSP}, t\u00ecnh tr\u1ea1ng {conditionText}, m\u00e0u {metadata.ColorName}, dung l\u01b0\u1ee3ng {phone.ThongSo.BoNhoTrong}, b\u1ea3o h\u00e0nh {warrantyText}.";
-            var smsUrl = $"sms:0901176222?body={Uri.EscapeDataString(smsMessage)}";
 
             return Json(new
             {
@@ -180,24 +181,36 @@ namespace QuanLyBanDienThoai.Controllers
                 weight = metadata.Weight,
                 sku = metadata.Sku,
                 detailsUrl = Url.Action(nameof(Details), new { id = phone.MaSP }),
-                smsUrl,
+                supportUrl = Url.Action("Index", "Support", new { productId = id }),
             });
         }
 
         [HttpGet]
+        public IActionResult CartProducts(string? ids)
+        {
+            var wanted = (ids ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries).Take(20).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            return Json(_dienThoaiService.GetAll().Where(p => wanted.Contains(p.MaSP))
+                .Select(p => BuildVariantOption(p, _phoneDetailService.GetProductMetadata(p.MaSP) ?? CreateFallbackVariant(p))).ToList());
+        }
+
+        [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult Cart()
         {
             ViewData["Title"] = "Giỏ hàng";
             ViewBag.IsAdmin = false;
-            return View();
+            var account = _accounts.Find(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            return View(new CustomerOrderRequestModel { CustomerName = account?.FullName ?? "", Phone = account?.Phone ?? "", Address = account?.Address ?? "", CheckoutToken = Guid.NewGuid().ToString("N") });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SubmitReview(string id, string customerName, int rating, string content)
+        [Authorize(Roles = "User")]
+        public IActionResult SubmitReview(string id, int rating, string content)
         {
             if (string.IsNullOrWhiteSpace(id) || _dienThoaiService.GetById(id) == null) return NotFound();
-            if (string.IsNullOrWhiteSpace(customerName) || customerName.Length > 80 || rating is < 1 or > 5 || string.IsNullOrWhiteSpace(content) || content.Length > 1200)
+            var customerName = User.FindFirstValue("DisplayName") ?? User.Identity!.Name!;
+            if (rating is < 1 or > 5 || string.IsNullOrWhiteSpace(content) || content.Length > 1200)
             {
                 TempData["ReviewError"] = "Vui lòng nhập tên, chọn số sao và viết nhận xét tối đa 1.200 ký tự.";
                 return RedirectToAction(nameof(Details), new { id });
@@ -213,32 +226,6 @@ namespace QuanLyBanDienThoai.Controllers
             });
             TempData["ReviewSuccess"] = "Cảm ơn bạn đã gửi đánh giá.";
             return Redirect($"{Url.Action(nameof(Details), new { id })}#reviews");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult SubmitOrder(CustomerOrderRequestModel request)
-        {
-            var products = _dienThoaiService.GetAll().ToDictionary(x => x.MaSP, StringComparer.OrdinalIgnoreCase);
-            var groupedItems = (request.Items ?? new List<CustomerOrderRequestItem>())
-                .Where(x => !string.IsNullOrWhiteSpace(x.ProductId) && x.Quantity > 0)
-                .GroupBy(x => x.ProductId, StringComparer.OrdinalIgnoreCase)
-                .Select(x => new { ProductId = x.Key, Quantity = x.Sum(y => y.Quantity) })
-                .ToList();
-
-            var validContact = !string.IsNullOrWhiteSpace(request.CustomerName) && request.CustomerName.Length <= 100
-                && System.Text.RegularExpressions.Regex.IsMatch(request.Phone ?? string.Empty, @"^0[35789]\d{8}$")
-                && !string.IsNullOrWhiteSpace(request.Address) && request.Address.Length <= 250;
-            if (!validContact || groupedItems.Count == 0 || groupedItems.Any(x => !products.TryGetValue(x.ProductId, out var p) || x.Quantity > p.SoLuongTon))
-            {
-                TempData["OrderError"] = "Thông tin đặt hàng chưa hợp lệ hoặc số lượng vượt tồn kho. Vui lòng kiểm tra lại giỏ hàng.";
-                return RedirectToAction(nameof(Cart));
-            }
-
-            var resolvedItems = groupedItems.Select(x => (products[x.ProductId], x.Quantity)).ToList();
-            var requestId = _phoneDetailService.AddOrderRequest(request, resolvedItems);
-            TempData["OrderSuccess"] = $"Đã nhận yêu cầu {requestId}. Nhân viên sẽ liên hệ xác nhận đơn hàng.";
-            return RedirectToAction(nameof(Cart), new { completed = true });
         }
 
         private static string GetSeries(DienThoaiModel phone, IReadOnlyDictionary<string, string> seriesById)
@@ -284,7 +271,6 @@ namespace QuanLyBanDienThoai.Controllers
                 ? $"{storage} GB"
                 : phone.ThongSo.BoNhoTrong;
             var image = string.IsNullOrWhiteSpace(metadata.Image) ? phone.HinhAnh : metadata.Image;
-            var smsMessage = $"Chào PhoneStore, tôi muốn được tư vấn {phone.TenSP}, tình trạng {conditionText}, màu {metadata.ColorName}, dung lượng {storageLabel}, bảo hành {warrantyText}.";
 
             return new PhoneVariantOptionViewModel
             {
@@ -319,7 +305,7 @@ namespace QuanLyBanDienThoai.Controllers
                 Weight = metadata.Weight,
                 Sku = metadata.Sku,
                 DetailsUrl = Url.Action(nameof(Details), new { id = phone.MaSP }) ?? string.Empty,
-                SmsUrl = $"sms:0901176222?body={Uri.EscapeDataString(smsMessage)}"
+                SupportUrl = Url.Action("Index", "Support", new { productId = phone.MaSP }) ?? string.Empty
             };
         }
 
@@ -345,6 +331,7 @@ namespace QuanLyBanDienThoai.Controllers
             };
         }
         // View hiển thị chuyển đổi XSLT thuần
+        [Authorize(Roles = "Admin")]
         public IActionResult XsltView()
         {
             string htmlContent = _xsltService.TransformXmlToHtml("Data/DienThoai.xml", "XSLT/DienThoaiCatalogue.xslt");
@@ -353,31 +340,31 @@ namespace QuanLyBanDienThoai.Controllers
         }
 
         // Trang Quản lý CRUD dành cho Admin/Quản lý
+        [Authorize(Roles = "Admin")]
         public IActionResult Manage()
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             var items = _dienThoaiService.GetAll();
             return View(items);
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             return View(new DienThoaiModel
             {
                 MaHang = "APPLE",
                 TenHang = "Apple",
-                GiaBan = 10000000,
-                SoLuongTon = 10
+                GiaBan = 0,
+                SoLuongTon = 0
             });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(DienThoaiModel model)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -390,7 +377,7 @@ namespace QuanLyBanDienThoai.Controllers
             if (success)
             {
                 TempData["SuccessMessage"] = message;
-                return RedirectToAction(nameof(Manage));
+                return RedirectToAction(nameof(Edit), new { id = model.MaSP });
             }
 
             ViewBag.ErrorMessage = message;
@@ -399,9 +386,9 @@ namespace QuanLyBanDienThoai.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(string id)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             if (string.IsNullOrWhiteSpace(id)) return NotFound();
 
             var item = _dienThoaiService.GetById(id);
@@ -412,9 +399,9 @@ namespace QuanLyBanDienThoai.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(DienThoaiModel model)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -434,11 +421,58 @@ namespace QuanLyBanDienThoai.Controllers
             return View(model);
         }
 
+        [HttpGet, Authorize(Roles = "Admin")]
+        public IActionResult VariantSettings(string id)
+        {
+            var phone = _dienThoaiService.GetById(id);
+            if (phone == null) return NotFound();
+            var metadata = _phoneDetailService.GetProductMetadata(id);
+            var storageText = metadata?.Storage ?? phone.ThongSo.BoNhoTrong;
+            var storageMatch = System.Text.RegularExpressions.Regex.Match(storageText, @"\d+");
+            var storage = int.TryParse(storageMatch.Value, out var value) ? value : 128;
+            if (storageText.Contains("TB", StringComparison.OrdinalIgnoreCase)) storage *= 1024;
+            ViewBag.Phone = phone;
+            return View(new AdminVariantInput
+            {
+                ProductId = id,
+                ModelSeries = metadata?.ModelSeries ?? phone.TenSP,
+                ColorName = metadata?.ColorName ?? "",
+                ColorCode = string.IsNullOrWhiteSpace(metadata?.ColorCode) ? "#9ca3af" : metadata.ColorCode,
+                ConditionType = metadata?.ConditionType ?? "New",
+                ConditionGrade = metadata?.ConditionGrade ?? "100%",
+                ConditionDescription = metadata?.ConditionDescription,
+                WarrantyMonths = metadata?.WarrantyMonths ?? 0,
+                StorageGB = storage,
+                OriginalPrice = metadata?.OriginalPrice ?? 0,
+                Sku = metadata?.Sku ?? id,
+                ImageUrl = metadata?.Image,
+                Camera = metadata?.Camera,
+                Resolution = metadata?.Resolution,
+                ChargingTechnology = metadata?.ChargingTechnology,
+                Ports = metadata?.Ports,
+                Weight = metadata?.Weight
+            });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Admin")]
+        public IActionResult VariantSettings(AdminVariantInput input)
+        {
+            var phone = _dienThoaiService.GetById(input.ProductId);
+            if (phone == null) return NotFound();
+            ViewBag.Phone = phone;
+            if (!ModelState.IsValid) return View(input);
+            if (!string.IsNullOrWhiteSpace(input.ImageUrl)) input.ImageUrl = Url.Content(input.ImageUrl);
+            var result = _phoneDetailService.SaveVariant(phone, input);
+            if (!result.Success) { ModelState.AddModelError("", result.Message); return View(input); }
+            TempData["SuccessMessage"] = result.Message;
+            return RedirectToAction(nameof(Edit), new { id = phone.MaSP });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(string id)
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             bool deleted = _dienThoaiService.Delete(id);
             if (deleted)
             {
@@ -446,15 +480,15 @@ namespace QuanLyBanDienThoai.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = $"Không thể xóa sản phẩm {id}.";
+                TempData["ErrorMessage"] = $"Không thể xóa sản phẩm {id}. Hãy kiểm tra mã sản phẩm và các IMEI/serial còn kho hoặc đang giữ cho đơn online.";
             }
             return RedirectToAction(nameof(Manage));
         }
 
         // Kiểm tra tính hợp lệ XML với XSD Schema
+        [Authorize(Roles = "Admin")]
         public IActionResult ValidateXsd()
         {
-            if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
             string xmlPath = _dienThoaiService.GetXmlPath();
             string xsdPath = _dienThoaiService.GetXsdPath();
 
@@ -464,6 +498,7 @@ namespace QuanLyBanDienThoai.Controllers
 
         // 1. XML Web Service Endpoint (Trả về dữ liệu Web Service XML thô)
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult XmlApi()
         {
             string xmlPath = _dienThoaiService.GetXmlPath();
@@ -510,6 +545,7 @@ namespace QuanLyBanDienThoai.Controllers
                 "XIAOMI" => "Xiaomi",
                 "OPPO" => "OPPO",
                 "GOOGLE" => "Google",
+                "GAMING" => "ASUS / Gaming",
                 _ => "Khác"
             };
         }

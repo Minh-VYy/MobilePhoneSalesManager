@@ -1,0 +1,36 @@
+@model List<CustomerSummary>
+@using System.Globalization
+@{ ViewData["Title"] = "Khách hàng"; var vi = CultureInfo.GetCultureInfo("vi-VN"); }
+<header class="overview-heading">
+    <div><p class="overview-eyebrow">Chăm sóc khách hàng</p><h1>Khách hàng của cửa hàng</h1><p>Tra cứu thông tin liên hệ, lịch sử mua và hội thoại hỗ trợ theo tài khoản.</p></div>
+    <a asp-controller="Support" asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-regular fa-comments" aria-hidden="true"></i> Hộp thư hỗ trợ</a>
+</header>
+<section class="overview-metrics overview-metrics--three" aria-label="Tổng hợp khách hàng">
+    <article class="overview-metric"><span>Tài khoản khách mua</span><strong>@Model.Count</strong><p>Khách đã đăng ký tại cửa hàng</p><i class="fa-regular fa-user" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Đã từng đặt hàng</span><strong>@Model.Count(x => x.OrderCount > 0)</strong><p>Có ít nhất một đơn trực tuyến</p><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></article>
+    <article class="overview-metric"><span>Giá trị đơn đã giao</span><strong>@Model.Sum(x => x.DeliveredTotal).ToString("N0", vi) ₫</strong><p>Không gồm đơn chờ, đang giao và đã hủy</p><i class="fa-solid fa-coins" aria-hidden="true"></i></article>
+</section>
+<section class="admin-card" data-admin-list data-admin-list-noun="khách hàng">
+    <header class="overview-section-heading"><div><h2>Danh sách khách hàng</h2><p>Mở hồ sơ để xem địa chỉ nhận hàng và các đơn mua liên quan.</p></div></header>
+    <div class="admin-list-controls"><label>Tìm khách hàng<input type="search" data-admin-keyword placeholder="Họ tên, tài khoản, email, số điện thoại…" /></label><span data-admin-list-count role="status">@Model.Count khách hàng</span></div>
+    <div class="admin-table-scroll">
+        <table class="admin-data-table">
+            <thead><tr><th>Khách hàng / tài khoản</th><th>Liên hệ</th><th class="num">Số đơn</th><th class="num">Đã giao</th><th>Đơn gần nhất</th><th>Thao tác</th></tr></thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-admin-row data-search="@item.Customer.FullName @item.Customer.Username @item.Customer.Email @item.Customer.Phone">
+                    <td><b>@item.Customer.FullName</b><small>@item.Customer.Username</small></td>
+                    <td>@item.Customer.Phone<small>@item.Customer.Email</small></td>
+                    <td class="num">@item.OrderCount<small>@item.PendingCount đang xử lý</small></td>
+                    <td class="num">@item.DeliveredTotal.ToString("N0", vi) ₫</td>
+                    <td>@(item.LastOrderAt?.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy") ?? "Chưa đặt hàng")</td>
+                    <td><a asp-action="Details" asp-route-id="@item.Customer.Id" class="admin-row-link">Xem hồ sơ <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <p class="admin-empty-note" data-admin-empty hidden>Chưa có khách hàng phù hợp với nội dung tìm kiếm.</p>
+    <partial name="_AdminPagination" />
+</section>

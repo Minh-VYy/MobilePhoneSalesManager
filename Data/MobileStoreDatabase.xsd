@@ -64,7 +64,7 @@
                       </xs:simpleContent>
                     </xs:complexType>
                   </xs:element>
-                  <xs:element name="WarrantyMonths" type="xs:positiveInteger" />
+                  <xs:element name="WarrantyMonths" type="xs:nonNegativeInteger" />
                 </xs:sequence>
               </xs:complexType>
             </xs:element>

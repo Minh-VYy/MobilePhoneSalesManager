@@ -1,0 +1,37 @@
+@model CustomerDetailsModel
+@using System.Globalization
+@{ ViewData["Title"] = "Hồ sơ khách hàng"; var customer = Model.Summary.Customer; var vi = CultureInfo.GetCultureInfo("vi-VN"); }
+<header class="overview-heading">
+    <div><p class="overview-eyebrow">Khách hàng / @customer.Username</p><h1>@customer.FullName</h1><p>Thông tin tài khoản và lịch sử đơn trực tuyến tại cửa hàng.</p></div>
+    <a asp-action="Index" class="btn-saas btn-saas-secondary"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Danh sách khách hàng</a>
+</header>
+<div class="admin-detail-layout">
+    <aside class="admin-card">
+        <header class="overview-section-heading"><div><h2>Thông tin liên hệ</h2><p>Dữ liệu do khách cập nhật trong tài khoản.</p></div></header>
+        <dl class="admin-info-list">
+            <div><dt>Tên đăng nhập</dt><dd>@customer.Username</dd></div>
+            <div><dt>Điện thoại</dt><dd><a href="tel:@customer.Phone">@customer.Phone</a></dd></div>
+            <div><dt>Email</dt><dd>@customer.Email</dd></div>
+            <div><dt>Địa chỉ</dt><dd>@(string.IsNullOrWhiteSpace(customer.Address) ? "Khách chưa bổ sung" : customer.Address)</dd></div>
+            <div><dt>Ngày đăng ký</dt><dd>@(customer.CreatedAt?.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm") ?? "Chưa ghi nhận")</dd></div>
+            <div><dt>Đơn đang xử lý</dt><dd>@Model.Summary.PendingCount đơn</dd></div>
+            <div><dt>Giá trị đã giao</dt><dd>@Model.Summary.DeliveredTotal.ToString("N0", vi) ₫</dd></div>
+        </dl>
+        <footer class="admin-panel-footer">
+            @if (Model.HasConversation) { <a asp-controller="Support" asp-action="Index" asp-route-conversationId="@customer.Id" class="btn-saas btn-saas-primary"><i class="fa-regular fa-comments" aria-hidden="true"></i> Mở hội thoại</a> }
+            else { <p class="admin-muted">Khách chưa có hội thoại hỗ trợ.</p> }
+        </footer>
+    </aside>
+    <section class="admin-card" data-admin-list>
+        <header class="overview-section-heading"><div><h2>Lịch sử mua hàng</h2><p>@Model.Orders.Count đơn trực tuyến gắn với tài khoản này.</p></div></header>
+        <div class="admin-list-controls"><label>Tìm đơn hàng<input type="search" data-admin-keyword placeholder="Mã đơn hàng…" /></label><span data-admin-list-count role="status"></span></div>
+        <div class="admin-table-scroll"><table class="admin-data-table">
+            <thead><tr><th>Đơn hàng / ngày đặt</th><th class="num">Tiền sản phẩm</th><th>Trạng thái</th><th>Thao tác</th></tr></thead>
+            <tbody>@foreach (var order in Model.Orders) {
+                <tr data-admin-row data-search="@order.Id"><td><b>@order.Id</b><small>@order.CreatedAt.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm")</small></td><td class="num">@order.Total.ToString("N0", vi) ₫</td><td><span class="order-status" data-status="@order.Status">@order.StatusLabel</span></td><td><a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="admin-row-link">Chi tiết</a></td></tr>
+            }</tbody>
+        </table></div>
+        <p class="admin-empty-note" data-admin-empty hidden>Chưa có đơn hàng phù hợp.</p>
+        <partial name="_AdminPagination" />
+    </section>
+</div>
