@@ -1,20 +1,66 @@
 (() => {
     const sidebar = document.getElementById('adminSidebar'), toggle = document.getElementById('mobileSidebarToggle');
+    const shell = document.querySelector('.admin-shell');
     const mobile = matchMedia('(max-width:900px)');
     const backdrop = document.querySelector('.admin-sidebar-backdrop');
-    function menu(open) {
+    const STORAGE_KEY = 'adminSidebarCollapsed';
+
+    /* ── Desktop collapse ── */
+    function setDesktopCollapsed(collapsed) {
+        if (!shell) return;
+        shell.classList.toggle('sidebar-collapsed', collapsed);
+        if (toggle) toggle.setAttribute('aria-expanded', String(!collapsed));
+        try { localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0'); } catch (_) {}
+    }
+
+    /* ── Mobile overlay ── */
+    function mobileMenu(open) {
         if (!sidebar || !toggle) return;
-        sidebar.classList.toggle('open', open); sidebar.inert = mobile.matches && !open;
-        const main = document.querySelector('.admin-main'); if (main) main.inert = mobile.matches && open;
-        toggle.setAttribute('aria-expanded', String(open)); if (backdrop) backdrop.hidden = !open;
+        sidebar.classList.toggle('open', open);
+        sidebar.inert = !open;
+        const main = document.querySelector('.admin-main'); if (main) main.inert = open;
+        toggle.setAttribute('aria-expanded', String(open));
+        if (backdrop) backdrop.hidden = !open;
         document.body.classList.toggle('admin-menu-open', open);
         if (open) sidebar.querySelector('a')?.focus();
     }
-    toggle?.addEventListener('click', () => menu(!sidebar.classList.contains('open')));
-    document.querySelectorAll('[data-admin-close]').forEach(button => button.addEventListener('click', () => { menu(false); toggle?.focus(); }));
-    mobile.addEventListener('change', () => menu(false)); menu(false);
+
+    /* ── Init ── */
+    if (!mobile.matches) {
+        // Restore saved state on desktop
+        const saved = (() => { try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; } })();
+        setDesktopCollapsed(saved === '1');
+    } else {
+        mobileMenu(false);
+    }
+
+    /* ── Toggle click ── */
+    toggle?.addEventListener('click', () => {
+        if (mobile.matches) {
+            mobileMenu(!sidebar.classList.contains('open'));
+        } else {
+            setDesktopCollapsed(!shell.classList.contains('sidebar-collapsed'));
+        }
+    });
+
+    document.querySelectorAll('[data-admin-close]').forEach(button =>
+        button.addEventListener('click', () => { mobileMenu(false); toggle?.focus(); })
+    );
+    mobile.addEventListener('change', e => {
+        if (e.matches) {
+            // Switching to mobile: remove desktop class, close overlay
+            shell?.classList.remove('sidebar-collapsed');
+            mobileMenu(false);
+        } else {
+            // Switching to desktop: restore saved state
+            document.body.classList.remove('admin-menu-open');
+            if (backdrop) backdrop.hidden = true;
+            const saved = (() => { try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; } })();
+            setDesktopCollapsed(saved === '1');
+        }
+    });
     document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') { const wasOpen = sidebar?.classList.contains('open'); menu(false); if (wasOpen) toggle?.focus(); document.querySelectorAll('.admin-notifications[open]').forEach(item => item.open = false); }
+        if (event.key === 'Escape') { const wasOpen = sidebar?.classList.contains('open'); mobileMenu(false); if (wasOpen) toggle?.focus(); document.querySelectorAll('.admin-notifications[open]').forEach(item => item.open = false); }
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
             event.preventDefault(); const search = document.getElementById('globalAdminSearch');
             if (search?.offsetParent) search.focus(); else if (search) location.href = search.form.action + '?focus=search';

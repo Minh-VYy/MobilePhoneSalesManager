@@ -60,6 +60,7 @@ public sealed class StockUnitService(PrivateXmlStore store, DienThoaiXmlService 
     }
     public static void UpdateOrderUnits(XElement root, BuyerOrder order, string next)
     {
+        var remainders = order.Items.ToDictionary(x => x.ProductId, x => x.Total - decimal.Floor(x.Total / x.Quantity) * x.Quantity, StringComparer.OrdinalIgnoreCase);
         foreach (var unit in root.Elements("Unit").Where(x => (string?)x.Element("Reference") == order.Id && (string?)x.Attribute("status") == "Reserved"))
         {
             if (next == "Cancelled")
@@ -69,7 +70,9 @@ public sealed class StockUnitService(PrivateXmlStore store, DienThoaiXmlService 
             else if (next == "Delivered")
             {
                 var item = order.Items.First(x => x.ProductId == (string?)unit.Attribute("productId"));
-                MarkSold(unit, order.Id, "Online", item.UnitPrice, "Đơn trực tuyến");
+                var extra = Math.Min(1, remainders[item.ProductId]);
+                remainders[item.ProductId] -= extra;
+                MarkSold(unit, order.Id, "Online", decimal.Floor(item.Total / item.Quantity) + extra, "Đơn trực tuyến");
             }
         }
     }

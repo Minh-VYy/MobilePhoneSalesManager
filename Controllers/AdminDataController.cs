@@ -16,7 +16,8 @@ public class AdminDataController(DienThoaiXmlService phones, HoaDonXmlService in
             return View(new List<DataFileStatus> {
                 Inspect("products", "Danh mục sản phẩm", phones.GetXmlPath(), phones.GetXsdPath(), "DienThoai"),
                 Inspect("invoices", "Hóa đơn tại quầy", invoices.GetXmlPath(), invoices.GetXsdPath(), "HoaDon"),
-                Inspect("variants", "Phiên bản & thông số mở rộng", store.PathFor("MobileStoreDatabase.xml"), store.PathFor("MobileStoreDatabase.xsd"), "Product")
+                Inspect("variants", "Phiên bản & thông số mở rộng", store.PathFor("MobileStoreDatabase.xml"), store.PathFor("MobileStoreDatabase.xsd"), "Product"),
+                Inspect("vouchers", "Mã & thẻ giảm giá", store.PathFor("Vouchers.xml"), store.PathFor("Vouchers.xsd"), "Voucher")
             });
         }
     }
@@ -43,6 +44,7 @@ public class AdminDataController(DienThoaiXmlService phones, HoaDonXmlService in
         "products" => (phones.GetXmlPath(), phones.GetXsdPath()),
         "invoices" => (invoices.GetXmlPath(), invoices.GetXsdPath()),
         "variants" => (store.PathFor("MobileStoreDatabase.xml"), store.PathFor("MobileStoreDatabase.xsd")),
+        "vouchers" => (store.PathFor("Vouchers.xml"), store.PathFor("Vouchers.xsd")),
         _ => null
     };
     private DataFileStatus Inspect(string key, string name, string path, string schema, string element)

@@ -17,10 +17,33 @@ document.addEventListener('DOMContentLoaded', function () {
         warranty: String(activeProduct.warrantyMonths)
     } : null;
     const formatPrice = value => new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(Number(value) || 0) + ' ₫';
+    const reviewableIds = new Set(JSON.parse(document.getElementById('product-review-eligibility')?.textContent || '[]').map(id => id.toUpperCase()));
+    function updateReviewEligibility(productId, valid = true) {
+        const form = detail.querySelector('[data-review-form]'), gate = detail.querySelector('[data-review-gate]');
+        const allowed = valid && reviewableIds.has(productId.toUpperCase());
+        if (form) {
+            form.hidden = !allowed;
+            form.querySelectorAll('select, textarea, button').forEach(control => { control.disabled = !allowed; });
+        }
+        if (gate) gate.hidden = allowed;
+    }
 
     function setText(selector, value) {
         const node = detail.querySelector(selector);
         if (node) node.textContent = value == null ? '' : String(value);
+    }
+
+    function updatePromotions(productId, valid = true) {
+        const section = detail.querySelector('[data-product-promotions]');
+        if (!section) return;
+        let count = 0;
+        section.querySelectorAll('[data-promotion-products]').forEach(card => {
+            const ids = card.dataset.promotionProducts.split(',').filter(Boolean);
+            const visible = valid && (!ids.length || ids.some(id => id.toUpperCase() === productId.toUpperCase()));
+            card.hidden = !visible;
+            if (visible) count++;
+        });
+        section.hidden = count === 0;
     }
 
     function dimension(product, kind) {
@@ -164,9 +187,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const reviewId = document.getElementById('review-product-id');
         if (reviewId) reviewId.value = product.productId;
+        updateReviewEligibility(product.productId);
+        updatePromotions(product.productId);
         const messageLink = detail.querySelector('[data-variant-message]');
         if (messageLink) {
             messageLink.href = product.supportUrl;
+            messageLink.dataset.supportProduct = product.productId;
             messageLink.dataset.supportMessage = `Tôi muốn tư vấn ${product.productName}: ${product.conditionText}, ${product.storageLabel}, ${product.color}, bảo hành ${product.warrantyText}.`;
         }
 
@@ -191,6 +217,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         selection = nextSelection;
         detail.dataset.pendingSelection = 'true';
+        updateReviewEligibility(activeProduct.productId, false);
+        updatePromotions(activeProduct.productId, false);
         markSelectedOptions();
         updateOptionAvailability();
         setText('[data-current-condition]', selectedLabel('condition'));
@@ -237,6 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (messageLink) {
             const message = `Tôi muốn tư vấn ${activeProduct.modelSeries}: ${selectedLabel('condition')}, ${selectedLabel('storage')}, ${selectedLabel('color')}, bảo hành ${selectedLabel('warranty')}.`;
             messageLink.href = activeProduct.supportUrl;
+            messageLink.dataset.supportProduct = activeProduct.productId;
             messageLink.dataset.supportMessage = message;
         }
         detail.querySelectorAll('[data-add-cart], [data-buy-now]').forEach(action => { action.disabled = true; });

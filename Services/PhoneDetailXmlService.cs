@@ -63,6 +63,8 @@ public class PhoneDetailXmlService
                 .Select(x => new ProductReviewModel
                 {
                     ProductId = (string?)x.Element("ProductId") ?? string.Empty,
+                    AccountId = (string?)x.Element("AccountId") ?? string.Empty,
+                    OrderId = (string?)x.Element("OrderId") ?? string.Empty,
                     CustomerName = (string?)x.Element("CustomerName") ?? string.Empty,
                     Rating = int.TryParse((string?)x.Element("Rating"), out var rating) ? rating : 0,
                     Content = (string?)x.Element("Content") ?? string.Empty,
@@ -80,6 +82,8 @@ public class PhoneDetailXmlService
             var document = File.Exists(_reviewPath) ? XDocument.Load(_reviewPath) : new XDocument(new XElement("Reviews"));
             document.Root!.Add(new XElement("Review",
                 new XElement("ProductId", review.ProductId),
+                new XElement("AccountId", review.AccountId),
+                new XElement("OrderId", review.OrderId),
                 new XElement("CustomerName", review.CustomerName),
                 new XElement("Rating", review.Rating),
                 new XElement("Content", review.Content),

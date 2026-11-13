@@ -9,6 +9,8 @@ public class DienThoaiChiTietViewModel
     public List<PhoneDetailMetadata> BienThe { get; set; } = new();
     public List<PhoneVariantOptionViewModel> VariantOptions { get; set; } = new();
     public List<ProductReviewModel> DanhGia { get; set; } = new();
+    public List<VoucherDefinition> Promotions { get; set; } = new();
+    public HashSet<string> ReviewableProductIds { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public double DiemDanhGia => DanhGia.Count == 0 ? 0 : Math.Round(DanhGia.Average(x => x.Rating), 1);
 }
 

@@ -13,7 +13,7 @@ else
         <article class="order-card glass">
             <div class="order-card__head"><a asp-action="Details" asp-route-id="@order.Id"><b>@order.Id</b></a><span class="order-status" data-status="@order.Status">@order.StatusLabel</span></div>
             <p>@order.CreatedAt.ToOffset(TimeSpan.FromHours(7)).ToString("dd/MM/yyyy HH:mm") · @order.Items.Sum(x => x.Quantity) sản phẩm @if (admin) { <text>· @order.CustomerName</text> }</p>
-            <div class="order-card__bottom"><strong>@order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) ₫</strong><a asp-action="Details" asp-route-id="@order.Id">Xem chi tiết <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+            <div class="order-card__bottom"><strong>@order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN")) ₫</strong><a asp-action="Details" asp-route-id="@order.Id">Xem chi tiết <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>@if (order.Status == "Shipping") { <a asp-controller="Support" asp-action="Index" asp-route-orderId="@order.Id" data-support-open data-support-order="@order.Id">Hỏi về vận chuyển</a> }</div>
         </article>
     }
     </div>

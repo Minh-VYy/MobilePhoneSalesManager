@@ -46,7 +46,7 @@
         const root = document.querySelector('[data-cart-page]');
         if (!root) return;
 
-const list = root.querySelector('[data-cart-list]');
+        const list = root.querySelector('[data-cart-list]');
         const empty = root.querySelector('[data-cart-empty]');
         const summary = root.querySelector('[data-cart-summary]');
         const countLabel = root.querySelector('[data-cart-count]');
@@ -55,6 +55,13 @@ const list = root.querySelector('[data-cart-list]');
         const checkout = root.querySelector('[data-checkout-submit]');
         const error = root.querySelector('[data-cart-error]');
         let validated = false, connectionError = '', sending = false;
+        const buyer = root.dataset.cartUser === 'true', orderForm = root.querySelector('#customer-order-form');
+        const couponInput = root.querySelector('[data-coupon-code]'), appliedCode = root.querySelector('[data-coupon-applied]');
+        const couponApply = root.querySelector('[data-coupon-apply]'), couponRemove = root.querySelector('[data-coupon-remove]'), couponMessage = root.querySelector('[data-coupon-message]');
+        const money = value => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(value);
+        const signature = () => JSON.stringify(readCart().map(item => [item.productId, Number(item.quantity)]));
+        let quote = null, quoteSignature = '', quoteBusy = false, quoteVersion = 0, quoteTimer;
+        let lastSignature = signature();
         const catalogUrl = new URL('CartProducts', new URL(root.dataset.catalogBase || './', location.href));
 
         function render() {
@@ -119,10 +126,20 @@ const list = root.querySelector('[data-cart-list]');
                 quantityInput.type = 'hidden'; quantityInput.name = `Items[${index}].Quantity`; quantityInput.value = String(quantity);
                 hiddenItems.append(productId, quantityInput);
             });
-            totalLabel.textContent = `${total.toLocaleString('vi-VN')} ₫`;
+            const quoted = quote && quoteSignature === signature();
+            const unapplied = couponInput.value.trim().toUpperCase() !== appliedCode.value.trim().toUpperCase();
+            root.querySelector('[data-cart-subtotal]').textContent = money(quoted ? quote.subtotal : total);
+            root.querySelector('[data-cart-discount]').textContent = quoted ? '−' + money(quote.discountAmount) : money(0);
+            root.querySelector('[data-cart-discount-row]').hidden = !quoted || quote.discountAmount === 0;
+            root.querySelector('[data-cart-voucher-label]').textContent = quoted ? quote.voucherCode : '';
+            totalLabel.textContent = quoted ? money(quote.total) : buyer ? '—' : money(total);
+            couponApply.disabled = !buyer || !validated || quoteBusy || sending;
+            couponRemove.hidden = !couponInput.value.trim() && !appliedCode.value;
+            couponRemove.disabled = !buyer || quoteBusy || sending;
+            couponInput.readOnly = !buyer || sending;
             error.textContent = connectionError || (unavailable ? 'Một sản phẩm đã hết hàng, không còn tồn tại hoặc không đủ số lượng. Hãy giảm số lượng hoặc xóa sản phẩm đó.' : '');
             error.hidden = !error.textContent;
-            if (checkout) checkout.disabled = !validated || unavailable || !!connectionError || sending;
+            if (checkout) checkout.disabled = !validated || unavailable || !!connectionError || sending || quoteBusy || !quoted || unapplied;
             updateBadge();
         }
 
@@ -137,7 +154,45 @@ const list = root.querySelector('[data-cart-list]');
             saveCart(items);
         }
 
-        document.addEventListener('phoneStoreCartUpdated', render);
+        function cartChanged() {
+            const next = signature();
+            if (next !== lastSignature) {
+                lastSignature = next; quote = null; quoteVersion++; quoteBusy = false;
+                clearTimeout(quoteTimer);
+                if (validated && buyer && readCart().length) quoteTimer = setTimeout(() => requestQuote(appliedCode.value), 150);
+            }
+            render();
+        }
+        async function requestQuote(code) {
+            if (!buyer || !validated || !readCart().length) return;
+            clearTimeout(quoteTimer);
+            const version = ++quoteVersion, cartSignature = signature(), requestedCode = (code || '').trim().toUpperCase();
+            quoteBusy = true; quote = null; couponMessage.textContent = 'Đang kiểm tra giá và ưu đãi…'; render();
+            const body = new URLSearchParams({ __RequestVerificationToken: orderForm.querySelector('[name="__RequestVerificationToken"]').value, VoucherCode: requestedCode });
+            readCart().forEach((item, index) => { body.set('Items[' + index + '].ProductId', item.productId); body.set('Items[' + index + '].Quantity', String(item.quantity)); });
+            try {
+                const response = await fetch(root.dataset.quoteUrl, { method: 'POST', headers: { Accept: 'application/json' }, body });
+                const data = await response.json().catch(() => ({}));
+                if (version !== quoteVersion || cartSignature !== signature()) return;
+                if (!response.ok) throw new Error(response.status === 401 ? 'Đăng nhập lại để kiểm tra mã giảm giá.' : data.error || 'Chưa kiểm tra được ưu đãi. Hãy thử áp dụng lại.');
+                quote = data; quoteSignature = cartSignature; appliedCode.value = data.voucherCode;
+                if (couponInput.value.trim().toUpperCase() === requestedCode) couponInput.value = data.voucherCode;
+                couponMessage.textContent = data.voucherCode ? 'Đã áp dụng ' + data.voucherCode + ' · Tiết kiệm ' + money(data.discountAmount) + '. Lượt chỉ được giữ khi đặt đơn thành công.' : 'Đã kiểm tra giá. Chưa áp dụng mã giảm giá.';
+                const updated = readCart().map(item => {
+                    const line = data.lines.find(x => x.productId === item.productId);
+                    return line ? { ...item, name: line.name, price: line.unitPrice } : item;
+                });
+                saveCart(updated);
+            } catch (failure) {
+                if (version === quoteVersion) { quote = null; couponMessage.textContent = failure.message + ' Bấm Bỏ mã để đặt không dùng mã, hoặc Áp dụng để thử lại.'; }
+            } finally { if (version === quoteVersion) { quoteBusy = false; render(); } }
+        }
+        couponApply.addEventListener('click', () => requestQuote(couponInput.value));
+        couponRemove.addEventListener('click', () => { couponInput.value = ''; appliedCode.value = ''; requestQuote(''); });
+        couponInput.addEventListener('input', () => { couponMessage.textContent = 'Bấm Áp dụng để kiểm tra mã vừa nhập.'; render(); });
+        couponInput.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); requestQuote(couponInput.value); } });
+        if (!buyer) couponMessage.textContent = 'Đăng nhập tài khoản khách để áp mã giảm giá và đặt hàng.';
+        document.addEventListener('phoneStoreCartUpdated', cartChanged);
         render();
         async function refreshCatalog() {
             validated = false; render();
@@ -155,6 +210,7 @@ const list = root.querySelector('[data-cart-list]');
                         : { ...item, stock: 0, unavailable: true };
                 });
                 validated = true; connectionError = ''; saveCart(updated);
+                if (buyer) requestQuote(appliedCode.value);
             } catch { connectionError = 'Chưa cập nhật được giá và tồn kho. Tải lại trang để thử lại; giỏ hàng của bạn vẫn được giữ.'; render(); }
         }
         root.querySelector('#customer-order-form')?.addEventListener('submit', event => {
@@ -163,6 +219,7 @@ const list = root.querySelector('[data-cart-list]');
             if (checkout) { checkout.disabled = true; checkout.textContent = 'Đang đặt hàng…'; }
         });
         window.addEventListener('storage', event => { if (event.key === key) refreshCatalog(); });
+        window.addEventListener('pageshow', event => { if (event.persisted) { sending = false; refreshCatalog(); } });
         refreshCatalog();
     }
 

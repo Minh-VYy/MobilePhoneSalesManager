@@ -27,6 +27,12 @@ namespace QuanLyBanDienThoai.Models
         public int SoNgay { get; set; }
         public DateOnly TuNgay { get; set; }
         public DateOnly DenNgay { get; set; }
+        public bool TuChon { get; set; }
+        public DateOnly TuNgayKyTruoc { get; set; }
+        public DateOnly DenNgayKyTruoc { get; set; }
+        public DashboardPeriod KyTruoc { get; set; } = new(0, 0, 0);
+        public DateOnly? NgayGiaoDichGanNhat { get; set; }
+        public List<DashboardOrderStatus> TrangThaiDon { get; set; } = [];
         public int TongTonKho { get; set; }
         public decimal GiaTriTonKho { get; set; }
         public int SoSanPhamHetHang { get; set; }
@@ -50,7 +56,13 @@ namespace QuanLyBanDienThoai.Models
         public List<SupportConversation> HoiThoaiChuaDoc { get; set; } = [];
     }
 
-    public sealed record DashboardDay(string Label, decimal Pos, decimal Online, int Transactions, int Units);
+    public sealed record DashboardDay(string Label, decimal Pos, decimal Online, int Transactions, int Units,
+        string PreviousLabel, decimal PreviousRevenue, int PreviousTransactions, int PreviousUnits);
+    public sealed record DashboardPeriod(decimal Revenue, int Transactions, int Units)
+    {
+        public decimal Average => Transactions == 0 ? 0 : Revenue / Transactions;
+    }
+    public sealed record DashboardOrderStatus(string Status, string Label, int Count, decimal Amount);
     public sealed record DashboardProduct(string Id, string Name, int Quantity, decimal Amount);
     public sealed record DashboardPayment(string Label, int Count, decimal Amount);
 
@@ -61,5 +73,7 @@ namespace QuanLyBanDienThoai.Models
         public int SoLuongTon { get; set; }
         public int SoLuongDaBan { get; set; }
         public decimal TongTienBan { get; set; }
+        public decimal DoanhThuPos { get; set; }
+        public decimal DoanhThuOnline { get; set; }
     }
 }

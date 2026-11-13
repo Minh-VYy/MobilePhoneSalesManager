@@ -1,5 +1,11 @@
 # Giao diện quản trị
 
+## Mã giảm giá và thông báo quyền lợi
+
+- `/Vouchers`: tạo/sửa/bật/tắt mã, giảm tiền hoặc phần trăm, trần giảm, đơn tối thiểu, phạm vi phiên bản, ngày hiệu lực và lượt dùng tổng/theo tài khoản. Dùng lại bảng lọc/phân trang và form quản trị hiện có.
+- `/QuangCao`: liên kết thẻ công khai vào banner để hiện thông báo ưu đãi và quyền lợi khi khả dụng. `/Promotions` là trang thẻ cho khách; quyền lợi do admin nhập, không tự sinh cam kết hoặc quà tặng.
+- `/AdminData`: xem XSD và tải `Vouchers.xml`. Đơn online lưu mã và giảm giá từng dòng; biểu đồ tính doanh thu sau giảm khi giao thành công. POS chưa áp mã. Xem [quy trình đầy đủ](PROMOTIONS.md).
+
 ## Quy tắc cần giữ
 
 - Áp dụng `UI_Design_Requirements.md` và các skill `ui-styling`, `ui-ux-pro-max`, `design-system` trong `.agents/skills`.
@@ -19,12 +25,15 @@
 
 ## Biểu đồ và chỉ số tại `/ThongKe`
 
-- Kỳ 7/30/90 ngày bao gồm hôm nay, cùng múi giờ UTC+7. Mỗi kỳ đọc chung một snapshot hóa đơn, đơn mua và kho dưới khóa giao dịch hiện có.
-- Bốn chỉ số: doanh thu tiền sản phẩm, số giao dịch hoàn tất (hóa đơn POS + đơn online đã giao), số máy đã bán, giá trị trung bình mỗi giao dịch. Không hiển thị tỷ lệ tăng trưởng giả hoặc suy ra lợi nhuận từ giá bán.
-- Biểu đồ thời gian giữ đủ ngày không bán (giá trị 0); hai đường dùng nét liền/nét đứt. Chuyển từng ngày/nhóm 7 ngày trên trình duyệt không tải lại trang. Nhóm 7 ngày tính từ đầu kỳ; nhóm cuối có thể ngắn hơn, tooltip ghi đầy đủ khoảng ngày. Kỳ 90 ngày mặc định gộp 7 ngày.
+- Kỳ 7/30/90 ngày bao gồm hôm nay, hoặc chọn ngày bắt đầu/kết thúc (tối đa 366 ngày, không sau hôm nay), cùng múi giờ UTC+7. Kỳ trước có cùng số ngày, kết thúc ngay trước ngày đầu kỳ đang xem. Mỗi lần xem đọc chung một snapshot hóa đơn, đơn mua và kho dưới khóa giao dịch hiện có.
+- Bốn chỉ số: doanh thu tiền sản phẩm, số giao dịch hoàn tất (hóa đơn POS + đơn online đã giao), số máy đã bán, giá trị trung bình mỗi giao dịch. Có giá trị kỳ trước và chênh lệch thực tế; mẫu số kỳ trước bằng 0 thì không tính phần trăm. Không suy ra lợi nhuận từ giá bán.
+- Sáu biểu đồ: doanh thu thời gian, tỷ trọng kênh bán, giao dịch/số máy, tiến độ đơn online, hãng theo từng kênh và sản phẩm bán tốt. Chart.js 4.4.4 được lưu cục bộ tại `wwwroot/lib/chartjs` kèm giấy phép MIT, không tải CDN lúc mở dashboard.
+- Biểu đồ thời gian giữ đủ ngày không bán (giá trị 0); hai đường dùng nét liền/nét đứt. Chọn so sánh hai kỳ hoặc hai kênh; chuyển từng ngày/nhóm 7 ngày không tải lại trang. Nhóm 7 ngày tính từ đầu mỗi kỳ; nhóm cuối có thể ngắn hơn, tooltip ghi đầy đủ khoảng ngày. Kỳ trên 30 ngày mặc định gộp 7 ngày. Bộ chọn mốc và nhấn điểm trên biểu đồ cho xem số tiền đầy đủ, chênh lệch, số giao dịch và số máy mà không cần giữ chuột trên tooltip.
+- Biểu đồ cột số lượng đổi được giao dịch hoàn tất/số máy; mỗi mốc có hai cột kỳ này/kỳ trước trên cùng thang số nguyên. Biểu đồ tiến độ chọn đơn theo ngày tạo trong kỳ và trạng thái hiện tại; bảng kèm số đơn, giá trị sản phẩm. Giá trị trạng thái không được cộng vào doanh thu theo ngày giao.
 - Biểu đồ vòng thể hiện tỷ trọng doanh thu tại quầy/online, kèm bảng luôn hiển thị số tiền, số giao dịch và tỷ trọng. Phương thức thanh toán chỉ thống kê POS; hóa đơn cũ chưa có trường phương thức thuộc nhóm “Chưa ghi phương thức”, không suy đoán từ ghi chú.
-- Biểu đồ thanh ngang theo hãng: tối đa 6 mục; nếu vượt, gộp các hãng ngoài 5 hãng đầu vào “Các hãng còn lại”. Bảng bên dưới vẫn có đầy đủ hãng. Hãng căn cứ danh mục hiện tại; mã sản phẩm đã xóa vẫn giữ doanh thu trong “Không phân loại”.
-- Biểu đồ sản phẩm thể hiện 6 SKU doanh thu cao nhất. Bảng có tất cả SKU đã bán, tên từ giao dịch đã lưu, số máy và số tiền. Tổng bảng ngày/kênh/hãng/sản phẩm cùng nguồn chi tiết giao dịch; giá sản phẩm hiện tại không thay đổi số tiền lịch sử.
+- Biểu đồ thanh ngang theo hãng có cột riêng cho POS/online: tối đa 6 mục; nếu vượt, gộp các hãng ngoài 5 hãng đầu vào “Các hãng còn lại”. Bảng bên dưới có đầy đủ hãng, tách số tiền theo kênh. Hãng căn cứ danh mục hiện tại; mã sản phẩm đã xóa vẫn giữ doanh thu trong “Không phân loại”.
+- Biểu đồ sản phẩm thể hiện 6 SKU dẫn đầu theo doanh thu hoặc số máy, chuyển chỉ số ngay tại trang. Bảng có tất cả SKU đã bán, tên từ giao dịch đã lưu, số máy và số tiền. Tổng bảng ngày/kênh/hãng/sản phẩm cùng nguồn chi tiết giao dịch; giá sản phẩm hiện tại không thay đổi số tiền lịch sử.
+- Kỳ không có giao dịch có liên kết chọn 7 ngày kết thúc ở giao dịch gần nhất, nếu dữ liệu có giao dịch cũ; không tự tạo dữ liệu minh họa. Hôm nay có thể là ngày chưa hoàn tất nên báo cáo ghi rõ dữ liệu mới phát sinh đến thời điểm xem.
 - Đơn online đã giao nhưng thiếu sự kiện giao trong lịch sử được cảnh báo và chưa xếp vào kỳ nào. Đơn chờ/đã xác nhận/đang giao/đã hủy và sổ IMEI không được cộng lại vào doanh thu.
 - Không vẽ biểu đồ tỷ trọng khi tổng bằng 0; dùng thông báo trống rõ ràng. Bảng luôn truy cập được bằng bàn phím, tooltip hiển thị số tiền đầy đủ bằng đồng Việt Nam; trục dùng số rút gọn. Biểu đồ tắt animation, dùng token màu hiện có và cập nhật theo theme.
 
@@ -33,7 +42,7 @@
 - `_Layout`: khung, điều hướng, thông báo, đăng xuất.
 - `_ProductForm`: thêm và sửa sản phẩm.
 - `_AdminPagination` và `admin-workspace.js`: lọc/phân trang đơn trực tuyến và hóa đơn POS.
-- `_SupportChat`: chat khách hàng và hộp thư admin.
+- `_SupportChat`: chat khách hàng và hộp thư admin. Chọn đơn chỉ hiện đơn của đúng khách đang trao đổi ở trạng thái chờ xác nhận/đã xác nhận/đang giao; ưu tiên đang giao. Không có đơn đang xử lý thì ẩn nút. Đổi khách xóa danh sách lựa chọn cũ; đổi trạng thái cập nhật lựa chọn qua SSE. Máy chủ chặn chọn đơn khác chủ hoặc đã kết thúc; thẻ ghim ẩn khi đơn đã giao/hủy, lịch sử đúng chủ vẫn giữ để đối chiếu.
 
 ## Các màn hình quản trị mở rộng
 

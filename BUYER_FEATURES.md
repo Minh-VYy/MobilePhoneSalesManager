@@ -1,5 +1,11 @@
 # Tài khoản, đơn mua và hỗ trợ trực tiếp
 
+## Mã giảm giá và thẻ ưu đãi
+
+- `/Promotions` hiển thị thẻ công khai còn hiệu lực, điều kiện và quyền lợi cửa hàng cấu hình. Trang sản phẩm lọc ưu đãi theo SKU đang chọn.
+- Khách đăng nhập áp/bỏ một mã cho mỗi đơn online ngay trong giỏ, không tải lại trang. Máy chủ xác nhận giá, phạm vi, hạn và lượt dùng trước khi đặt.
+- Chi tiết đơn hiển thị tạm tính, mã đã dùng, tiền giảm và thanh toán; số tiền lưu cố định theo đơn. Xem [hướng dẫn ưu đãi](PROMOTIONS.md).
+
 ## Khởi chạy và tài khoản đầu tiên
 
 1. Chạy lại ứng dụng sau khi cập nhật source (`dotnet run`).
@@ -16,9 +22,15 @@ Không có tài khoản hoặc mật khẩu demo. Mật khẩu tối thiểu 10 
 - Đơn COD lưu theo tài khoản. Gửi lại cùng mã checkout không tạo đơn trùng; giỏ chỉ được xóa sau khi đặt hàng thành công.
 - `/Orders/Index`: lịch sử mua hàng; `/Orders/Details/{id}`: sản phẩm, thông tin nhận hàng, tiền sản phẩm và lịch sử trạng thái. Người mua chỉ xem đơn của mình và chỉ hủy được đơn chờ xác nhận.
 - `/Account/Profile`: thông tin liên hệ/địa chỉ nhận hàng; `/Account/ChangePassword`: đổi mật khẩu bằng mật khẩu hiện tại.
-- Nhận xét sản phẩm yêu cầu đăng nhập khách hàng, tên lấy từ tài khoản.
+- Nhận xét yêu cầu tài khoản User có đơn của chính mình đã giao và chứa đúng mã phiên bản (SKU). Máy chủ kiểm tra lại quyền mua trước khi ghi, không tin `id` từ form hoặc danh sách quyền ở trình duyệt. Đơn chờ/đang giao/đã hủy không đủ điều kiện. Đổi phiên bản cập nhật form ngay tại chỗ; đơn đã giao có liên kết đến phần đánh giá từng sản phẩm.
+- Đánh giá mới lưu AccountId và OrderId được xác định trên máy chủ, tên lấy từ tài khoản, hiển thị nhãn “Đã mua hàng”. Đánh giá cũ không có liên kết mua vẫn được giữ, không tự thêm nhãn xác minh. Hóa đơn POS chưa gắn tài khoản không tự cấp quyền đánh giá theo tên hoặc số điện thoại. `ProductReviews.xml` được bỏ qua trong Git.
 - Các nút chính dùng chung `storefront-buttons.css` với class `store-action`: hình chữ nhật bo góc, nền tối trung tính và chấm sáng chuyển động nhẹ theo mẫu tham khảo floating-dots. Nút phụ, nút gọn trên header và nút xem tất cả có modifier riêng. CSS giới hạn trong `storefront-body`, hỗ trợ reduced-motion và giữ trạng thái disabled của sản phẩm hết hàng; không cần React/Three.js.
-- Nút chat nổi và nút tư vấn trên sản phẩm mở cùng một giao diện chat. Tư vấn giữ nội dung lựa chọn sản phẩm và chỉ gửi khi khách bấm Gửi.
+- Nút chat nổi và nút tư vấn trên sản phẩm mở cùng một giao diện chat. Nhấn tư vấn sẽ gắn đúng SKU/phiên bản đang chọn vào thẻ chung ở đầu chat; việc chọn được lưu để cả khách và nhân viên thấy ngay. Bản nháp tin nhắn không tự gửi.
+- Trong chat, dùng “Chọn sản phẩm” hoặc “Chọn đơn hàng” để đổi nội dung đang trao đổi. Có ảnh, tên, mã, tùy chọn, giá hoặc tiền sản phẩm, trạng thái và liên kết xem chi tiết. Nút bỏ thẻ chỉ bỏ nội dung hiện tại, không xóa lịch sử.
+- Danh sách chọn đơn chỉ gồm đơn của đúng khách trong hội thoại còn chờ xác nhận, đã xác nhận hoặc đang giao; không chọn được đơn đã giao/đã hủy. Không có đơn đang xử lý thì ẩn nút chọn đơn. Nhân viên chỉ chọn đơn của khách đang trả lời. Máy chủ kiểm tra lại chủ đơn và trạng thái khi chọn; thẻ ghim ẩn khi đơn kết thúc và tin nhắn mới không gắn tiếp đơn đó. Lịch sử thẻ của chính khách được giữ để đối chiếu.
+- Thẻ chung được lưu trong `SupportChats.xml`, đồng bộ qua SSE và giữ khi tải lại trang. Thay đổi trạng thái đơn gửi cập nhật đến chat để thẻ phản ánh trạng thái mới. Mỗi lần đổi/bỏ nội dung là một sự kiện trong lịch sử; tin nhắn giữ snapshot nội dung khi gửi. Hội thoại cũ không có thẻ vẫn đọc được.
+- Thẻ ghim dùng bố cục gọn; vùng tin nhắn có hàng co giãn và thanh cuộn riêng, ô nhập nằm dưới vùng tin nhắn. Khi đang đọc tin cũ, cập nhật thẻ không kéo về cuối; khi ở cuối, thay đổi kích thước và tin mới giữ phần tin nhắn mới nhất trong tầm nhìn.
+- Máy chủ kiểm tra quyền sở hữu đơn, đọc giá/trạng thái từ dữ liệu thật và chống lặp thao tác theo client ID. Nếu một người đổi thẻ đúng lúc người kia gửi, hệ thống yêu cầu kiểm tra thẻ mới, giữ nguyên bản nháp để gửi lại.
 
 ## Chức năng quản trị
 
@@ -26,7 +38,7 @@ Không có tài khoản hoặc mật khẩu demo. Mật khẩu tối thiểu 10 
 - `/Orders/Manage`: xử lý đơn trực tuyến. Luồng: Chờ xác nhận → Đã xác nhận → Đang giao → Đã giao. Có thể hủy trước khi giao; xác nhận trừ tồn kho, hủy đơn đã xác nhận hoàn tồn kho.
 - Cập nhật trạng thái và tồn kho dùng khóa chung cùng nhật ký XML để phục hồi nếu việc ghi tệp bị ngắt.
 - `/Support/Index`: hộp thư hỗ trợ, số tin chưa đọc, lịch sử và trả lời khách hàng. Không có trả lời tự động giả lập.
-- `/ThongKe/Index`: tổng quan theo 7/30/90 ngày; doanh số POS và đơn trực tuyến đã giao, đơn cần xử lý, tồn kho, tài khoản khách hàng và tin chưa đọc đều lấy từ XML thực tế.
+- `/ThongKe/Index`: 6 biểu đồ theo 7/30/90 ngày hoặc khoảng ngày tự chọn, so sánh kỳ trước cùng độ dài, đọc chi tiết từng mốc và đổi chỉ số ngay trên trang. Doanh số POS và đơn online đã giao, đơn cần xử lý, tồn kho, tài khoản khách và tin chưa đọc lấy từ XML thực tế. Thư viện Chart.js được lưu cục bộ.
 - Kho có tìm kiếm không dấu, lọc hãng/tồn kho, sắp xếp giá, bảng/thẻ và hộp xem nhanh cấu hình. Đơn trực tuyến và hóa đơn POS có tìm kiếm, phân trang thực tế tại trình duyệt.
 - Form thêm/sửa dùng chung partial, có nhãn trường, giới hạn giá/tồn kho không âm và phản hồi lỗi. Giao diện dùng lại token, hỗ trợ bàn phím và bố cục di động.
 - Hồ sơ khách hàng có lịch sử đơn theo tài khoản và mở đúng hội thoại đã có. Chi tiết đơn admin tách riêng, trình bày từng phiên bản, giá, nhận hàng, ghi chú, lịch sử và thao tác trạng thái.

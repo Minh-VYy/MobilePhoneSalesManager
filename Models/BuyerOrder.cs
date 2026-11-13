@@ -10,10 +10,15 @@ public sealed class BuyerOrder
     public string Phone { get; set; } = "";
     public string Address { get; set; } = "";
     public string Note { get; set; } = "";
+    public string VoucherCode { get; set; } = "";
+    public string VoucherTitle { get; set; } = "";
     public List<BuyerOrderItem> Items { get; set; } = [];
     public List<OrderEvent> History { get; set; } = [];
-    public decimal Total => Items.Sum(x => x.UnitPrice * x.Quantity);
+    public decimal Subtotal => Items.Sum(x => x.Subtotal);
+    public decimal DiscountAmount => Items.Sum(x => x.DiscountAmount);
+    public decimal Total => Items.Sum(x => x.Total);
     public string StatusLabel => StatusName(Status);
+    public bool IsInProgress => Status is "Pending" or "Confirmed" or "Shipping";
     public static string StatusName(string status) => status switch
     {
         "Pending" => "Chờ xác nhận",
@@ -43,5 +48,8 @@ public sealed class BuyerOrderItem
     public string Options { get; set; } = "";
     public decimal UnitPrice { get; set; }
     public int Quantity { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public decimal Subtotal => UnitPrice * Quantity;
+    public decimal Total => Subtotal - DiscountAmount;
 }
 public sealed record OrderEvent(string Status, DateTimeOffset At);

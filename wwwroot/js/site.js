@@ -660,28 +660,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 13. Dynamic Flash Sale Countdown Timer
-    const hoursEl = document.getElementById('flashHours');
-    const minsEl  = document.getElementById('flashMins');
-    const secsEl  = document.getElementById('flashSecs');
-
-    if (hoursEl && minsEl && secsEl) {
-        let totalSeconds = 5 * 3600 + 42 * 60 + 19;
-        setInterval(() => {
-            if (totalSeconds <= 0) {
-                totalSeconds = 24 * 3600;
-            } else {
-                totalSeconds--;
-            }
-            const h = Math.floor(totalSeconds / 3600);
-            const m = Math.floor((totalSeconds % 3600) / 60);
-            const s = totalSeconds % 60;
-
-            hoursEl.textContent = String(h).padStart(2, '0');
-            minsEl.textContent  = String(m).padStart(2, '0');
-            secsEl.textContent  = String(s).padStart(2, '0');
-        }, 1000);
-    }
 });
 
 

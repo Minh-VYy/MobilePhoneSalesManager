@@ -3305,6 +3305,11 @@ td.num, th.num { text-align: right; font-family: var(--font-code); }
 .phone-review-form__content { grid-column:1/-1; }
 .phone-review-submit { display:inline-flex; min-height:42px; align-items:center; justify-content:center; gap:9px; padding:0 16px; border:0; border-radius:9px; background:var(--glass-strong); color:var(--text); font:600 12px var(--font-body); }
 .phone-review-submit:hover { color:var(--primary-2); }
+.phone-review-form[hidden],.phone-review-gate[hidden] { display:none; }
+.phone-review-gate { margin-top:20px; padding:14px 16px; border:1px solid var(--border); border-radius:10px; color:var(--text-muted); font-size:13px; line-height:1.7; }
+.phone-review-gate p { margin:0; }
+.phone-review-gate a { display:block; margin-top:8px; color:var(--primary-2); }
+.phone-review-verified { display:inline-flex; align-items:center; gap:5px; margin:6px 10px 0 0; color:var(--success); font-size:11px; }
 .phone-form-success,.phone-form-error { padding:10px 12px; border-radius:9px; font-size:12px; }
 .phone-form-success { color:var(--success); background:color-mix(in srgb,var(--success) 10%,transparent); }
 .phone-form-error { color:var(--danger); background:color-mix(in srgb,var(--danger) 10%,transparent); }

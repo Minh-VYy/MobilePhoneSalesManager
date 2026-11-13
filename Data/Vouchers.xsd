@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Vouchers"><xs:complexType><xs:sequence><xs:element name="Voucher" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:sequence>
+    <xs:element name="Title" type="xs:string"/><xs:element name="DiscountType"><xs:simpleType><xs:restriction base="xs:string"><xs:enumeration value="FixedAmount"/><xs:enumeration value="Percentage"/></xs:restriction></xs:simpleType></xs:element>
+    <xs:element name="DiscountValue" type="xs:decimal"/><xs:element name="MinOrderAmount" type="xs:decimal"/><xs:element name="ExpiryDate" type="xs:date"/>
+    <xs:element name="Status"><xs:simpleType><xs:restriction base="xs:string"><xs:enumeration value="unused"/><xs:enumeration value="used"/><xs:enumeration value="disabled"/></xs:restriction></xs:simpleType></xs:element>
+    <xs:element name="StartDate" type="xs:date" minOccurs="0"/><xs:element name="MaxDiscount" type="xs:decimal" minOccurs="0"/>
+    <xs:element name="UsageLimit" type="xs:positiveInteger" minOccurs="0"/><xs:element name="PerAccountLimit" type="xs:positiveInteger" minOccurs="0"/>
+    <xs:element name="Public" type="xs:boolean" minOccurs="0"/><xs:element name="Description" type="xs:string" minOccurs="0"/><xs:element name="Benefits" type="xs:string" minOccurs="0"/>
+    <xs:element name="ProductIds" minOccurs="0"><xs:complexType><xs:sequence><xs:element name="Id" type="xs:string" minOccurs="0" maxOccurs="500"/></xs:sequence></xs:complexType></xs:element>
+  </xs:sequence><xs:attribute name="code" use="required"><xs:simpleType><xs:restriction base="xs:string"><xs:pattern value="[A-Z0-9][A-Z0-9_-]{2,31}"/></xs:restriction></xs:simpleType></xs:attribute></xs:complexType></xs:element></xs:sequence></xs:complexType>
+  <xs:unique name="UniqueVoucherCode"><xs:selector xpath="Voucher"/><xs:field xpath="@code"/></xs:unique></xs:element>
+</xs:schema>

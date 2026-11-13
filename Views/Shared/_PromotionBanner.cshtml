@@ -1,0 +1,6 @@
+@model VoucherDefinition
+<aside class="promotion-banner" aria-label="Ưu đãi và quyền lợi mua hàng">
+    <p><strong>@Model.DiscountLabel</strong><span>Mã <code>@Model.Code</code> · Đến hết @Model.ExpiryDate?.ToString("dd/MM/yyyy")</span></p>
+    @if (Model.BenefitLines.Any()) { <ul class="promotion-benefits">@foreach (var benefit in Model.BenefitLines.Take(3)) { <li><i class="fa-solid fa-check" aria-hidden="true"></i>@benefit</li> }</ul> }
+    <a asp-controller="Promotions" asp-action="Index" asp-fragment="@("promotion-" + Model.Code)">Xem điều kiện và đầy đủ quyền lợi <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+</aside>

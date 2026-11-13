@@ -31,7 +31,7 @@ public class HomeController : Controller
         var android = allPhones.Where(p => !string.Equals(p.MaHang, "APPLE", StringComparison.OrdinalIgnoreCase) && !p.MaSP.StartsWith("ACC-")).ToList();
         var accessories = allPhones.Where(p => p.MaSP.StartsWith("ACC-")).ToList();
 
-        // Flash sale: selection of prominent flagships with discounted prices
+        // Featured catalogue items; promotion eligibility is configured separately.
         var flashSale = allPhones.Where(p => p.GiaBan > 15000000 || p.MaSP.StartsWith("ACC-")).Take(8).ToList();
 
         var viewModel = new HomeIndexViewModel

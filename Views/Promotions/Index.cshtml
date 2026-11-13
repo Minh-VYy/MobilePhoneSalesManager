@@ -1,0 +1,5 @@
+@model List<VoucherDefinition>
+@{ Layout = "_LayoutUser"; ViewData["Title"] = "Thẻ giảm giá & quyền lợi mua hàng"; }
+<section class="customer-page"><header class="customer-heading"><h1>@ViewData["Title"]</h1><p>Chọn ưu đãi còn hiệu lực. Điều kiện và giá trị giảm được kiểm tra lại khi đặt hàng; mỗi đơn dùng một mã.</p></header>
+@if (Model.Count == 0) { <div class="account-card glass"><h2>Chưa có ưu đãi công khai đang áp dụng</h2><p>Các chương trình được cửa hàng bật công khai sẽ xuất hiện tại đây.</p></div> }
+else { <div class="promotion-grid">@foreach (var voucher in Model) { <partial name="_PromotionCard" model="voucher" /> }</div> }</section>

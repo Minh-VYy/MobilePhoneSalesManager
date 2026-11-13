@@ -71,13 +71,13 @@ Giao diện quản trị dùng nền sáng mặc định, font Inter và màu ch
 | Nhóm | Chức năng |
 | --- | --- |
 | Danh mục | Xem, tìm kiếm, lọc hãng / nhóm iPhone, Android / khoảng giá; danh sách gộp các phiên bản cùng dòng máy |
-| Chi tiết | Hình ảnh, mô tả, thông số, đánh giá, sản phẩm liên quan |
+| Chi tiết | Hình ảnh, mô tả, thông số, sản phẩm liên quan; chỉ khách có đơn đã giao chứa đúng phiên bản mới được gửi đánh giá |
 | Chọn phiên bản | Tình trạng mới / đã dùng, dung lượng, màu và bảo hành theo các phiên bản thực có trong dữ liệu |
 | Tồn kho | Lựa chọn không còn hàng bị vô hiệu hóa và hiển thị mờ hơn |
 | Giỏ hàng | Thêm, đổi số lượng, xóa, mua ngay; đối chiếu giá và tồn trước khi đặt |
 | Đơn mua | Đặt hàng COD, xem lịch sử / chi tiết và hủy đơn đang chờ xác nhận |
 | Tài khoản | Đăng ký, đăng nhập bằng tên đăng nhập hoặc email, cập nhật hồ sơ, đổi mật khẩu, đăng xuất |
-| Tư vấn | Chat trực tiếp với nhân viên; có thể đưa thông tin sản phẩm đang chọn vào nội dung tư vấn |
+| Tư vấn | Chat trực tiếp; gắn sản phẩm hoặc đơn hàng ở đầu hội thoại để hai bên cùng thấy, có lịch sử và cập nhật trạng thái đơn |
 | Nội dung | Banner tự chuyển theo nội dung, ảnh và thời gian cấu hình; mục “Điểm nổi bật” dẫn đến tin công nghệ |
 
 Không phải mọi tổ hợp màu, dung lượng và bảo hành đều có thể mua: lựa chọn phải tương ứng với một mã phiên bản có thật và còn hàng.
@@ -86,7 +86,7 @@ Không phải mọi tổ hợp màu, dung lượng và bảo hành đều có th
 
 | Nhóm | Chức năng |
 | --- | --- |
-| Tổng quan | Chỉ số kinh doanh, 4 biểu đồ doanh thu, bảng đối chiếu, đơn cần xử lý và tin chưa đọc |
+| Tổng quan | 6 biểu đồ, so sánh kỳ trước, chọn khoảng ngày, chi tiết từng mốc, bảng đối chiếu, đơn cần xử lý và tin chưa đọc |
 | Sản phẩm | Thêm / sửa / xóa, tìm và lọc kho, bảng / thẻ, xem nhanh, kiểm tra XSD |
 | Phiên bản | Thiết lập dòng máy, tình trạng, màu, dung lượng, bảo hành, giá niêm yết và thông số mở rộng |
 | Đơn online | Xác nhận, chuyển giao, xác nhận đã giao, hủy theo trạng thái; cập nhật tồn và mã máy tương ứng |
@@ -108,7 +108,7 @@ Không phải mọi tổ hợp màu, dung lượng và bảo hành đều có th
 - Tùy chọn: Visual Studio hỗ trợ .NET 9, hoặc VS Code có công cụ C#.
 - Tùy chọn: máy quét mã dạng bàn phím, có ký tự kết thúc **Enter**, để bán tại quầy.
 
-Dự án hiện không có bước `npm install` hoặc build frontend riêng. Một số font, icon, thư viện biểu đồ và ảnh dùng nguồn bên ngoài; cần truy cập mạng để tải những tài nguyên đó.
+Dự án hiện không có bước `npm install` hoặc build frontend riêng. Chart.js 4.4.4 và giấy phép được lưu trong `wwwroot/lib/chartjs`, dashboard không phụ thuộc CDN biểu đồ. Một số font, icon và ảnh vẫn dùng nguồn bên ngoài; cần truy cập mạng để tải những tài nguyên đó.
 
 ### Lấy mã nguồn
 
@@ -195,7 +195,8 @@ Vai trò do máy chủ quyết định. Mở giao diện cửa hàng không đ�
 3. Đăng nhập tài khoản khách, kiểm tra giỏ và điền thông tin nhận hàng.
 4. Đặt đơn. Máy chủ lấy lại giá / tồn, kiểm tra số lượng và lưu đơn vào `BuyerOrders.xml`.
 5. Theo dõi tại `/Orders`; có thể hủy khi đơn còn **Chờ xác nhận**.
-6. Nhân viên xử lý đơn theo luồng:
+6. Cần tư vấn, bấm **Nhắn tin về đơn hàng này** ở chi tiết hoặc **Hỏi về vận chuyển** ở đơn đang giao. Trong chat cũng có nút **Chọn sản phẩm / Chọn đơn hàng**; đơn chỉ thuộc khách đang trao đổi. Thẻ chung có ảnh, mã, giá / tiền sản phẩm, trạng thái và liên kết chi tiết, được lưu và đồng bộ cho cả hai người.
+7. Nhân viên xử lý đơn theo luồng:
 
 ~~~text
 Chờ xác nhận → Đã xác nhận → Đang giao hàng → Đã giao hàng
@@ -236,23 +237,25 @@ Xem quy trình chi tiết và giới hạn với máy tồn cũ tại [BARCODE_P
 
 ## 7. Quy tắc thống kê doanh thu
 
-Tại **Quản trị → Tổng quan kinh doanh** (`/ThongKe`), chọn kỳ **7 / 30 / 90 ngày**. Kỳ bao gồm hôm nay, tính theo giờ Việt Nam **UTC+7**.
+Tại **Quản trị → Tổng quan kinh doanh** (`/ThongKe`), chọn kỳ **7 / 30 / 90 ngày** gồm hôm nay, hoặc **Chọn khoảng ngày** (tối đa 366 ngày, không sau hôm nay), theo giờ Việt Nam **UTC+7**. Kỳ trước có cùng độ dài và kết thúc ngay trước kỳ đang xem; các chỉ số có số liệu kỳ trước và chênh lệch. Khi kỳ trước bằng 0, không tính phần trăm tăng trưởng.
 
 | Thành phần | Cách tính |
 | --- | --- |
 | Doanh thu tại quầy | Tổng số lượng × đơn giá đã lưu trong các dòng hóa đơn thuộc kỳ, theo ngày lập |
-| Doanh thu online | Tổng tiền sản phẩm của các đơn đã giao thuộc kỳ, theo ngày giao trong lịch sử |
+| Doanh thu online | Tổng tiền sản phẩm sau giảm giá đã lưu của các đơn đã giao thuộc kỳ, theo ngày giao trong lịch sử |
 | Tổng doanh thu | Doanh thu tại quầy + doanh thu online đã giao |
 | Giao dịch hoàn tất | Số hóa đơn tại quầy + số đơn online đã giao trong kỳ |
 | Số máy đã bán | Tổng số lượng sản phẩm của các giao dịch trên |
 | Giá trị trung bình | Tổng doanh thu / số giao dịch hoàn tất; bằng 0 khi chưa có giao dịch |
 
-Bốn biểu đồ gồm:
+Sáu biểu đồ gồm:
 
-1. **Doanh thu theo thời gian:** hai kênh riêng, có thể chuyển từng ngày / nhóm 7 ngày ngay trên trang.
+1. **Doanh thu theo thời gian:** chọn so sánh hai kỳ hoặc hai kênh, chuyển từng ngày / nhóm 7 ngày ngay trên trang. Nhấn điểm hoặc chọn mốc để xem đầy đủ số tiền, chênh lệch, số giao dịch và số máy.
 2. **Kênh bán hàng:** tỷ trọng doanh thu quầy / online, kèm số tiền và số giao dịch.
-3. **Theo thương hiệu:** doanh thu từng hãng; khi nhiều hơn 6 hãng, các hãng ngoài 5 hãng đầu được gộp trên biểu đồ.
-4. **Sản phẩm tạo doanh thu cao nhất:** 6 phiên bản dẫn đầu theo doanh thu, kèm bảng đầy đủ tất cả SKU đã bán.
+3. **Giao dịch / số máy:** cột cạnh nhau cho kỳ hiện tại và kỳ trước, đổi chỉ số không tải lại trang.
+4. **Tiến độ đơn online:** đơn tạo trong kỳ theo trạng thái hiện tại, kèm giá trị sản phẩm; giá trị này không phải doanh thu theo ngày giao.
+5. **Theo thương hiệu:** cột riêng cho POS / online; khi nhiều hơn 6 hãng, các hãng ngoài 5 hãng đầu được gộp trên biểu đồ.
+6. **Sản phẩm bán tốt:** 6 phiên bản dẫn đầu theo doanh thu hoặc số máy, kèm bảng đầy đủ tất cả SKU đã bán.
 
 Các quy tắc đối chiếu:
 
@@ -277,6 +280,7 @@ Các quy tắc đối chiếu:
 | `QuangCao.xml` | Nội dung, ảnh, thứ tự và thời gian chạy banner | Chưa có XSD riêng |
 | `Accounts.xml` | Tài khoản, vai trò, mật khẩu đã băm, trạng thái xác thực | Chưa có XSD riêng |
 | `BuyerOrders.xml` | Đơn online theo tài khoản và lịch sử trạng thái | Chưa có XSD riêng |
+| `Vouchers.xml` | Mã giảm giá online, phạm vi SKU, thời hạn, giới hạn lượt và quyền lợi | `Vouchers.xsd` |
 | `SupportChats.xml` | Hội thoại, tin nhắn và mốc đã đọc | Chưa có XSD riêng |
 | `StockUnits.xml` | Mã máy duy nhất, mã phụ, trạng thái và giao dịch liên quan | Chưa có XSD riêng |
 | `ProductReviews.xml` | Đánh giá của khách, tạo khi có đánh giá đầu tiên | Chưa có XSD riêng |
@@ -285,7 +289,7 @@ Các quy tắc đối chiếu:
 
 Các tệp nghiệp vụ phát sinh được tạo khi cần; không phải mọi tệp trong bảng đều tồn tại ngay sau khi clone.
 
-`Orders.xml`, `Customers.xml`, `CustomerOrderRequests.xml`, `Vouchers.xml` và `AppConfig.xml` còn trong kho từ các luồng trước. Luồng đặt hàng / tài khoản đang sử dụng `BuyerOrders.xml` và `Accounts.xml`. Không tự chuyển hay gán đơn cũ cho tài khoản mới dựa trên số điện thoại; voucher chưa được tích hợp vào checkout hiện tại.
+`Orders.xml`, `Customers.xml`, `CustomerOrderRequests.xml` và `AppConfig.xml` còn trong kho từ các luồng trước. Luồng đặt hàng / tài khoản đang sử dụng `BuyerOrders.xml` và `Accounts.xml`. Không tự chuyển hay gán đơn cũ cho tài khoản mới dựa trên số điện thoại. `Vouchers.xml` đã tích hợp vào checkout online, đọc tương thích các mã cũ; xem [Mã giảm giá và quyền lợi](PROMOTIONS.md) để cấu hình đúng phạm vi trước khi công khai.
 
 ### Vai trò của XSD, XPath và XSLT
 
@@ -438,7 +442,7 @@ Nếu dùng reverse proxy, cho phép kết nối streaming và tắt buffering c
 | Máy quét không thêm sản phẩm | Đặt con trỏ vào ô quét; kiểm tra chế độ bàn phím, hậu tố Enter và mã máy đã đăng ký |
 | Không chốt được POS | Quét đủ mã theo số lượng, kiểm tra tồn / trạng thái máy và xác nhận thanh toán |
 | Không có doanh thu trong kỳ | Kiểm tra kỳ ngày; đơn online phải đã giao, còn POS phải có hóa đơn được lưu; quét mã riêng lẻ chưa tạo doanh thu |
-| Biểu đồ không xuất hiện | Kiểm tra khả năng tải Chart.js từ CDN; các bảng số liệu vẫn có thể xem |
+| Biểu đồ không xuất hiện | Kiểm tra triển khai đủ `wwwroot/lib/chartjs/chart.umd.min.js` và script dashboard; các bảng số liệu vẫn có thể xem |
 | Chat không cập nhật trực tiếp | Kiểm tra đăng nhập, mạng và cấu hình SSE / buffering trên proxy |
 | Mất ảnh / lỗi XSLT sau publish | Kiểm tra đường dẫn ảnh và bảo đảm bộ `Data/`, `XSLT/`, `wwwroot/` được triển khai đầy đủ |
 

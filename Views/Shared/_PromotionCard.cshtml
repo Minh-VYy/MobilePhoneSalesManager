@@ -1,0 +1,23 @@
+@model VoucherDefinition
+@using System.Globalization
+@inject QuanLyBanDienThoai.Services.DienThoaiXmlService Phones
+@{ var vi = CultureInfo.GetCultureInfo("vi-VN"); }
+<article class="promotion-card" id="@("promotion-" + Model.Code)">
+    <div class="promotion-card-heading"><span class="promotion-discount">@Model.DiscountLabel</span><code>@Model.Code</code></div>
+    <h3>@Model.Title</h3>@if (!string.IsNullOrWhiteSpace(Model.Description)) { <p>@Model.Description</p> }
+    <p class="promotion-conditions">
+        Đơn online · Từ @Model.MinOrderAmount.ToString("N0", vi) ₫ sản phẩm được áp dụng
+        @if (Model.MaxDiscount.HasValue)
+        {
+            <text> · Giảm tối đa @Model.MaxDiscount.GetValueOrDefault().ToString("N0", vi) ₫</text>
+        }
+        <br />@(Model.ProductIds.Count == 0 ? "Tất cả sản phẩm" : $"{Model.ProductIds.Count} phiên bản được chỉ định") · @Model.PerAccountLimit lượt / tài khoản · Đến hết @Model.ExpiryDate?.ToString("dd/MM/yyyy") (UTC+7)
+    </p>
+    @if (Model.ProductIds.Count > 0)
+    {
+        var products = Phones.GetAll().ToDictionary(x => x.MaSP, StringComparer.OrdinalIgnoreCase);
+        <details class="promotion-scope"><summary>Xem phiên bản áp dụng</summary><ul>@foreach (var id in Model.ProductIds) { <li><a asp-controller="DienThoai" asp-action="Details" asp-route-id="@id">@(products.GetValueOrDefault(id)?.TenSP ?? id)</a><small>@id</small></li> }</ul></details>
+    }
+    @if (Model.BenefitLines.Any()) { <ul class="promotion-benefits">@foreach (var benefit in Model.BenefitLines) { <li><i class="fa-solid fa-check" aria-hidden="true"></i>@benefit</li> }</ul> }
+    <a asp-controller="DienThoai" asp-action="Cart" asp-route-voucher="@Model.Code" class="store-action promotion-use">Dùng mã tại giỏ hàng <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+</article>

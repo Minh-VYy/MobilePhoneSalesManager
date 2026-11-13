@@ -13,19 +13,24 @@ namespace QuanLyBanDienThoai.Controllers
         private readonly PhoneDetailXmlService _phoneDetailService;
         private readonly XmlValidationService _validationService;
         private readonly XsltTransformService _xsltService;
+        private readonly CustomerOrderService _orders;
+        private readonly VoucherService _vouchers;
 
         public DienThoaiController(
             DienThoaiXmlService dienThoaiService,
             AccountXmlService accounts,
             PhoneDetailXmlService phoneDetailService,
             XmlValidationService validationService,
-            XsltTransformService xsltService)
+            XsltTransformService xsltService,
+            CustomerOrderService orders, VoucherService vouchers)
         {
             _dienThoaiService = dienThoaiService;
             _accounts = accounts;
             _phoneDetailService = phoneDetailService;
             _validationService = validationService;
             _xsltService = xsltService;
+            _orders = orders;
+            _vouchers = vouchers;
         }
 
         // Trang Catalogue sản phẩm cho người dùng
@@ -87,6 +92,7 @@ namespace QuanLyBanDienThoai.Controllers
             return View(model);
         }
         [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public IActionResult Details(string id)
         {
             if (string.IsNullOrWhiteSpace(id)) return NotFound();
@@ -124,7 +130,13 @@ namespace QuanLyBanDienThoai.Controllers
                     })
                     .OfType<PhoneVariantOptionViewModel>()
                     .ToList(),
-                DanhGia = _phoneDetailService.GetReviews(phone.MaSP)
+                DanhGia = _phoneDetailService.GetReviews(phone.MaSP),
+                Promotions = _vouchers.PublicCards().Where(v => variants.Any(p => v.AppliesTo(p.ProductId))).ToList(),
+                ReviewableProductIds = User.IsInRole("User")
+                    ? _orders.PurchasedProductIds(User.FindFirstValue(ClaimTypes.NameIdentifier)!)
+                        .Where(productId => variants.Any(x => string.Equals(x.ProductId, productId, StringComparison.OrdinalIgnoreCase)))
+                        .ToHashSet(StringComparer.OrdinalIgnoreCase)
+                    : new(StringComparer.OrdinalIgnoreCase)
             };
             return View(model);
         }
@@ -195,12 +207,12 @@ namespace QuanLyBanDienThoai.Controllers
 
         [HttpGet]
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-        public IActionResult Cart()
+        public IActionResult Cart(string? voucher = null)
         {
             ViewData["Title"] = "Giỏ hàng";
             ViewBag.IsAdmin = false;
             var account = _accounts.Find(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            return View(new CustomerOrderRequestModel { CustomerName = account?.FullName ?? "", Phone = account?.Phone ?? "", Address = account?.Address ?? "", CheckoutToken = Guid.NewGuid().ToString("N") });
+            return View(new CustomerOrderRequestModel { CustomerName = account?.FullName ?? "", Phone = account?.Phone ?? "", Address = account?.Address ?? "", VoucherCode = voucher?.Length <= 32 ? voucher.Trim() : "", CheckoutToken = Guid.NewGuid().ToString("N") });
         }
 
         [HttpPost]
@@ -212,18 +224,30 @@ namespace QuanLyBanDienThoai.Controllers
             var customerName = User.FindFirstValue("DisplayName") ?? User.Identity!.Name!;
             if (rating is < 1 or > 5 || string.IsNullOrWhiteSpace(content) || content.Length > 1200)
             {
-                TempData["ReviewError"] = "Vui lòng nhập tên, chọn số sao và viết nhận xét tối đa 1.200 ký tự.";
+                TempData["ReviewError"] = "Chọn từ 1 đến 5 sao và viết nhận xét tối đa 1.200 ký tự.";
                 return RedirectToAction(nameof(Details), new { id });
             }
 
-            _phoneDetailService.AddReview(new ProductReviewModel
+            lock (PrivateXmlStore.Gate)
             {
-                ProductId = id,
-                CustomerName = customerName.Trim(),
-                Rating = rating,
-                Content = content.Trim(),
-                CreatedAt = DateTime.Now
-            });
+                var accountId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                var purchase = _orders.DeliveredPurchase(accountId, id);
+                if (purchase == null)
+                {
+                    TempData["ReviewError"] = "Bạn chỉ có thể đánh giá đúng phiên bản đã mua trong đơn đã giao của tài khoản mình.";
+                    return Redirect($"{Url.Action(nameof(Details), new { id })}#reviews");
+                }
+                _phoneDetailService.AddReview(new ProductReviewModel
+                {
+                    ProductId = id,
+                    AccountId = accountId,
+                    OrderId = purchase.Id,
+                    CustomerName = customerName.Trim(),
+                    Rating = rating,
+                    Content = content.Trim(),
+                    CreatedAt = DateTimeOffset.UtcNow.ToOffset(TimeSpan.FromHours(7)).DateTime
+                });
+            }
             TempData["ReviewSuccess"] = "Cảm ơn bạn đã gửi đánh giá.";
             return Redirect($"{Url.Action(nameof(Details), new { id })}#reviews");
         }

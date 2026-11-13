@@ -23,4 +23,6 @@ public class QuangCaoModel
     public int ThoiGianChuyenGiay { get; set; } = 6;
 
     public bool DangHienThi { get; set; } = true;
+    [StringLength(32), RegularExpression("[A-Za-z0-9][A-Za-z0-9_-]{2,31}")]
+    public string? PromotionCode { get; set; }
 }

@@ -1,13 +1,15 @@
 @model QuanLyBanDienThoai.Models.HomeIndexViewModel
+@inject QuanLyBanDienThoai.Services.VoucherService Vouchers
 @{
     ViewData["Title"] = "PhoneStore — Flagship Điện Thoại Cao Cấp";
     Layout = "_LayoutHome";
+    var promotions = Vouchers.PublicCards();
 }
 
 @* ── PROGRESS RAIL ── *@
 <nav class="rail" aria-label="Điều hướng trang">
     <button type="button" class="on" data-target="sec-hero"     title="Trang Chủ"><i></i></button>
-    <button type="button"           data-target="sec-flash"    title="Flash Sale"><i></i></button>
+    <button type="button"           data-target="sec-flash"    title="Sản phẩm đáng quan tâm"><i></i></button>
     <button type="button"           data-target="sec-iphone"   title="iPhone / iPad"><i></i></button>
     <button type="button"           data-target="sec-android"  title="Android"><i></i></button>
     <button type="button"           data-target="sec-phukien"  title="Phụ Kiện"><i></i></button>
@@ -29,6 +31,7 @@
                 </div>
                 <h1 class="ps-hero__h1">@ad.TieuDe</h1>
                 <p class="ps-hero__sub">@ad.MoTa</p>
+                @if (promotions.FirstOrDefault(x => x.Code == ad.PromotionCode) is { } promotion) { <partial name="_PromotionBanner" model="promotion" /> }
                 <div class="ps-hero__actions">
                     <a href="#sec-flash" class="store-action">
                         <span>Khám phá ngay</span>
@@ -76,29 +79,29 @@
         <div class="ps-perk-item">
             <div class="ps-perk-icon"><i class="fa-solid fa-truck-fast"></i></div>
             <div class="ps-perk-text">
-                <h4>Miễn Phí Vận Chuyển</h4>
-                <p>Giao hàng tận nơi toàn quốc</p>
+                <h4>Thông tin rõ ràng</h4>
+                <p>Xem giá, tình trạng và thông số</p>
             </div>
         </div>
         <div class="ps-perk-item">
             <div class="ps-perk-icon"><i class="fa-solid fa-shield-halved"></i></div>
             <div class="ps-perk-text">
-                <h4>Bảo Hành 12 Tháng</h4>
-                <p>1 đổi 1 trong 30 ngày đầu</p>
+                <h4>Bảo hành theo phiên bản</h4>
+                <p>Kiểm tra chính sách của máy đã chọn</p>
             </div>
         </div>
         <div class="ps-perk-item">
             <div class="ps-perk-icon"><i class="fa-solid fa-credit-card"></i></div>
             <div class="ps-perk-text">
-                <h4>Trả Góp 0% Lãi Suất</h4>
-                <p>Duyệt hồ sơ nhanh 5 phút</p>
+                <h4>Ưu đãi có điều kiện rõ ràng</h4>
+                <p><a asp-controller="Promotions" asp-action="Index">Xem mã và thẻ giảm giá</a></p>
             </div>
         </div>
         <div class="ps-perk-item">
             <div class="ps-perk-icon"><i class="fa-solid fa-arrows-rotate"></i></div>
             <div class="ps-perk-text">
-                <h4>Thu Cũ Đổi Mới</h4>
-                <p>Trợ giá lên đến 3.000.000đ</p>
+                <h4>Tư vấn trực tiếp</h4>
+                <p>Trao đổi cùng nhân viên trước khi mua</p>
             </div>
         </div>
     </div>
@@ -109,14 +112,11 @@
     <div class="flash-sale-head">
         <div class="flash-sale-title">
             <i class="fa-solid fa-bolt text-warning fs-4"></i>
-            <span>FLASH SALE TRONG NGÀY</span>
-            <span class="flash-sale-badge">GIẢM ĐẾN 25%</span>
+            <span>SẢN PHẨM ĐÁNG QUAN TÂM</span>
+            <a asp-controller="Promotions" asp-action="Index" class="flash-sale-badge">XEM THẺ ƯU ĐÃI</a>
         </div>
         <div class="flash-sale-timer">
-            <span>Kết thúc trong:</span>
-            <span class="timer-box" id="flashHours">05</span> :
-            <span class="timer-box" id="flashMins">42</span> :
-            <span class="timer-box" id="flashSecs">19</span>
+            <span>Mức giảm và thời hạn theo từng chương trình</span>
         </div>
     </div>
 

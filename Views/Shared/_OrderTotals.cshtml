@@ -1,0 +1,11 @@
+@model BuyerOrder
+@using System.Globalization
+@{ var vi = CultureInfo.GetCultureInfo("vi-VN"); }
+<div class="order-totals">
+    <div><span>Tạm tính sản phẩm</span><strong>@Model.Subtotal.ToString("N0", vi) ₫</strong></div>
+    @if (Model.DiscountAmount > 0)
+    {
+        <div class="order-totals-discount"><span>Giảm giá <b>@Model.VoucherCode</b><small>@Model.VoucherTitle</small></span><strong>−@Model.DiscountAmount.ToString("N0", vi) ₫</strong></div>
+    }
+    <div class="order-totals-final"><span>Thanh toán tiền sản phẩm</span><strong>@Model.Total.ToString("N0", vi) ₫</strong></div>
+</div>

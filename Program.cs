@@ -60,6 +60,7 @@ builder.Services.AddTransient<XmlOrderService>();
 builder.Services.AddTransient<QuangCaoXmlService>();
 builder.Services.AddSingleton<PhoneDetailXmlService>();
 builder.Services.AddTransient<StockUnitService>();
+builder.Services.AddTransient<VoucherService>();
 builder.Services.AddTransient<TinTucXmlService>();
 
 var app = builder.Build();

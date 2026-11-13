@@ -22,4 +22,5 @@ Data/SupportChats.xml
 Data/BuyerOrders.xml
 Data/CommerceTransaction.xml
 Data/StockUnits.xml
+Data/ProductReviews.xml
 Data/*.tmp

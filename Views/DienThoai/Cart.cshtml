@@ -1,6 +1,6 @@
 @model CustomerOrderRequestModel
 @{ ViewData["Title"] = "Giỏ hàng"; Layout = "_LayoutUser"; }
-<section class="phone-cart-page" data-cart-page data-catalog-base="@Url.Content("~/DienThoai/")">
+<section class="phone-cart-page" data-cart-page data-catalog-base="@Url.Content("~/DienThoai/")" data-quote-url="@Url.Action("Quote", "Orders")" data-cart-user="@User.IsInRole("User").ToString().ToLowerInvariant()">
     <nav class="phone-detail-breadcrumb" aria-label="Điều hướng"><a asp-controller="Home" asp-action="Index">Trang chủ</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span>Giỏ hàng</span></nav>
     <header class="phone-cart-heading"><h1>Giỏ hàng</h1><p>Kiểm tra phiên bản, số lượng và thông tin nhận hàng.</p></header>
     <p class="phone-form-error" data-cart-error role="alert" hidden></p>
@@ -15,16 +15,20 @@
             <form asp-controller="Orders" asp-action="Create" method="post" id="customer-order-form">
                 <div asp-validation-summary="All" class="form-errors" role="alert"></div>
                 <input asp-for="CheckoutToken" type="hidden" />
+                <input asp-for="VoucherCode" type="hidden" data-coupon-applied />
                 <div data-cart-hidden-items></div>
                 <label asp-for="CustomerName">Họ và tên<input asp-for="CustomerName" maxlength="100" autocomplete="name" required /></label>
                 <label asp-for="Phone">Số điện thoại<input asp-for="Phone" inputmode="tel" pattern="0[35789][0-9]{8}" maxlength="10" autocomplete="tel" required /></label>
                 <label asp-for="Address">Địa chỉ nhận hàng<textarea asp-for="Address" maxlength="250" autocomplete="street-address" required rows="3"></textarea></label>
                 <label asp-for="Note">Ghi chú <small>(không bắt buộc)</small><textarea asp-for="Note" maxlength="500" rows="2"></textarea></label>
                 <p class="phone-cart-note">Thanh toán khi nhận hàng (COD). Cửa hàng liên hệ xác nhận đơn và chi phí giao hàng trước khi gửi.</p>
-                <div class="phone-cart-total"><span>Tiền sản phẩm</span><strong data-cart-total>0 ₫</strong></div>
+                <div class="cart-coupon"><label for="cart-coupon-code">Mã giảm giá</label><div class="cart-coupon-input"><input id="cart-coupon-code" value="@Model.VoucherCode" maxlength="32" autocomplete="off" spellcheck="false" placeholder="Nhập mã giảm giá" data-coupon-code /><button type="button" data-coupon-apply>Áp dụng</button><button type="button" data-coupon-remove hidden>Bỏ mã</button></div><p data-coupon-message role="status">Mỗi đơn online áp dụng một mã. <a asp-controller="Promotions" asp-action="Index">Xem thẻ giảm giá</a></p></div>
+                <div class="cart-money-row"><span>Tạm tính sản phẩm</span><strong data-cart-subtotal>0 ₫</strong></div>
+                <div class="cart-money-row cart-money-row--discount" data-cart-discount-row hidden><span>Giảm giá <b data-cart-voucher-label></b></span><strong data-cart-discount>0 ₫</strong></div>
+                <div class="phone-cart-total"><span>Thanh toán tiền sản phẩm</span><strong data-cart-total>0 ₫</strong></div>
                 @if (User.IsInRole("User")) { <button type="submit" class="store-action phone-buy-now" data-checkout-submit disabled>Đặt hàng <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button> }
                 else if (User.IsInRole("Admin")) { <p class="phone-cart-note">Đăng nhập bằng tài khoản khách hàng để đặt mua.</p> }
-                else { <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="/DienThoai/Cart" class="store-action phone-buy-now">Đăng nhập để đặt hàng</a> }
+                else { <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Cart", new { voucher = Model.VoucherCode })" class="store-action phone-buy-now">Đăng nhập để đặt hàng</a> }
             </form>
         </aside>
     </div>

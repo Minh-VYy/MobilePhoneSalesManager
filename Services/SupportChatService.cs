@@ -8,7 +8,7 @@ namespace QuanLyBanDienThoai.Services;
 public sealed class SupportChatService(PrivateXmlStore store)
 {
     private readonly ConcurrentDictionary<Guid, ChatSubscription> _subscriptions = new();
-    public List<SupportConversation> Conversations() => store.Read("SupportChats.xml", "Conversations", root => root.Elements("Conversation").Select(x =>
+    public List<SupportConversation> Conversations() => store.Read("SupportChats.xml", "Conversations", root => root.Elements("Conversation").Where(x => x.Elements("Message").Any()).Select(x =>
     {
         var last = x.Elements("Message").Last();
         var seen = (long?)x.Attribute("AdminRead") ?? 0;
@@ -17,6 +17,7 @@ public sealed class SupportChatService(PrivateXmlStore store)
     }).OrderByDescending(x => x.UpdatedAt).ToList());
 
     public bool Exists(string id) => store.Read("SupportChats.xml", "Conversations", root => Find(root, id) != null);
+    public void NotifyChanged(string accountId) => Publish(accountId);
     public List<SupportMessage> Messages(string id, long after = 0, long? before = null) => store.Read("SupportChats.xml", "Conversations", root =>
         (Find(root, id)?.Elements("Message") ?? []).Where(x => (long)x.Attribute("id")! > after && (before == null || (long)x.Attribute("id")! < before))
         .TakeLast(before != null || after == 0 ? 50 : 200).Select(Map).ToList());
@@ -37,6 +38,7 @@ public sealed class SupportChatService(PrivateXmlStore store)
     {
         store.Update("SupportChats.xml", "Conversations", root =>
         {
+            if (context == null && Find(root, id) == null) return false;
             var conversation = GetOrCreate(root, id, name, admin);
             var role = admin ? "Admin" : "User";
             if (conversation.Elements("Message").Any(x => (string?)x.Attribute("clientId") == clientId && (string?)x.Attribute("role") == role)) return false;
@@ -53,7 +55,7 @@ public sealed class SupportChatService(PrivateXmlStore store)
         Publish(id);
     }
 
-    public SupportMessage Send(string id, string name, bool admin, string text, string clientId, long? contextVersion = null)
+    public SupportMessage Send(string id, string name, bool admin, string text, string clientId, SupportContext? currentContext, long? contextVersion = null)
     {
         var message = store.Update("SupportChats.xml", "Conversations", root =>
         {
@@ -63,7 +65,7 @@ public sealed class SupportChatService(PrivateXmlStore store)
             if (duplicate != null) return Map(duplicate);
             if (contextVersion.HasValue && contextVersion != ((long?)conversation.Attribute("ContextVersion") ?? 0))
                 throw new InvalidOperationException("Nội dung tư vấn vừa thay đổi. Hãy kiểm tra thẻ phía trên rồi gửi lại; tin nhắn của bạn vẫn được giữ.");
-            var element = MessageElement(NextId(conversation), name, role, clientId, text.Trim(), MapContext(conversation.Element("Context")), "Text");
+            var element = MessageElement(NextId(conversation), name, role, clientId, text.Trim(), currentContext, "Text");
             conversation.Add(element);
             return Map(element);
         });

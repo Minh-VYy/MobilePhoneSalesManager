@@ -9,7 +9,8 @@ namespace QuanLyBanDienThoai.Controllers;
 public class QuangCaoController : Controller
 {
     private readonly QuangCaoXmlService _service;
-    public QuangCaoController(QuangCaoXmlService service) => _service = service;
+    private readonly VoucherService _vouchers;
+    public QuangCaoController(QuangCaoXmlService service, VoucherService vouchers) { _service = service; _vouchers = vouchers; }
 
     public IActionResult Index()
     {
@@ -29,6 +30,7 @@ public class QuangCaoController : Controller
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult Create(QuangCaoModel model)
     {
+        ValidatePromotion(model);
         if (!ModelState.IsValid) return Editor(model, false);
         _service.Add(model);
         TempData["SuccessMessage"] = "Đã thêm banner quảng cáo.";
@@ -38,6 +40,7 @@ public class QuangCaoController : Controller
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult Save(QuangCaoModel model)
     {
+        ValidatePromotion(model);
         if (!ModelState.IsValid) return Editor(model, true);
         if (!_service.Update(model)) return NotFound();
         TempData["SuccessMessage"] = "Đã cập nhật banner quảng cáo.";
@@ -60,6 +63,16 @@ public class QuangCaoController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    private void ValidatePromotion(QuangCaoModel model)
+    {
+        if (string.IsNullOrWhiteSpace(model.PromotionCode)) { model.PromotionCode = ""; return; }
+        try
+        {
+            model.PromotionCode = VoucherService.Normalize(model.PromotionCode);
+            if (_vouchers.Get(model.PromotionCode) is not { Public: true }) ModelState.AddModelError(nameof(model.PromotionCode), "Chọn một thẻ giảm giá công khai đang có trên hệ thống.");
+        }
+        catch (InvalidOperationException error) { ModelState.AddModelError(nameof(model.PromotionCode), error.Message); }
+    }
     private ViewResult Editor(QuangCaoModel model, bool editing)
     {
         ViewData["EditingBanner"] = editing;

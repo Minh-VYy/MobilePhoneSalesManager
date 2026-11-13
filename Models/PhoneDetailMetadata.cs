@@ -27,6 +27,9 @@ public class PhoneDetailMetadata
 public class ProductReviewModel
 {
     public string ProductId { get; set; } = string.Empty;
+    public string AccountId { get; set; } = string.Empty;
+    public string OrderId { get; set; } = string.Empty;
+    public bool VerifiedPurchase => !string.IsNullOrEmpty(AccountId) && !string.IsNullOrEmpty(OrderId);
     public string CustomerName { get; set; } = string.Empty;
     public int Rating { get; set; }
     public string Content { get; set; } = string.Empty;
@@ -35,6 +38,8 @@ public class ProductReviewModel
 
 public class CustomerOrderRequestModel
 {
+    [System.ComponentModel.DataAnnotations.StringLength(32)]
+    public string? VoucherCode { get; set; }
     [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.StringLength(100)]
     public string CustomerName { get; set; } = string.Empty;
     [System.ComponentModel.DataAnnotations.Required, System.ComponentModel.DataAnnotations.RegularExpression(@"^0[35789]\d{8}$")]

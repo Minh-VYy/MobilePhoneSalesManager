@@ -119,10 +119,23 @@
                         data-condition="@conditionText" data-storage="@phone.ThongSo.BoNhoTrong" data-warranty="@warrantyText">
                     Mua ngay <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                 </button>
-                <a class="store-action phone-message-link" data-variant-message data-support-open data-support-message="@consultMessage" asp-controller="Support" asp-action="Index" asp-route-productId="@phone.MaSP"><i class="fa-regular fa-message"></i> Nhắn tin tư vấn</a>
+                <a class="store-action phone-message-link" data-variant-message data-support-open data-support-product="@phone.MaSP" data-support-message="@consultMessage" asp-controller="Support" asp-action="Index" asp-route-productId="@phone.MaSP"><i class="fa-regular fa-message"></i> Nhắn tin tư vấn</a>
             </div>
         </section>
     </div>
+
+    @if (Model.Promotions.Count > 0)
+    {
+        <section class="product-promotions" data-product-promotions hidden="@(!Model.Promotions.Any(v => v.AppliesTo(phone.MaSP)))" aria-labelledby="product-promotions-heading">
+            <div class="phone-detail-section-heading"><div><h2 id="product-promotions-heading">Ưu đãi và quyền lợi</h2><p>Áp dụng theo đúng phiên bản bạn đang chọn. Một mã cho mỗi đơn online.</p></div></div>
+            <div class="promotion-grid">
+                @foreach (var promotion in Model.Promotions)
+                {
+                    <div data-promotion-products="@string.Join(',', promotion.ProductIds)" hidden="@(!promotion.AppliesTo(phone.MaSP))"><partial name="_PromotionCard" model="promotion" /></div>
+                }
+            </div>
+        </section>
+    }
 
     <section class="phone-editorial-specs glass" aria-labelledby="product-description-heading">
         <div class="phone-detail-section-heading"><div><h2 id="product-description-heading">Thông tin sản phẩm</h2><p>Thông số và tình trạng theo dữ liệu sản phẩm</p></div></div>
@@ -162,24 +175,33 @@
                 {
                     @foreach (var review in Model.DanhGia)
                     {
-                        <article class="phone-review-item"><div><b>@review.CustomerName</b><time datetime="@review.CreatedAt.ToString("O")">@review.CreatedAt.ToString("dd/MM/yyyy")</time></div><span class="phone-rating-stars">@(new string('★', review.Rating))</span><p>@review.Content</p></article>
+                        <article class="phone-review-item"><div><b>@review.CustomerName</b><time datetime="@review.CreatedAt.ToString("O")">@review.CreatedAt.ToString("dd/MM/yyyy")</time></div>@if (review.VerifiedPurchase) { <span class="phone-review-verified"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Đã mua hàng</span> }<span class="phone-rating-stars">@(new string('★', review.Rating))</span><p>@review.Content</p></article>
                     }
                 }
             </div>
         </div>
         @if (User.IsInRole("User"))
         {
-        <form asp-action="SubmitReview" method="post" class="phone-review-form">
+        var canReview = Model.ReviewableProductIds.Contains(phone.MaSP);
+        <div class="phone-review-gate" data-review-gate hidden="@canReview" role="status">
+            <p>Bạn chỉ có thể đánh giá phiên bản đã mua và nhận hàng. Đơn chờ, đang giao hoặc đã hủy chưa đủ điều kiện đánh giá.</p>
+            @foreach (var purchased in Model.VariantOptions.Where(x => Model.ReviewableProductIds.Contains(x.ProductId)))
+            {
+                <a asp-action="Details" asp-route-id="@purchased.ProductId" asp-fragment="reviews">Đánh giá phiên bản đã mua: @purchased.ProductName</a>
+            }
+        </div>
+        <form asp-action="SubmitReview" method="post" class="phone-review-form" data-review-form hidden="@(!canReview)">
             @Html.AntiForgeryToken()<input type="hidden" id="review-product-id" name="id" value="@phone.MaSP" />
             <label>Tên hiển thị<input value="@(User.FindFirst("DisplayName")?.Value ?? User.Identity?.Name)" readonly /></label>
-            <label>Đánh giá<select name="rating" required><option value="5">5 sao · Rất hài lòng</option><option value="4">4 sao · Hài lòng</option><option value="3">3 sao · Bình thường</option><option value="2">2 sao · Chưa hài lòng</option><option value="1">1 sao · Không hài lòng</option></select></label>
-            <label class="phone-review-form__content">Nhận xét<textarea name="content" maxlength="1200" required rows="3" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea></label>
-            <button type="submit" class="store-action phone-review-submit">Gửi đánh giá <i class="fa-solid fa-arrow-right"></i></button>
+            <label>Đánh giá<select name="rating" required disabled="@(!canReview)"><option value="5">5 sao · Rất hài lòng</option><option value="4">4 sao · Hài lòng</option><option value="3">3 sao · Bình thường</option><option value="2">2 sao · Chưa hài lòng</option><option value="1">1 sao · Không hài lòng</option></select></label>
+            <label class="phone-review-form__content">Nhận xét<textarea name="content" maxlength="1200" required rows="3" disabled="@(!canReview)" placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."></textarea></label>
+            <button type="submit" class="store-action phone-review-submit" disabled="@(!canReview)">Gửi đánh giá <i class="fa-solid fa-arrow-right"></i></button>
         </form>
         }
         else if (User.Identity?.IsAuthenticated != true)
         {
-            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Details", new { id = phone.MaSP })" class="store-action btn">Đăng nhập để đánh giá</a>
+            <p class="phone-review-empty">Đánh giá dành cho khách đã mua và nhận đúng phiên bản sản phẩm.</p>
+            <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Details", new { id = phone.MaSP })" class="store-action btn">Đăng nhập để kiểm tra quyền đánh giá</a>
         }
     </section>
 
@@ -201,6 +223,7 @@
 </section>
 
 <script type="application/json" id="product-variant-data">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.VariantOptions, new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web)))</script>
+@if (User.IsInRole("User")) { <script type="application/json" id="product-review-eligibility">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ReviewableProductIds))</script> }
 
 @section Scripts {
     <script src="~/js/product-detail.js" asp-append-version="true"></script>

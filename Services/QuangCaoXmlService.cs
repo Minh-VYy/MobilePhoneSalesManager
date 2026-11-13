@@ -82,7 +82,7 @@ public class QuangCaoXmlService
             new XElement("HinhAnh", x.HinhAnh),
             new XElement("ThuTu", x.ThuTu),
             new XElement("ThoiGianChuyenGiay", x.ThoiGianChuyenGiay),
-            new XElement("DangHienThi", x.DangHienThi))));
+            new XElement("DangHienThi", x.DangHienThi), new XElement("PromotionCode", x.PromotionCode ?? ""))));
         Directory.CreateDirectory(Path.GetDirectoryName(_xmlPath)!);
         var tempPath = _xmlPath + ".tmp";
         new XDocument(new XDeclaration("1.0", "utf-8", null), root).Save(tempPath);
@@ -97,6 +97,7 @@ public class QuangCaoXmlService
         HinhAnh = (string?)e.Element("HinhAnh") ?? string.Empty,
         ThuTu = (int?)e.Element("ThuTu") ?? 1,
         ThoiGianChuyenGiay = (int?)e.Element("ThoiGianChuyenGiay") ?? 6,
-        DangHienThi = (bool?)e.Element("DangHienThi") ?? true
+        DangHienThi = (bool?)e.Element("DangHienThi") ?? true,
+        PromotionCode = (string?)e.Element("PromotionCode") ?? ""
     };
 }

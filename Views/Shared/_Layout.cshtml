@@ -18,6 +18,7 @@
         new { Group = "Sản phẩm & bán hàng", Controller = "HoaDon", Action = "Create", Text = "Bán hàng tại quầy", Icon = "fa-cash-register", Badge = 0 },
         new { Group = "Sản phẩm & bán hàng", Controller = "HoaDon", Action = "Index", Text = "Hóa đơn tại quầy", Icon = "fa-receipt", Badge = 0 },
         new { Group = "Cửa hàng", Controller = "QuangCao", Action = "Index", Text = "Banner quảng cáo", Icon = "fa-images", Badge = 0 },
+        new { Group = "Cửa hàng", Controller = "Vouchers", Action = "Index", Text = "Mã & thẻ giảm giá", Icon = "fa-ticket", Badge = 0 },
         new { Group = "Cửa hàng", Controller = "AdminData", Action = "Index", Text = "Dữ liệu hệ thống", Icon = "fa-database", Badge = 0 },
         new { Group = "Cửa hàng", Controller = "Account", Action = "Profile", Text = "Tài khoản quản trị", Icon = "fa-user", Badge = 0 },
         new { Group = "Cửa hàng", Controller = "Account", Action = "ChangePassword", Text = "Đổi mật khẩu", Icon = "fa-key", Badge = 0 }
@@ -27,7 +28,7 @@
 <html lang="vi" data-theme="light">
 <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>@ViewData["Title"] · Smart XML Solutions</title>
+    <title>@ViewData["Title"] · Smart Phone Solutions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /><link rel="stylesheet" href="~/css/commerce.css" asp-append-version="true" /><link rel="stylesheet" href="~/css/admin-theme.css" asp-append-version="true" /><link rel="stylesheet" href="~/css/admin-workspace.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -37,9 +38,9 @@
 <div class="admin-shell">
     <aside class="admin-sidebar" id="adminSidebar" aria-label="Điều hướng quản trị">
         <div class="admin-sidebar-brand">
-            <a asp-controller="ThongKe" asp-action="Index" class="admin-sidebar-header" aria-label="Trang quản trị Smart XML Solutions">
-                <img src="~/images/logo.png" asp-append-version="true" class="admin-brand-logo" width="56" height="56" alt="Smart XML Solutions" />
-                <span class="admin-brand-title"><strong>Smart XML Solutions</strong><small>Quản trị cửa hàng</small></span>
+            <a asp-controller="ThongKe" asp-action="Index" class="admin-sidebar-header" aria-label="Trang quản trị Smart Phone Solutions">
+                <img src="~/images/logo.png" asp-append-version="true" class="admin-brand-logo" width="56" height="56" alt="Smart Phone Solutions" />
+                <span class="admin-brand-title"><strong>Smart Phone Solutions</strong><small>Quản trị cửa hàng</small></span>
             </a>
             <button type="button" class="admin-icon-btn admin-menu-toggle" data-admin-close aria-label="Đóng điều hướng"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
         </div>
@@ -51,7 +52,7 @@
                 {
                     var active = controller == link.Controller && (action == link.Action
                         || (controller == "Orders" && link.Action == "Manage")
-                        || (controller is "Customers" or "Support" or "QuangCao" && link.Action == "Index")
+                        || (controller is "Customers" or "Support" or "QuangCao" or "Vouchers" && link.Action == "Index")
                         || (controller == "DienThoai" && action is "Edit" or "VariantSettings" && link.Action == "Manage")
                         || (controller == "HoaDon" && action == "Print" && link.Action == "Index"));
                     <a asp-controller="@link.Controller" asp-action="@link.Action" class="admin-nav-item @(active ? "active" : "")" aria-current="@(active ? "page" : null)"><i class="fa-solid @link.Icon" aria-hidden="true"></i><span>@link.Text</span>@if (link.Badge > 0) { <b class="admin-nav-count">@link.Badge</b> }</a>
@@ -63,7 +64,7 @@
     <button class="admin-sidebar-backdrop" type="button" data-admin-close aria-label="Đóng điều hướng" hidden></button>
     <div class="admin-main">
         <header class="admin-topbar">
-            <div class="admin-topbar-left"><button class="admin-icon-btn admin-menu-toggle" type="button" id="mobileSidebarToggle" aria-label="Mở điều hướng" aria-controls="adminSidebar" aria-expanded="false"><i class="fa-solid fa-bars" aria-hidden="true"></i></button><nav class="admin-breadcrumb" aria-label="Đường dẫn"><a asp-controller="ThongKe" asp-action="Index">Quản trị</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span class="admin-breadcrumb-current">@ViewData["Title"]</span></nav></div>
+            <div class="admin-topbar-left"><button class="admin-icon-btn admin-sidebar-toggle" type="button" id="mobileSidebarToggle" aria-label="Ẩn/hiện thanh menu" aria-controls="adminSidebar" aria-expanded="true"><i class="fa-solid fa-bars" aria-hidden="true"></i></button><nav class="admin-breadcrumb" aria-label="Đường dẫn"><a asp-controller="ThongKe" asp-action="Index">Quản trị</a><i class="fa-solid fa-chevron-right" aria-hidden="true"></i><span class="admin-breadcrumb-current">@ViewData["Title"]</span></nav></div>
             <div class="admin-topbar-right">
                 <form asp-controller="DienThoai" asp-action="Manage" method="get" class="admin-top-search" role="search">
                     <label for="globalAdminSearch" class="sr-only">Tìm sản phẩm trong kho</label>

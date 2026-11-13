@@ -21,6 +21,13 @@ public class OrdersController(CustomerOrderService orders) : Controller
         return View(order);
     }
     [Authorize(Roles = "User"), HttpPost, ValidateAntiForgeryToken]
+    public IActionResult Quote(CartQuoteInput input)
+    {
+        if (!ModelState.IsValid) return BadRequest(new { error = "Giỏ hàng hoặc mã giảm giá chưa hợp lệ." });
+        try { return Json(orders.Quote(AccountId, input.Items, input.VoucherCode)); }
+        catch (InvalidOperationException error) { return BadRequest(new { error = error.Message }); }
+    }
+    [Authorize(Roles = "User"), HttpPost, ValidateAntiForgeryToken]
     public IActionResult Create(CustomerOrderRequestModel input)
     {
         if (ModelState.IsValid)
